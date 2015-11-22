@@ -1,6 +1,6 @@
 # README #
 
-### What is this repository for? ###
+### Description ###
 
 * telemetron-client-java is intended to gather application and JVM metrics and send them to the Telemetron server.
 
