@@ -1,7 +1,10 @@
 package com.mindera.telemetron.client;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
- * Created by hugocosta on 22/11/15.
+ * HTTP Sender<br/>
+ * If the TelemetronClient is configured to use secure communications, this class uses HTTPS.
  */
 public class HTTPSender extends AbstractSender implements Sender {
 
@@ -9,7 +12,6 @@ public class HTTPSender extends AbstractSender implements Sender {
     private int port;
 
     public HTTPSender(String host, String port) {
-        //TODO validate params
         this.host = host;
         this.port = Integer.parseInt(port);
     }
@@ -17,6 +19,7 @@ public class HTTPSender extends AbstractSender implements Sender {
     @Override
     public void send(byte[] message) {
         //TODO add implementation
+        throw new UnsupportedOperationException("not yet... we are working on that!!");
     }
 
 }

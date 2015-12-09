@@ -1,7 +1,7 @@
 package com.mindera.telemetron.client;
 
 /**
- * Created by hugocosta on 15/11/15.
+ * Sender interface. A sender is responsible for handle the communication with Telemetron Servers.
  */
 public interface Sender {
 

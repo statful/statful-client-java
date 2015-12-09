@@ -2,9 +2,6 @@ package com.mindera.telemetron.client;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by hugocosta on 16/11/15.
- */
 public class TelemetronClientTest {
 
     @org.junit.Before
@@ -12,20 +9,27 @@ public class TelemetronClientTest {
 
     }
 
-    @org.junit.Test
-    public void testAddGauge() throws Exception {
-        TelemetronClient client = new TelemetronClient();
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
-        client.addGauge("price", 12, null);
+    private TelemetronClient createSimpleClient() {
+        TelemetronConfig config = new TelemetronConfig();
+        config.setPrefix("TEST_PREFIX");
+        return new TelemetronClient(config);
+    }
+
+    @org.junit.Test(expected = IllegalArgumentException.class)
+    public void testAddTimerWithoutName() throws Exception {
+        TelemetronClient client = createSimpleClient();
+        client.addTimer(null, 12, new TimerConfig());
+    }
+
+    @org.junit.Test(expected = IllegalArgumentException.class)
+    public void testAddCounterWithoutName() throws Exception {
+        TelemetronClient client = createSimpleClient();
+        client.addCounter(null, 12, new CounterConfig());
+    }
+
+    @org.junit.Test(expected = IllegalArgumentException.class)
+    public void testAddGaugeWithoutName() throws Exception {
+        TelemetronClient client = createSimpleClient();
+        client.addGauge(null, 12, new GaugeConfig());
     }
 }
