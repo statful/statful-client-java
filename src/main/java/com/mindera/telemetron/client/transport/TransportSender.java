@@ -1,11 +1,8 @@
-package com.mindera.telemetron.client;
+package com.mindera.telemetron.client.transport;
 
 /**
  * Sender interface. A sender is responsible for handle the communication with Telemetron Servers.
  */
-public interface Sender {
-
+public interface TransportSender {
     void send(String message);
-    void send(byte[] message);
-
 }
