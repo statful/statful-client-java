@@ -19,14 +19,14 @@ public class ConfigurationBuilderTest {
     public void shouldThrowIfPrefixIsNotSpecified() {
         ConfigurationBuilder.newBuilder()
                 .with(transport(UDP))
-                .build();
+                .buildConfiguration();
     }
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowIfTransportIsNotSpecified() {
         ConfigurationBuilder.newBuilder()
                 .with(prefix("test_prefix"))
-                .build();
+                .buildConfiguration();
     }
 
     @Test
@@ -34,7 +34,7 @@ public class ConfigurationBuilderTest {
         ClientConfiguration config = ConfigurationBuilder.newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
-                .build();
+                .buildConfiguration();
 
         assertEquals("Should have default host", "127.0.0.1", config.getHost());
         assertEquals("Should have default port", 2013, config.getPort());
@@ -50,7 +50,7 @@ public class ConfigurationBuilderTest {
         ClientConfiguration config = ConfigurationBuilder.newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
-                .build();
+                .buildConfiguration();
 
         Tags tags = config.getTimerTags();
         assertEquals("Timer should have 'unit' tag in ms", "ms", tags.getTagValue("unit"));
@@ -65,7 +65,7 @@ public class ConfigurationBuilderTest {
         ClientConfiguration config = ConfigurationBuilder.newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
-                .build();
+                .buildConfiguration();
 
         assertNull("Should not have default counter tags", config.getCounterTags());
 
@@ -79,7 +79,7 @@ public class ConfigurationBuilderTest {
         ClientConfiguration config = ConfigurationBuilder.newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
-                .build();
+                .buildConfiguration();
 
         assertNull("Should not have default gauge tags", config.getGaugeTags());
 
@@ -95,7 +95,7 @@ public class ConfigurationBuilderTest {
                 .with(host("localhost"))
                 .with(port(6167))
                 .with(transport(UDP))
-                .build();
+                .buildConfiguration();
 
         assertEquals("Should configure host", "localhost", config.getHost());
         assertEquals("Should configure port", 6167, config.getPort());
@@ -107,7 +107,7 @@ public class ConfigurationBuilderTest {
         ClientConfiguration config = ConfigurationBuilder.newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
-                .build();
+                .buildConfiguration();
 
         assertEquals("Should configure prefix", "test_prefix", config.getPrefix());
     }
@@ -118,7 +118,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(token("myToken"))
-                .build();
+                .buildConfiguration();
 
         assertEquals("Should configure token", "myToken", config.getToken());
     }
@@ -129,7 +129,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(app("myApp"))
-                .build();
+                .buildConfiguration();
 
         assertEquals("Should configure app name", "myApp", config.getApp());
     }
@@ -140,7 +140,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(dryRun(true))
-                .build();
+                .buildConfiguration();
 
         assertTrue("Should configure token", config.isDryRun());
     }
@@ -151,7 +151,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(tag("host", "localhost"), tag("cluster", "prod"))
-                .build();
+                .buildConfiguration();
 
         Tags tags = config.getTimerTags();
         assertEquals("Should configure 'host' tag", "localhost", tags.getTagValue("host"));
@@ -164,7 +164,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(sampleRate(50))
-                .build();
+                .buildConfiguration();
 
         assertEquals("Should configure sample rate", 50, config.getSampleRate());
     }
@@ -175,7 +175,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(namespace("my namespace"))
-                .build();
+                .buildConfiguration();
 
         assertEquals("Should configure namespace", "my namespace", config.getNamespace());
     }
@@ -186,7 +186,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(flushSize(1000))
-                .build();
+                .buildConfiguration();
 
         assertEquals("Should configure flush size", 1000, config.getFlushSize());
     }
@@ -197,7 +197,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(flushInterval(500))
-                .build();
+                .buildConfiguration();
 
         assertEquals("Should configure flush interval", 500, config.getFlushIntervalMillis());
     }
@@ -208,7 +208,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(timer(tag("cluster", "prod")))
-                .build();
+                .buildConfiguration();
 
         Tags tags = config.getTimerTags();
         assertEquals("Timer should have 'unit' tag", "ms", tags.getTagValue("unit"));
@@ -223,7 +223,7 @@ public class ConfigurationBuilderTest {
                 .with(app("web"))
                 .with(tag("host", "localhost"))
                 .with(timer(tag("unit", "ns")))
-                .build();
+                .buildConfiguration();
 
         Tags tags = config.getTimerTags();
         assertEquals("Timer should have 'app' tag", "web", tags.getTagValue("app"));
@@ -238,7 +238,7 @@ public class ConfigurationBuilderTest {
                 .with(transport(UDP))
                 .with(timer(LAST))
                 .with(timer(aggrFreq(100)))
-                .build();
+                .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getTimerAggregations().getAggregations();
         assertThat("Should configure timer aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT, COUNT_PS, LAST));
@@ -251,7 +251,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(counter(tag("cluster", "prod")))
-                .build();
+                .buildConfiguration();
 
         Tags tags = config.getCounterTags();
         assertEquals("Timer should have 'cluster' tag", "prod", tags.getTagValue("cluster"));
@@ -265,7 +265,7 @@ public class ConfigurationBuilderTest {
                 .with(app("web"))
                 .with(tag("host", "localhost"))
                 .with(counter(tag("unit", "ns")))
-                .build();
+                .buildConfiguration();
 
         Tags tags = config.getCounterTags();
         assertEquals("Timer should have 'app' tag", "web", tags.getTagValue("app"));
@@ -279,7 +279,7 @@ public class ConfigurationBuilderTest {
                 .with(transport(UDP))
                 .with(counter(LAST))
                 .with(counter(aggrFreq(100)))
-                .build();
+                .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getCounterAggregations().getAggregations();
         assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT_PS, LAST));
@@ -292,7 +292,7 @@ public class ConfigurationBuilderTest {
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(gauge(tag("cluster", "prod")))
-                .build();
+                .buildConfiguration();
 
         Tags tags = config.getGaugeTags();
         assertEquals("Timer should have 'cluster' tag", "prod", tags.getTagValue("cluster"));
@@ -306,7 +306,7 @@ public class ConfigurationBuilderTest {
                 .with(app("web"))
                 .with(tag("host", "localhost"))
                 .with(gauge(tag("unit", "ns")))
-                .build();
+                .buildConfiguration();
 
         Tags tags = config.getGaugeTags();
         assertEquals("Gauge should have 'app' tag", "web", tags.getTagValue("app"));
@@ -320,7 +320,7 @@ public class ConfigurationBuilderTest {
                 .with(transport(UDP))
                 .with(gauge(P90))
                 .with(gauge(aggrFreq(100)))
-                .build();
+                .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getGaugeAggregations().getAggregations();
         assertThat("Should configure gauge aggregations", aggregations, containsInAnyOrder(LAST, P90));

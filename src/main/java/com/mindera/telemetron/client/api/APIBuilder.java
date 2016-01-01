@@ -3,11 +3,8 @@ package com.mindera.telemetron.client.api;
 import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.sender.MetricsSender;
 
-import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Objects.nonNull;
 
 public class APIBuilder {
@@ -56,24 +53,38 @@ public class APIBuilder {
     }
 
     public APIBuilder with(TagBuilder... tagsBuilders) {
-        asList(tagsBuilders).stream().filter(Objects::nonNull)
-                .forEach(builder -> getSafeTags().putTag(builder.getType(), builder.getValue()));
+        for (TagBuilder builder : tagsBuilders) {
+            if (builder != null) {
+                getSafeTags().putTag(builder.getType(), builder.getValue());
+            }
+        }
         return this;
     }
 
-    public APIBuilder with(AggregationBuilder... aggsBuilders) {
-        asList(aggsBuilders).stream().filter(Objects::nonNull)
-                .forEach(builder -> getSafeAggregations().put(builder.getAggregation()));
+    public APIBuilder with(AggregationBuilder... aggregationBuilders) {
+        for (AggregationBuilder builder : aggregationBuilders) {
+            if (builder != null) {
+                getSafeAggregations().put(builder.getAggregation());
+            }
+        }
         return this;
     }
 
-    public APIBuilder with(Aggregation... aggs) {
-        getSafeAggregations().putAll(asList(aggs).stream().filter(Objects::nonNull).collect(Collectors.toList()));
+    public APIBuilder with(Aggregation... aggregations) {
+        if (aggregations != null) {
+            for (Aggregation aggregation : aggregations) {
+                if (aggregation != null) {
+                    getSafeAggregations().put(aggregation);
+                }
+            }
+        }
         return this;
     }
 
-    public APIBuilder with(Aggregations aggs) {
-        getSafeAggregations().merge(aggs);
+    public APIBuilder with(Aggregations aggregations) {
+        if (aggregations != null) {
+            getSafeAggregations().merge(aggregations);
+        }
         return this;
     }
 

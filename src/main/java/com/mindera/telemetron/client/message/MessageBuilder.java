@@ -18,8 +18,8 @@ public class MessageBuilder {
     private String prefix;
     private String namespace;
     private String name;
-    private Map<String, String> tags = new HashMap<>();
-    private List<Aggregation> aggregations = new ArrayList<>();
+    private Map<String, String> tags = new HashMap<String, String>();
+    private List<Aggregation> aggregations = new ArrayList<Aggregation>();
     private String value;
     private String timestamp;
     private int aggregationFreq;

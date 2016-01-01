@@ -12,11 +12,14 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import static com.mindera.telemetron.client.message.MessageBuilder.newBuilder;
 import static java.util.Arrays.asList;
 
 public class BufferedMetricsSender implements MetricsSender {
+
+    private static Logger LOGGER = Logger.getLogger(BufferedMetricsSender.class.getName());
 
     private final TransportSender transportSender;
     private final boolean dryRun;
@@ -29,7 +32,7 @@ public class BufferedMetricsSender implements MetricsSender {
         this.dryRun = configuration.isDryRun();
         this.metricPrefix = configuration.getPrefix();
         this.flushSize = configuration.getFlushSize();
-        this.buffer = new ArrayBlockingQueue<>(flushSize);
+        this.buffer = new ArrayBlockingQueue<String>(flushSize);
 
         startFlushInterval(configuration.getFlushIntervalMillis());
     }
@@ -37,8 +40,17 @@ public class BufferedMetricsSender implements MetricsSender {
     private void startFlushInterval(long flushInterval) {
         if (flushInterval >= 100) {
             ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-            executorService.scheduleAtFixedRate(this::flush, flushInterval, flushInterval, TimeUnit.MILLISECONDS);
+            executorService.scheduleAtFixedRate(flusher(), flushInterval, flushInterval, TimeUnit.MILLISECONDS);
         }
+    }
+
+    private Runnable flusher() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                flush();
+            }
+        };
     }
 
     @Override
@@ -60,14 +72,14 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     private boolean shouldPutMetric(int sampleRate) {
-        if (sampleRate < 0) {
-            // TODO log
-            sampleRate = 0;
+        if (sampleRate < 1) {
+            sampleRate = 1;
+            LOGGER.warning("The configured sample rate is bellow 1, assuming 1.");
         }
 
         if (sampleRate > 100) {
-            // TODO - warn
             sampleRate = 100;
+            LOGGER.warning("The configured sample rate is above 100, assuming 100.");
         }
         
         return Math.random() <= (double) sampleRate / 100;
@@ -80,8 +92,8 @@ public class BufferedMetricsSender implements MetricsSender {
 
         boolean inserted = buffer.offer(metric);
         if (!inserted) {
+            LOGGER.warning("The buffer is full, sending metric to Telemetron now.");
             transportSender.send(metric);
-            // TODO - log
         }
     }
 
@@ -98,7 +110,7 @@ public class BufferedMetricsSender implements MetricsSender {
 
     private String getMessageBuffer() {
         @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-        Collection<String> messages = new ArrayList<>();
+        Collection<String> messages = new ArrayList<String>();
         buffer.drainTo(messages);
 
         StringBuilder sb = new StringBuilder();

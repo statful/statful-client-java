@@ -3,136 +3,146 @@ package com.mindera.telemetron.client.api;
 import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.config.DefaultClientConfiguration;
 
-public class ConfigurationBuilder {
+public class ConfigurationBuilder<T> {
 
     private DefaultClientConfiguration result;
+    private ConfigurationBuilderChain<T> builderChain;
 
     private ConfigurationBuilder() {
         this.result = new DefaultClientConfiguration();
     }
 
-    public static ConfigurationBuilder newBuilder() {
-        return new ConfigurationBuilder();
+    private ConfigurationBuilder(ConfigurationBuilderChain<T> builderChain) {
+        this.result = new DefaultClientConfiguration();
+        this.builderChain = builderChain;
     }
 
-    public ConfigurationBuilder with(HostBuilder hostBuilder) {
+    public static <T> ConfigurationBuilder<T> newBuilder(ConfigurationBuilderChain<T> builderChain) {
+        return new ConfigurationBuilder<T>(builderChain);
+    }
+
+    static <T> ConfigurationBuilder<T> newBuilder() {
+        return new ConfigurationBuilder<T>();
+    }
+
+    public ConfigurationBuilder<T> with(HostBuilder hostBuilder) {
         withHost(hostBuilder.getHost());
         return this;
     }
 
-    public ConfigurationBuilder withHost(String host) {
+    public ConfigurationBuilder<T> withHost(String host) {
         this.result.setHost(host);
         return this;
     }
 
-    public ConfigurationBuilder with(PortBuilder portBuilder) {
+    public ConfigurationBuilder<T> with(PortBuilder portBuilder) {
         withPort(portBuilder.getPort());
         return this;
     }
 
-    public ConfigurationBuilder withPort(int port) {
+    public ConfigurationBuilder<T> withPort(int port) {
         this.result.setPort(port);
         return this;
     }
 
-    public ConfigurationBuilder with(PrefixBuilder prefixBuilder) {
+    public ConfigurationBuilder<T> with(PrefixBuilder prefixBuilder) {
         withPrefix(prefixBuilder.getPrefix());
         return this;
     }
 
-    public ConfigurationBuilder withPrefix(String prefix) {
+    public ConfigurationBuilder<T> withPrefix(String prefix) {
         this.result.setPrefix(prefix);
         return this;
     }
 
-    public ConfigurationBuilder with(TransportBuilder transportBuilder) {
+    public ConfigurationBuilder<T> with(TransportBuilder transportBuilder) {
         withTransport(transportBuilder.getTransport());
         return this;
     }
 
-    public ConfigurationBuilder withTransport(Transport transport) {
+    public ConfigurationBuilder<T> withTransport(Transport transport) {
         this.result.setTransport(transport);
         return this;
     }
 
-    public ConfigurationBuilder with(TokenBuilder tokenBuilder) {
+    public ConfigurationBuilder<T> with(TokenBuilder tokenBuilder) {
         withToken(tokenBuilder.getToken());
         return this;
     }
 
-    public ConfigurationBuilder withToken(String token) {
+    public ConfigurationBuilder<T> withToken(String token) {
         this.result.setToken(token);
         return this;
     }
 
-    public ConfigurationBuilder with(AppBuilder appBuilder) {
+    public ConfigurationBuilder<T> with(AppBuilder appBuilder) {
         withApp(appBuilder.getApp());
         return this;
     }
-    
-    public ConfigurationBuilder withApp(String app) {
+
+    public ConfigurationBuilder<T> withApp(String app) {
         this.result.setApp(app);
         return this;
     }
 
-    public ConfigurationBuilder with(DryRunBuilder dryRunBuilder) {
+    public ConfigurationBuilder<T> with(DryRunBuilder dryRunBuilder) {
         isDryRun(dryRunBuilder.isDryRun());
         return this;
     }
 
-    public ConfigurationBuilder isDryRun(boolean isDryRun) {
+    public ConfigurationBuilder<T> isDryRun(boolean isDryRun) {
         this.result.setDryRun(isDryRun);
         return this;
     }
 
-    public ConfigurationBuilder with(NamespaceBuilder namespaceBuilder) {
+    public ConfigurationBuilder<T> with(NamespaceBuilder namespaceBuilder) {
         withNamespace(namespaceBuilder.getNamespace());
         return this;
     }
 
-    public ConfigurationBuilder withNamespace(String namespace) {
+    public ConfigurationBuilder<T> withNamespace(String namespace) {
         this.result.setNamespace(namespace);
         return this;
     }
 
-    public ConfigurationBuilder with(TagBuilder... tagsBuilders) {
+    public ConfigurationBuilder<T> with(TagBuilder... tagsBuilders) {
         for (TagBuilder tagBuilder : tagsBuilders) {
             this.result.mergeApplicationTag(tagBuilder.getType(), tagBuilder.getValue());
         }
         return this;
     }
 
-    public ConfigurationBuilder with(SampleRateBuilder sampleRateBuilder) {
+    public ConfigurationBuilder<T> with(SampleRateBuilder sampleRateBuilder) {
         withSampleRate(sampleRateBuilder.getSampleRate());
         return this;
     }
 
-    public ConfigurationBuilder withSampleRate(int sampleRate) {
+    public ConfigurationBuilder<T> withSampleRate(int sampleRate) {
         this.result.setSampleRate(sampleRate);
         return this;
     }
 
-    public ConfigurationBuilder with(FlushSizeBuilder flushSizeBuilder) {
+    public ConfigurationBuilder<T> with(FlushSizeBuilder flushSizeBuilder) {
         withFlushSize(flushSizeBuilder.getFlushSize());
         return this;
     }
 
-    public ConfigurationBuilder withFlushSize(int flushSize) {
+    public ConfigurationBuilder<T> withFlushSize(int flushSize) {
         this.result.setFlushSize(flushSize);
         return this;
     }
 
-    public ConfigurationBuilder with(FlushIntervalBuilder flushIntervalBuilder) {
+    public ConfigurationBuilder<T> with(FlushIntervalBuilder flushIntervalBuilder) {
         withFlushInterval(flushIntervalBuilder.getFlushInterval());
         return this;
     }
 
-    public ConfigurationBuilder withFlushInterval(long flushInterval) {
+    public ConfigurationBuilder<T> withFlushInterval(long flushInterval) {
         this.result.setFlushIntervalMillis(flushInterval);
         return this;
     }
 
-    public ConfigurationBuilder with(TimerConfigBuilder timerConfigBuilder) {
+    public ConfigurationBuilder<T> with(TimerConfigBuilder timerConfigBuilder) {
         this.result.mergeTimerTags(timerConfigBuilder.getTags());
         this.result.mergeTimerAggregations(timerConfigBuilder.getAggregations());
 
@@ -142,7 +152,7 @@ public class ConfigurationBuilder {
         return this;
     }
 
-    public ConfigurationBuilder with(CounterConfigBuilder counterConfigBuilder) {
+    public ConfigurationBuilder<T> with(CounterConfigBuilder counterConfigBuilder) {
         this.result.mergeCounterTags(counterConfigBuilder.getTags());
         this.result.mergeCounterAggregations(counterConfigBuilder.getAggregations());
 
@@ -152,7 +162,7 @@ public class ConfigurationBuilder {
         return this;
     }
 
-    public ConfigurationBuilder with(GaugeConfigBuilder gaugeConfigBuilder) {
+    public ConfigurationBuilder<T> with(GaugeConfigBuilder gaugeConfigBuilder) {
         this.result.mergeGaugeTags(gaugeConfigBuilder.getTags());
         this.result.mergeGaugeAggregations(gaugeConfigBuilder.getAggregations());
 
@@ -162,7 +172,11 @@ public class ConfigurationBuilder {
         return this;
     }
 
-    public ClientConfiguration build() {
+    public T build() {
+        return builderChain.build(this.buildConfiguration());
+    }
+
+    ClientConfiguration buildConfiguration() {
         if (!result.isValid()) {
             throw new IllegalStateException("Configuration is not valid. Prefix and transport must be defined");
         }
@@ -256,5 +270,4 @@ public class ConfigurationBuilder {
     public static GaugeConfigBuilder gauge(AggregationFreqBuilder aggrFreqBuilder) {
         return new GaugeConfigBuilder(aggrFreqBuilder);
     }
-
 }

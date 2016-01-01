@@ -404,6 +404,14 @@ public class TelemetronClientTest {
         shouldContainDefaultTimerAggregations(aggrArg.getValue());
     }
 
+    @Test
+    public void shouldBuildClientWithDefaultConfiguration() {
+        TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix")
+                .build();
+
+        telemetron.counter("a").send();
+    }
+
     private void shouldContainDefaultTimerTags(Tags tags) {
         assertNotNull("Tags should not be null", tags);
         assertEquals("Should contain 1 tag", 1, tags.getTags().size());

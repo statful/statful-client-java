@@ -7,7 +7,7 @@ import static java.util.Objects.nonNull;
 
 public class Tags {
 
-    private final Map<String, String> tags = new HashMap<>();
+    private final Map<String, String> tags = new HashMap<String, String>();
 
     public static Tags from(String type, String name) {
         Tags result = new Tags();

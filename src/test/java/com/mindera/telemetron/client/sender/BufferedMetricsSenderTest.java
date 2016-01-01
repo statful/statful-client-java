@@ -39,6 +39,7 @@ public class BufferedMetricsSenderTest {
         when(configuration.getFlushSize()).thenReturn(3);
         when(configuration.getFlushIntervalMillis()).thenReturn(0L);
         when(configuration.getPrefix()).thenReturn("test_prefix");
+        when(configuration.getSampleRate()).thenReturn(100);
 
         subject = new BufferedMetricsSender(transportSender, configuration);
     }
@@ -163,13 +164,18 @@ public class BufferedMetricsSenderTest {
         when(configuration.getFlushSize()).thenReturn(999);
         when(configuration.getFlushIntervalMillis()).thenReturn(200L);
 
-        BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration);
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration);
 
         ExecutorService executorService = Executors.newFixedThreadPool(20);
 
         // When
         for (int i = 0; i < 1000; i++) {
-            executorService.execute(() -> subject.put("test_metric", "100", null, null, 10, 100, "application", "123456789"));
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    subject.put("test_metric", "100", null, null, 10, 100, "application", "123456789");
+                }
+            });
         }
 
         executorService.awaitTermination(150, TimeUnit.MILLISECONDS);

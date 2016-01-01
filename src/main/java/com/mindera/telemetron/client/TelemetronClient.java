@@ -1,12 +1,15 @@
 package com.mindera.telemetron.client;
 
-import com.mindera.telemetron.client.api.APIBuilder;
-import com.mindera.telemetron.client.api.Aggregations;
-import com.mindera.telemetron.client.api.Tags;
+import com.mindera.telemetron.client.api.*;
 import com.mindera.telemetron.client.config.ClientConfiguration;
+import com.mindera.telemetron.client.sender.BufferedMetricsSender;
 import com.mindera.telemetron.client.sender.MetricsSender;
+import com.mindera.telemetron.client.transport.DummySender;
+import com.mindera.telemetron.client.transport.TransportSender;
 
 import java.util.logging.Logger;
+
+import static com.mindera.telemetron.client.api.Transport.*;
 
 public class TelemetronClient implements MetricsSender {
 
@@ -57,5 +60,19 @@ public class TelemetronClient implements MetricsSender {
     @Override
     public void put(String name, String value, Tags tags, Aggregations aggregations, Integer aggregationFreq, Integer sampleRate, String namespace, String timestamp) {
         metricsSender.put(name, value, tags, aggregations, aggregationFreq, sampleRate, namespace, timestamp);
+    }
+
+    public static ConfigurationBuilder<TelemetronClient> newUDPClient(String prefix) {
+        return ConfigurationBuilder
+                .newBuilder(new ConfigurationBuilderChain<TelemetronClient>() {
+                    @Override
+                    public TelemetronClient build(ClientConfiguration configuration) {
+                        TransportSender transportSender = new DummySender();
+                        MetricsSender buffuredMetricsSender = new BufferedMetricsSender(transportSender, configuration);
+                        return new TelemetronClient(buffuredMetricsSender, configuration);
+                    }
+                })
+                .withTransport(UDP)
+                .withPrefix(prefix);
     }
 }
