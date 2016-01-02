@@ -1,8 +1,8 @@
 package com.mindera.telemetron.client.sender;
 
-import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.api.Aggregations;
 import com.mindera.telemetron.client.api.Tags;
+import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.transport.TransportSender;
 
 import java.util.ArrayList;
@@ -27,6 +27,8 @@ public class BufferedMetricsSender implements MetricsSender {
     private final int flushSize;
     private final ArrayBlockingQueue<String> buffer;
 
+    private ScheduledExecutorService executorService;
+
     public BufferedMetricsSender(TransportSender transportSender, ClientConfiguration configuration) {
         this.transportSender = transportSender;
         this.dryRun = configuration.isDryRun();
@@ -39,7 +41,7 @@ public class BufferedMetricsSender implements MetricsSender {
 
     private void startFlushInterval(long flushInterval) {
         if (flushInterval >= 100) {
-            ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+            executorService = Executors.newScheduledThreadPool(1);
             executorService.scheduleAtFixedRate(flusher(), flushInterval, flushInterval, TimeUnit.MILLISECONDS);
         }
     }
@@ -55,7 +57,7 @@ public class BufferedMetricsSender implements MetricsSender {
 
     @Override
     public void put(String name, String value, Tags tags, Aggregations aggregations, Integer aggregationFreq, Integer sampleRate, String namespace, String timestamp) {
-        if (shouldPutMetric(sampleRate)) {
+        if (!dryRun && shouldPutMetric(sampleRate)) {
             String rawMessage = newBuilder()
                     .withPrefix(metricPrefix)
                     .withName(name)
@@ -71,18 +73,30 @@ public class BufferedMetricsSender implements MetricsSender {
         }
     }
 
+    @Override
+    public void shutdown() {
+        transportSender.shutdown();
+        if (executorService != null) {
+            executorService.shutdown();
+        }
+    }
+
     private boolean shouldPutMetric(int sampleRate) {
+        sampleRate = sanitizeSampleRate(sampleRate);
+        
+        return Math.random() <= (double) sampleRate / 100;
+    }
+
+    private int sanitizeSampleRate(int sampleRate) {
         if (sampleRate < 1) {
             sampleRate = 1;
             LOGGER.warning("The configured sample rate is bellow 1, assuming 1.");
-        }
-
-        if (sampleRate > 100) {
+        } else if (sampleRate > 100) {
             sampleRate = 100;
             LOGGER.warning("The configured sample rate is above 100, assuming 100.");
         }
-        
-        return Math.random() <= (double) sampleRate / 100;
+
+        return sampleRate;
     }
 
     private void putRaw(String metric) {
@@ -93,19 +107,23 @@ public class BufferedMetricsSender implements MetricsSender {
         boolean inserted = buffer.offer(metric);
         if (!inserted) {
             LOGGER.warning("The buffer is full, sending metric to Telemetron now.");
-            transportSender.send(metric);
+            sendMetric(metric);
         }
     }
 
     private boolean isTimeToFlush() {
-        return !dryRun && flushSize <= buffer.size();
+        return  flushSize <= buffer.size();
     }
 
     private void flush() {
         String message = getMessageBuffer();
         if (!message.isEmpty()) {
-            transportSender.send(message);
+            sendMetric(message);
         }
+    }
+
+    private void sendMetric(String metric) {
+        transportSender.send(metric);
     }
 
     private String getMessageBuffer() {

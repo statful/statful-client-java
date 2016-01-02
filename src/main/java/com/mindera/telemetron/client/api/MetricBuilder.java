@@ -1,6 +1,8 @@
 package com.mindera.telemetron.client.api;
 
-public class MetricBuilder {
+public final class MetricBuilder {
+
+    private MetricBuilder() {}
 
     public static AggregationBuilder agg(Aggregation aggregation) {
         return new AggregationBuilder(aggregation);
