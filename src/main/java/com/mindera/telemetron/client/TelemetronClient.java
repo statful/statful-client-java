@@ -4,12 +4,12 @@ import com.mindera.telemetron.client.api.*;
 import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.sender.BufferedMetricsSender;
 import com.mindera.telemetron.client.sender.MetricsSender;
-import com.mindera.telemetron.client.transport.DummySender;
 import com.mindera.telemetron.client.transport.TransportSender;
+import com.mindera.telemetron.client.transport.UDPSender;
 
 import java.util.logging.Logger;
 
-import static com.mindera.telemetron.client.api.Transport.*;
+import static com.mindera.telemetron.client.api.Transport.UDP;
 
 public class TelemetronClient implements MetricsSender {
 
@@ -18,7 +18,7 @@ public class TelemetronClient implements MetricsSender {
     private final MetricsSender metricsSender;
     private final ClientConfiguration configuration;
 
-    public TelemetronClient(MetricsSender metricsSender, ClientConfiguration configuration) {
+    TelemetronClient(MetricsSender metricsSender, ClientConfiguration configuration) {
         this.metricsSender = metricsSender;
         this.configuration = configuration;
     }
@@ -59,7 +59,16 @@ public class TelemetronClient implements MetricsSender {
 
     @Override
     public void put(String name, String value, Tags tags, Aggregations aggregations, Integer aggregationFreq, Integer sampleRate, String namespace, String timestamp) {
-        metricsSender.put(name, value, tags, aggregations, aggregationFreq, sampleRate, namespace, timestamp);
+        try {
+            metricsSender.put(name, value, tags, aggregations, aggregationFreq, sampleRate, namespace, timestamp);
+        } catch (Exception e) {
+            LOGGER.warning("Unable to send metric: " + e.toString());
+        }
+    }
+
+    @Override
+    public void shutdown() {
+        metricsSender.shutdown();
     }
 
     public static ConfigurationBuilder<TelemetronClient> newUDPClient(String prefix) {
@@ -67,9 +76,9 @@ public class TelemetronClient implements MetricsSender {
                 .newBuilder(new ConfigurationBuilderChain<TelemetronClient>() {
                     @Override
                     public TelemetronClient build(ClientConfiguration configuration) {
-                        TransportSender transportSender = new DummySender();
-                        MetricsSender buffuredMetricsSender = new BufferedMetricsSender(transportSender, configuration);
-                        return new TelemetronClient(buffuredMetricsSender, configuration);
+                        TransportSender transportSender = new UDPSender(configuration.getHost(), configuration.getPort());
+                        MetricsSender bufferedMetricsSender = new BufferedMetricsSender(transportSender, configuration);
+                        return new TelemetronClient(bufferedMetricsSender, configuration);
                     }
                 })
                 .withTransport(UDP)

@@ -5,4 +5,6 @@ package com.mindera.telemetron.client.transport;
  */
 public interface TransportSender {
     void send(String message);
+
+    void shutdown();
 }

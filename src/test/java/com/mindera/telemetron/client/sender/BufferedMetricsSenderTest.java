@@ -226,4 +226,24 @@ public class BufferedMetricsSenderTest {
         int size = subject.getBuffer().size();
         assertEquals("Buffer should have 0 metrics", 0, size);
     }
+
+    @Test
+    public void shouldShutdown() throws Exception {
+        // Given
+        when(configuration.getFlushSize()).thenReturn(2);
+        when(configuration.getFlushIntervalMillis()).thenReturn(100L);
+
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration);
+
+        subject.put("test_metric0", "100", null, null, 10, 100, "application", "123456789");
+
+        // When
+        subject.shutdown();
+
+        Thread.sleep(150);
+
+        // Then
+        List<String> buffer = subject.getBuffer();
+        assertEquals("Buffer should have metrics", 1, buffer.size());
+    }
 }

@@ -5,12 +5,16 @@ import com.mindera.telemetron.client.api.Aggregations;
 import com.mindera.telemetron.client.api.Tags;
 import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.sender.MetricsSender;
+import com.mindera.telemetron.client.transport.UdpEcho;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
 import static com.mindera.telemetron.client.api.MetricBuilder.*;
@@ -405,11 +409,34 @@ public class TelemetronClientTest {
     }
 
     @Test
-    public void shouldBuildClientWithDefaultConfiguration() {
-        TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix")
-                .build();
+    public void shouldShutdownClient() {
+        // Given
+        TelemetronClient subject = new TelemetronClient(metricsSender, configuration);
 
-        telemetron.counter("a").send();
+        // When
+        subject.shutdown();
+
+        // Then
+        verify(metricsSender, times(1)).shutdown();
+    }
+
+    @Test
+    public void shouldCreateUdpClient() throws Exception {
+        // Given
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        Future<String> response = executorService.submit(new UdpEcho(2013));
+
+        // When
+        TelemetronClient client = TelemetronClient.newUDPClient("test_prefix")
+                .withFlushInterval(100)
+                .build();
+        client.counter("test_counter").send();
+
+        String responseString = response.get();
+
+        // Then
+        assertTrue("Should receive message", responseString.startsWith("test_prefix.application.counter.test_counter 0"));
+        executorService.shutdown();
     }
 
     private void shouldContainDefaultTimerTags(Tags tags) {

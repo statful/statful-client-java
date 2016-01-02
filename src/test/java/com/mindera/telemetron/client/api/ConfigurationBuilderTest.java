@@ -17,21 +17,21 @@ public class ConfigurationBuilderTest {
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowIfPrefixIsNotSpecified() {
-        ConfigurationBuilder.newBuilder()
+        newBuilder()
                 .with(transport(UDP))
                 .buildConfiguration();
     }
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowIfTransportIsNotSpecified() {
-        ConfigurationBuilder.newBuilder()
+        newBuilder()
                 .with(prefix("test_prefix"))
                 .buildConfiguration();
     }
 
     @Test
     public void shouldUseDefaultValuesWhenNoneAreSpecified() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .buildConfiguration();
@@ -47,7 +47,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldUseTimerDefaultValues() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .buildConfiguration();
@@ -62,7 +62,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldUseCounterDefaultValues() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .buildConfiguration();
@@ -76,7 +76,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldUseGaugeDefaultValues() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .buildConfiguration();
@@ -90,7 +90,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureUDPTransport() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(host("localhost"))
                 .with(port(6167))
@@ -104,7 +104,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigurePrefix() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .buildConfiguration();
@@ -114,7 +114,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureToken() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(token("myToken"))
@@ -125,7 +125,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureApp() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(app("myApp"))
@@ -136,7 +136,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureDryRun() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(dryRun(true))
@@ -147,7 +147,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureDefaultTags() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(tag("host", "localhost"), tag("cluster", "prod"))
@@ -160,7 +160,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureSampleRate() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(sampleRate(50))
@@ -171,7 +171,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureNamespace() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(namespace("my namespace"))
@@ -182,7 +182,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureFlushSize() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(flushSize(1000))
@@ -193,7 +193,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureFlushInterval() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(flushInterval(500))
@@ -204,7 +204,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureTimerTags() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(timer(tag("cluster", "prod")))
@@ -217,7 +217,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldMergeTimerTags() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(app("web"))
@@ -233,7 +233,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureTimerAggregations() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(timer(LAST))
@@ -247,7 +247,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureCounterTags() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(counter(tag("cluster", "prod")))
@@ -259,7 +259,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldMergeCounterTags() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(app("web"))
@@ -274,7 +274,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureCounterAggregations() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(counter(LAST))
@@ -288,7 +288,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureGaugeTags() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(gauge(tag("cluster", "prod")))
@@ -300,7 +300,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldMergeGaugeTags() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(app("web"))
@@ -315,7 +315,7 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldConfigureGaugeAggregations() {
-        ClientConfiguration config = ConfigurationBuilder.newBuilder()
+        ClientConfiguration config = newBuilder()
                 .with(prefix("test_prefix"))
                 .with(transport(UDP))
                 .with(gauge(P90))
@@ -325,5 +325,62 @@ public class ConfigurationBuilderTest {
         Collection<Aggregation> aggregations = config.getGaugeAggregations().getAggregations();
         assertThat("Should configure gauge aggregations", aggregations, containsInAnyOrder(LAST, P90));
         assertEquals("Should gauge aggregation frequency", 100, config.getGaugeAggregationFreq());
+    }
+
+    @Test
+    public void shouldConfigureTimerAggregationsWithBuilder() {
+        ClientConfiguration config = newBuilder()
+                .with(prefix("test_prefix"))
+                .with(transport(UDP))
+                .with(timer(agg(LAST)))
+                .buildConfiguration();
+
+        Collection<Aggregation> aggregations = config.getTimerAggregations().getAggregations();
+        assertThat("Should configure timer aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT, COUNT_PS, LAST));
+    }
+
+    @Test
+    public void shouldConfigureCounterAggregationsWithBuilder() {
+        ClientConfiguration config = newBuilder()
+                .with(prefix("test_prefix"))
+                .with(transport(UDP))
+                .with(counter(agg(LAST)))
+                .buildConfiguration();
+
+        Collection<Aggregation> aggregations = config.getCounterAggregations().getAggregations();
+        assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT_PS, LAST));
+    }
+
+    @Test
+    public void shouldConfigureGaugeAggregationsWithBuilder() {
+        ClientConfiguration config = newBuilder()
+                .with(prefix("test_prefix"))
+                .with(transport(UDP))
+                .with(gauge(agg(P90)))
+                .buildConfiguration();
+
+        Collection<Aggregation> aggregations = config.getGaugeAggregations().getAggregations();
+        assertThat("Should configure gauge aggregations", aggregations, containsInAnyOrder(LAST, P90));
+    }
+
+    @Test
+    public void shouldChainBuilder() {
+        class TestClass {
+            final ClientConfiguration configuration;
+
+            TestClass(ClientConfiguration configuration) {
+                this.configuration = configuration;
+            }
+        }
+
+        TestClass subject = newBuilder(new ConfigurationBuilderChain<TestClass>() {
+            @Override
+            public TestClass build(ClientConfiguration configuration) {
+                return new TestClass(configuration);
+            }
+        }).withPrefix("test_prefix").withTransport(UDP).build();
+
+        assertEquals("Should build with prefix configuration", "test_prefix", subject.configuration.getPrefix());
+        assertEquals("Should build with transport configuration", UDP, subject.configuration.getTransport());
     }
 }

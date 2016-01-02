@@ -113,13 +113,9 @@ public class APIBuilder {
     }
 
     public void send() {
-        try {
-            // TODO - UTC Timestamp?
-            String epochTime = Long.toString(System.currentTimeMillis() / 1000L);
-            metricsSender.put(metricName, value, tags, aggregations, aggregationFreq, sampleRate, namespace, epochTime);
-        } catch (Exception e) {
-            LOGGER.warning(e.toString());
-        }
+        // TODO - UTC Timestamp?
+        String epochTime = Long.toString(System.currentTimeMillis() / 1000L);
+        metricsSender.put(metricName, value, tags, aggregations, aggregationFreq, sampleRate, namespace, epochTime);
     }
 
     private Tags getSafeTags() {
