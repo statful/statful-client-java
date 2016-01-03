@@ -21,7 +21,7 @@ public class TelemetronClient implements MetricsSender {
     private final MetricsSender metricsSender;
     private final ClientConfiguration configuration;
 
-    TelemetronClient(MetricsSender metricsSender, ClientConfiguration configuration) {
+    TelemetronClient(final MetricsSender metricsSender, final ClientConfiguration configuration) {
         this.metricsSender = metricsSender;
         this.configuration = configuration;
     }
@@ -33,7 +33,7 @@ public class TelemetronClient implements MetricsSender {
      * @param timestamp The timer timestamp value to send to Telemetron
      * @return A Counter metric builder, ready to be sent or configure
      */
-    public TelemetronMetricBuilder timer(String metricName, long timestamp) {
+    public final TelemetronMetricBuilder timer(final String metricName, final long timestamp) {
         APIBuilder apiBuilder = new APIBuilder(this)
                 .withConfiguration(configuration)
                 .withAggregations(configuration.getTimerAggregations())
@@ -51,7 +51,7 @@ public class TelemetronClient implements MetricsSender {
      * @param metricName The counter name to create
      * @return A Counter metric builder, ready to be sent or configure
      */
-    public TelemetronMetricBuilder counter(String metricName) {
+    public final TelemetronMetricBuilder counter(final String metricName) {
         return counter(metricName, 0);
     }
 
@@ -62,7 +62,7 @@ public class TelemetronClient implements MetricsSender {
      * @param value The counter increment value to send to Telemetron
      * @return A Counter metric builder, ready to be sent or configure
      */
-    public TelemetronMetricBuilder counter(String metricName, int value) {
+    public final TelemetronMetricBuilder counter(final String metricName, final int value) {
         APIBuilder apiBuilder = new APIBuilder(this)
                 .withConfiguration(configuration)
                 .withAggregations(configuration.getCounterAggregations())
@@ -81,7 +81,7 @@ public class TelemetronClient implements MetricsSender {
      * @param value The gauge value to send to Telemetron
      * @return A Gauge metric builder, ready to be sent or configure
      */
-    public TelemetronMetricBuilder gauge(String metricName, String value) {
+    public final TelemetronMetricBuilder gauge(final String metricName, final String value) {
         APIBuilder apiBuilder = new APIBuilder(this)
                 .withConfiguration(configuration)
                 .withAggregations(configuration.getGaugeAggregations())
@@ -94,7 +94,11 @@ public class TelemetronClient implements MetricsSender {
     }
 
     @Override
-    public void put(String name, String value, Tags tags, Aggregations aggregations, AggregationFreq aggregationFreq, Integer sampleRate, String namespace, String timestamp) {
+    public final void put(
+            final String name, final String value, final Tags tags, final Aggregations aggregations,
+            final AggregationFreq aggregationFreq, final Integer sampleRate, final String namespace,
+            final String timestamp
+    ) {
         try {
             metricsSender.put(name, value, tags, aggregations, aggregationFreq, sampleRate, namespace, timestamp);
         } catch (Exception e) {
@@ -103,7 +107,7 @@ public class TelemetronClient implements MetricsSender {
     }
 
     @Override
-    public void shutdown() {
+    public final void shutdown() {
         metricsSender.shutdown();
     }
 
@@ -113,7 +117,7 @@ public class TelemetronClient implements MetricsSender {
      * @param prefix The metric prefix
      * @return A Telemetron client builder, ready for configure or bootstrap
      */
-    public static TelemetronClientBuilder buildUDPClient(String prefix) {
+    public static TelemetronClientBuilder buildUDPClient(final String prefix) {
         ConfigurationBuilder<TelemetronClient> configurationBuilder = ConfigurationBuilder
                 .newBuilder(builderChain).transport(UDP).prefix(prefix);
 
@@ -123,7 +127,7 @@ public class TelemetronClient implements MetricsSender {
     private static ConfigurationBuilderChain<TelemetronClient> builderChain =
             new ConfigurationBuilderChain<TelemetronClient>() {
         @Override
-        public TelemetronClient build(ClientConfiguration configuration) {
+        public TelemetronClient build(final ClientConfiguration configuration) {
             TransportSender transportSender = new UDPSender(configuration.getHost(), configuration.getPort());
             MetricsSender bufferedMetricsSender = new BufferedMetricsSender(transportSender, configuration);
             return new TelemetronClient(bufferedMetricsSender, configuration);

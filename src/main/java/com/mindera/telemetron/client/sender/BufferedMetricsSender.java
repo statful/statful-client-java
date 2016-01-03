@@ -20,7 +20,12 @@ import static java.util.Arrays.asList;
 
 public class BufferedMetricsSender implements MetricsSender {
 
-    private static Logger LOGGER = Logger.getLogger(BufferedMetricsSender.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(BufferedMetricsSender.class.getName());
+
+    private static final int MIN_SAMPLE_RATE = 1;
+    private static final int MAX_SAMPLE_RATE = 100;
+    private static final int SAMPLE_RATE_DIVIDER = 100;
+    private static final int MIN_FLUSH_INTERVAL = 100;
 
     private final TransportSender transportSender;
     private final boolean dryRun;
@@ -30,7 +35,7 @@ public class BufferedMetricsSender implements MetricsSender {
 
     private ScheduledExecutorService executorService;
 
-    public BufferedMetricsSender(TransportSender transportSender, ClientConfiguration configuration) {
+    public BufferedMetricsSender(final TransportSender transportSender, final ClientConfiguration configuration) {
         this.transportSender = transportSender;
         this.dryRun = configuration.isDryRun();
         this.metricPrefix = configuration.getPrefix();
@@ -40,8 +45,8 @@ public class BufferedMetricsSender implements MetricsSender {
         startFlushInterval(configuration.getFlushIntervalMillis());
     }
 
-    private void startFlushInterval(long flushInterval) {
-        if (flushInterval >= 100) {
+    private void startFlushInterval(final long flushInterval) {
+        if (flushInterval >= MIN_FLUSH_INTERVAL) {
             executorService = Executors.newScheduledThreadPool(1);
             executorService.scheduleAtFixedRate(flusher(), flushInterval, flushInterval, TimeUnit.MILLISECONDS);
         }
@@ -57,7 +62,11 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     @Override
-    public void put(String name, String value, Tags tags, Aggregations aggregations, AggregationFreq aggregationFreq, Integer sampleRate, String namespace, String timestamp) {
+     public final void put(
+            final String name, final String value, final Tags tags, final Aggregations aggregations,
+            final AggregationFreq aggregationFreq, final Integer sampleRate, final String namespace,
+            final String timestamp
+    ) {
         if (!dryRun && shouldPutMetric(sampleRate)) {
             String rawMessage = newBuilder()
                     .withPrefix(metricPrefix)
@@ -75,32 +84,32 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     @Override
-    public void shutdown() {
+    public final void shutdown() {
         transportSender.shutdown();
         if (executorService != null) {
             executorService.shutdown();
         }
     }
 
-    private boolean shouldPutMetric(int sampleRate) {
-        sampleRate = sanitizeSampleRate(sampleRate);
-        
-        return Math.random() <= (double) sampleRate / 100;
+    private boolean shouldPutMetric(final int sampleRate) {
+        int newSampleRate = sanitizeSampleRate(sampleRate);
+        return Math.random() <= (double) newSampleRate / SAMPLE_RATE_DIVIDER;
     }
 
-    private int sanitizeSampleRate(int sampleRate) {
-        if (sampleRate < 1) {
-            sampleRate = 1;
+    private int sanitizeSampleRate(final int sampleRate) {
+        int newSampleRate = MAX_SAMPLE_RATE;
+        if (sampleRate < MIN_SAMPLE_RATE) {
+            newSampleRate = MIN_SAMPLE_RATE;
             LOGGER.warning("The configured sample rate is bellow 1, assuming 1.");
-        } else if (sampleRate > 100) {
-            sampleRate = 100;
+        } else if (sampleRate > MAX_SAMPLE_RATE) {
+            newSampleRate = MAX_SAMPLE_RATE;
             LOGGER.warning("The configured sample rate is above 100, assuming 100.");
         }
 
-        return sampleRate;
+        return newSampleRate;
     }
 
-    private void putRaw(String metric) {
+    private void putRaw(final String metric) {
         if (isTimeToFlush()) {
             flush();
         }
@@ -123,7 +132,7 @@ public class BufferedMetricsSender implements MetricsSender {
         }
     }
 
-    private void sendMetric(String metric) {
+    private void sendMetric(final String metric) {
         transportSender.send(metric);
     }
 
@@ -139,7 +148,7 @@ public class BufferedMetricsSender implements MetricsSender {
         return sb.toString();
     }
 
-    List<String> getBuffer() {
+    final List<String> getBuffer() {
         return asList(buffer.toArray(new String[buffer.size()]));
     }
 }

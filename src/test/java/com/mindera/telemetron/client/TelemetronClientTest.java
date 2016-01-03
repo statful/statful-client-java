@@ -19,14 +19,8 @@ import java.util.concurrent.Future;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
 import static com.mindera.telemetron.client.api.AggregationFreq.*;
-import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 

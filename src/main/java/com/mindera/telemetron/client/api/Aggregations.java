@@ -9,7 +9,7 @@ public class Aggregations {
 
     private final Collection<Aggregation> aggregations = EnumSet.noneOf(Aggregation.class);
 
-    public static Aggregations from(Aggregation... aggregations) {
+    public static Aggregations from(final Aggregation... aggregations) {
         Aggregations result = new Aggregations();
         for (Aggregation aggregation : aggregations) {
             result.put(aggregation);
@@ -17,19 +17,19 @@ public class Aggregations {
         return result;
     }
 
-    public void put(Aggregation aggregation) {
+    public final void put(final Aggregation aggregation) {
         aggregations.add(aggregation);
     }
 
-    public void putAll(Collection<Aggregation> aggregations) {
+    public final void putAll(final Collection<Aggregation> aggregations) {
         this.aggregations.addAll(aggregations);
     }
 
-    public Collection<Aggregation> getAggregations() {
+    public final Collection<Aggregation> getAggregations() {
         return aggregations;
     }
 
-    public Aggregations merge(Aggregations aggregations) {
+    public final Aggregations merge(final Aggregations aggregations) {
         if (nonNull(aggregations)) {
             this.aggregations.addAll(aggregations.getAggregations());
         }

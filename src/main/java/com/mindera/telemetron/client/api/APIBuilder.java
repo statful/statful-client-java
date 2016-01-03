@@ -8,6 +8,8 @@ import com.mindera.telemetron.client.sender.MetricsSender;
  */
 public class APIBuilder {
 
+    private static final long TIMESTAMP_DIVIDER = 1000L;
+
     private final MetricsSender metricsSender;
 
     private String metricName;
@@ -18,7 +20,7 @@ public class APIBuilder {
     private AggregationFreq aggregationFreq;
     private Integer sampleRate;
 
-    public APIBuilder(MetricsSender metricsSender) {
+    public APIBuilder(final MetricsSender metricsSender) {
         this.metricsSender = metricsSender;
     }
 
@@ -28,7 +30,7 @@ public class APIBuilder {
      * @param metricName Metric name as string
      * @return A reference to this builder
      */
-    public APIBuilder withMetricName(String metricName) {
+    public final APIBuilder withMetricName(final String metricName) {
         this.metricName = metricName;
         return this;
     }
@@ -39,7 +41,7 @@ public class APIBuilder {
      * @param value The value as string
      * @return A reference to this builder
      */
-    public APIBuilder withValue(String value) {
+    public final APIBuilder withValue(final String value) {
         this.value = value;
         return this;
     }
@@ -50,7 +52,7 @@ public class APIBuilder {
      * @param configuration Client configuration
      * @return A reference to this builder
      */
-    public APIBuilder withConfiguration(ClientConfiguration configuration) {
+    public final APIBuilder withConfiguration(final ClientConfiguration configuration) {
         return this.withNamespace(configuration.getNamespace())
                 .withSampleRate(configuration.getSampleRate());
     }
@@ -61,7 +63,7 @@ public class APIBuilder {
      * @param sampleRate Sample rate as integer
      * @return A reference to this builder
      */
-    private APIBuilder withSampleRate(Integer sampleRate) {
+    private APIBuilder withSampleRate(final Integer sampleRate) {
         this.sampleRate = sampleRate;
         return this;
     }
@@ -73,7 +75,7 @@ public class APIBuilder {
      * @param value The tag value
      * @return A reference to this builder
      */
-    public APIBuilder tag(String type, String value) {
+    public final APIBuilder tag(final String type, final String value) {
         // TODO - simplify
         if (type != null && !type.isEmpty() && value != null && !value.isEmpty()) {
             getSafeTags().putTag(type, value);
@@ -87,7 +89,7 @@ public class APIBuilder {
      * @param tags Tags to use
      * @return A reference to this builder
      */
-    public APIBuilder withTags(Tags tags) {
+    public final APIBuilder withTags(final Tags tags) {
         if (tags != null) {
             getSafeTags().merge(tags);
         }
@@ -100,7 +102,7 @@ public class APIBuilder {
      * @param aggregations Array of aggregations to use
      * @return A reference to this builder
      */
-    public APIBuilder aggregations(Aggregation... aggregations) {
+    public final APIBuilder aggregations(final Aggregation... aggregations) {
         // TODO - simplify
         if (aggregations != null) {
             for (Aggregation aggregation : aggregations) {
@@ -118,7 +120,7 @@ public class APIBuilder {
      * @param aggregations Aggregations to use
      * @return A reference to this builder
      */
-    public APIBuilder withAggregations(Aggregations aggregations) {
+    public final APIBuilder withAggregations(final Aggregations aggregations) {
         if (aggregations != null) {
             getSafeAggregations().merge(aggregations);
         }
@@ -131,7 +133,7 @@ public class APIBuilder {
      * @param aggFreq Aggregation frequency (10, 30, 60, 120, 180, 300)
      * @return A reference to this builder
      */
-    public APIBuilder aggFreq(AggregationFreq aggFreq) {
+    public final APIBuilder aggFreq(final AggregationFreq aggFreq) {
         aggregationFreq = aggFreq;
         return this;
     }
@@ -142,12 +144,12 @@ public class APIBuilder {
      * @param namespace Namespace as string
      * @return A reference to this builder
      */
-    public APIBuilder namespace(String namespace) {
+    public final APIBuilder namespace(final String namespace) {
         withNamespace(namespace);
         return this;
     }
 
-    private APIBuilder withNamespace(String namespace) {
+    private APIBuilder withNamespace(final String namespace) {
         this.namespace = namespace;
         return this;
     }
@@ -155,9 +157,9 @@ public class APIBuilder {
     /**
      * Sends the metric to Telemetron.
      */
-    public void send() {
+    public final void send() {
         // TODO - UTC Timestamp?
-        String epochTime = Long.toString(System.currentTimeMillis() / 1000L);
+        String epochTime = Long.toString(System.currentTimeMillis() / TIMESTAMP_DIVIDER);
         metricsSender.put(metricName, value, tags, aggregations, aggregationFreq, sampleRate, namespace, epochTime);
     }
 

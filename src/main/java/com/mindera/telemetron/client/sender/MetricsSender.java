@@ -21,7 +21,8 @@ public interface MetricsSender {
      * @param namespace The namespace of the metric
      * @param timestamp The timestamp associated with the metric
      */
-    void put(String name, String value, Tags tags, Aggregations aggregations, AggregationFreq aggregationFreq, Integer sampleRate, String namespace, String timestamp);
+    void put(String name, String value, Tags tags, Aggregations aggregations, AggregationFreq aggregationFreq,
+             Integer sampleRate, String namespace, String timestamp);
 
     /**
      * Shutdows the metrics sender. This typically means realising resources or stopping flush mechanism.

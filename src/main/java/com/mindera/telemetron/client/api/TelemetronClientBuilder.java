@@ -5,7 +5,7 @@ import com.mindera.telemetron.client.TelemetronClient;
 public final class TelemetronClientBuilder {
     private final ConfigurationBuilder<TelemetronClient> configurationBuilder;
 
-    public TelemetronClientBuilder(ConfigurationBuilder<TelemetronClient> configurationBuilder) {
+    public TelemetronClientBuilder(final ConfigurationBuilder<TelemetronClient> configurationBuilder) {
         this.configurationBuilder = configurationBuilder;
     }
 

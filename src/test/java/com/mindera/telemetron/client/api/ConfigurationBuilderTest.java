@@ -7,7 +7,6 @@ import java.util.Collection;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
 import static com.mindera.telemetron.client.api.AggregationFreq.*;
-import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
 import static com.mindera.telemetron.client.api.ConfigurationBuilder.*;
 import static com.mindera.telemetron.client.api.MetricBuilder.*;
 import static com.mindera.telemetron.client.api.Transport.UDP;

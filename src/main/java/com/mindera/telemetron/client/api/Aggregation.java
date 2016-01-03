@@ -15,7 +15,7 @@ public enum Aggregation {
 
     private String name;
 
-    Aggregation(String name) {
+    Aggregation(final String name) {
         this.name = name;
     }
 

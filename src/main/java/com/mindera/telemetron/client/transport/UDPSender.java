@@ -15,7 +15,7 @@ public class UDPSender implements TransportSender {
     private InetAddress address;
     private DatagramSocket socket;
 
-    public UDPSender(String host, int port) {
+    public UDPSender(final String host, final int port) {
         this.port = port;
         this.host = host;
 
@@ -27,7 +27,7 @@ public class UDPSender implements TransportSender {
     }
 
     @Override
-    public void send(String message) {
+    public final void send(final String message) {
         try {
             sendMessage(message);
         } catch (IOException e) {
@@ -36,7 +36,7 @@ public class UDPSender implements TransportSender {
         }
     }
 
-    private void retrySendMessage(String message) {
+    private void retrySendMessage(final String message) {
         try {
             sendMessage(message);
         } catch (IOException e) {
@@ -45,7 +45,7 @@ public class UDPSender implements TransportSender {
         }
     }
 
-    private void sendMessage(String message) throws IOException {
+    private void sendMessage(final String message) throws IOException {
         try {
             createSocketIfClosed();
             socket.send(createPacket(message));
@@ -57,7 +57,7 @@ public class UDPSender implements TransportSender {
     }
 
     @Override
-    public void shutdown() {
+    public final void shutdown() {
         socket.disconnect();
         socket.close();
     }
@@ -73,12 +73,12 @@ public class UDPSender implements TransportSender {
         socket = new DatagramSocket();
     }
 
-    private DatagramPacket createPacket(String message) {
+    private DatagramPacket createPacket(final String message) {
         byte[] byteMessage = message.getBytes(Charset.forName("UTF-8"));
         return new DatagramPacket(byteMessage, byteMessage.length, address, port);
     }
 
-    void setMockedSocket(DatagramSocket socket) {
+    final void setMockedSocket(final DatagramSocket socket) {
         this.socket = socket;
     }
 }

@@ -10,11 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mindera.telemetron.client.api.AggregationFreq.*;
+
 /**
  * Telemetron message builder. This is an internal class to build messages from the metric data.<br/>
  * Message format follows the specification of Telemetron API.
  */
-public class MessageBuilder {
+public final class MessageBuilder {
 
     private String prefix;
     private String namespace;
@@ -23,54 +25,54 @@ public class MessageBuilder {
     private List<Aggregation> aggregations = new ArrayList<Aggregation>();
     private String value;
     private String timestamp;
-    private AggregationFreq aggregationFreq;
+    private AggregationFreq aggregationFreq = FREQ_10;
 
-    private MessageBuilder() {}
+    private MessageBuilder() { }
 
     public static MessageBuilder newBuilder() {
         return new MessageBuilder();
     }
 
-    public MessageBuilder withPrefix(String prefix) {
+    public MessageBuilder withPrefix(final String prefix) {
         this.prefix = prefix;
         return this;
     }
 
-    public MessageBuilder withNamespace(String namespace) {
+    public MessageBuilder withNamespace(final String namespace) {
         this.namespace = namespace;
         return this;
     }
 
-    public MessageBuilder withName(String name) {
+    public MessageBuilder withName(final String name) {
         this.name = name;
         return this;
     }
 
-    public MessageBuilder withTags(Tags tags) {
+    public MessageBuilder withTags(final Tags tags) {
         if (tags != null) {
             this.tags.putAll(tags.getTags());
         }
         return this;
     }
 
-    public MessageBuilder withValue(String value) {
+    public MessageBuilder withValue(final String value) {
         this.value = value;
         return this;
     }
 
-    public MessageBuilder withAggregations(Aggregations aggregations) {
+    public MessageBuilder withAggregations(final Aggregations aggregations) {
         if (aggregations != null) {
             this.aggregations.addAll(aggregations.getAggregations());
         }
         return this;
     }
 
-    public MessageBuilder withAggregationFreq(AggregationFreq aggregationFreq) {
+    public MessageBuilder withAggregationFreq(final AggregationFreq aggregationFreq) {
         this.aggregationFreq = aggregationFreq;
         return this;
     }
 
-    public MessageBuilder withTimestamp(String timestamp) {
+    public MessageBuilder withTimestamp(final String timestamp) {
         this.timestamp = timestamp;
         return this;
     }

@@ -6,7 +6,7 @@ package com.mindera.telemetron.client.api;
  */
 public final class MetricBuilder {
 
-    private MetricBuilder() {}
+    private MetricBuilder() { }
 
     /**
      * Instantiates a new aggregation builder. Example: timer(agg(AVG)).
@@ -14,7 +14,7 @@ public final class MetricBuilder {
      * @param aggregation The aggregation to use
      * @return An aggregation builder
      */
-    public static AggregationBuilder agg(Aggregation aggregation) {
+    public static AggregationBuilder agg(final Aggregation aggregation) {
         return new AggregationBuilder(aggregation);
     }
 
@@ -24,7 +24,7 @@ public final class MetricBuilder {
      * @param aggregationFreq The aggregation frequency to use
      * @return An aggregation frequency builder
      */
-    public static AggregationFreqBuilder aggFreq(AggregationFreq aggregationFreq) {
+    public static AggregationFreqBuilder aggFreq(final AggregationFreq aggregationFreq) {
         return new AggregationFreqBuilder(aggregationFreq);
     }
 
@@ -35,7 +35,7 @@ public final class MetricBuilder {
      * @param value The tag value to use
      * @return A tag builder
      */
-    public static TagBuilder tag(String type, String value) {
+    public static TagBuilder tag(final String type, final String value) {
         return new TagBuilder(type, value);
     }
 }

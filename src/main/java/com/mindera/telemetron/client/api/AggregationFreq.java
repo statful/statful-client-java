@@ -11,7 +11,7 @@ public enum AggregationFreq {
 
     private int frequency;
 
-    AggregationFreq(int frequency) {
+    AggregationFreq(final int frequency) {
         this.frequency = frequency;
     }
 

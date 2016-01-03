@@ -8,7 +8,7 @@ import com.mindera.telemetron.client.config.DefaultClientConfiguration;
  *
  * @param <T> The type to return upon build
  */
-public class ConfigurationBuilder<T> {
+public final class ConfigurationBuilder<T> {
 
     private DefaultClientConfiguration result;
     private ConfigurationBuilderChain<T> builderChain;
@@ -17,7 +17,7 @@ public class ConfigurationBuilder<T> {
         this.result = new DefaultClientConfiguration();
     }
 
-    private ConfigurationBuilder(ConfigurationBuilderChain<T> builderChain) {
+    private ConfigurationBuilder(final ConfigurationBuilderChain<T> builderChain) {
         this.result = new DefaultClientConfiguration();
         this.builderChain = builderChain;
     }
@@ -33,7 +33,7 @@ public class ConfigurationBuilder<T> {
      * @param <T> A T type to chain the configuration builder
      * @return A configuration builder that will return T
      */
-    public static <T> ConfigurationBuilder<T> newBuilder(ConfigurationBuilderChain<T> builderChain) {
+    public static <T> ConfigurationBuilder<T> newBuilder(final ConfigurationBuilderChain<T> builderChain) {
         return new ConfigurationBuilder<T>(builderChain);
     }
 
@@ -43,7 +43,7 @@ public class ConfigurationBuilder<T> {
      * @param host Hostname
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> host(String host) {
+    public ConfigurationBuilder<T> host(final String host) {
         this.result.setHost(host);
         return this;
     }
@@ -54,7 +54,7 @@ public class ConfigurationBuilder<T> {
      * @param port Port number
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> port(int port) {
+    public ConfigurationBuilder<T> port(final int port) {
         this.result.setPort(port);
         return this;
     }
@@ -65,7 +65,7 @@ public class ConfigurationBuilder<T> {
      * @param prefix Prefix name
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> prefix(String prefix) {
+    public ConfigurationBuilder<T> prefix(final String prefix) {
         this.result.setPrefix(prefix);
         return this;
     }
@@ -76,7 +76,7 @@ public class ConfigurationBuilder<T> {
      * @param transport Transport type
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> transport(Transport transport) {
+    public ConfigurationBuilder<T> transport(final Transport transport) {
         this.result.setTransport(transport);
         return this;
     }
@@ -87,7 +87,7 @@ public class ConfigurationBuilder<T> {
      * @param token The token
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> token(String token) {
+    public ConfigurationBuilder<T> token(final String token) {
         this.result.setToken(token);
         return this;
     }
@@ -98,7 +98,7 @@ public class ConfigurationBuilder<T> {
      * @param app Application name
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> app(String app) {
+    public ConfigurationBuilder<T> app(final String app) {
         this.result.setApp(app);
         return this;
     }
@@ -109,7 +109,7 @@ public class ConfigurationBuilder<T> {
      * @param isDryRun Boolean to set dry run
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> isDryRun(boolean isDryRun) {
+    public ConfigurationBuilder<T> isDryRun(final boolean isDryRun) {
         this.result.setDryRun(isDryRun);
         return this;
     }
@@ -120,7 +120,7 @@ public class ConfigurationBuilder<T> {
      * @param namespace The namespace
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> namespace(String namespace) {
+    public ConfigurationBuilder<T> namespace(final String namespace) {
         this.result.setNamespace(namespace);
         return this;
     }
@@ -132,7 +132,7 @@ public class ConfigurationBuilder<T> {
      * @param value Tag value
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> tag(String type, String value) {
+    public ConfigurationBuilder<T> tag(final String type, final String value) {
         // TODO - simplify
         if (type != null && !type.isEmpty() && value != null && !value.isEmpty()) {
             this.result.mergeApplicationTag(type, value);
@@ -146,7 +146,7 @@ public class ConfigurationBuilder<T> {
      * @param sampleRate Sample rate as integer
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> sampleRate(int sampleRate) {
+    public ConfigurationBuilder<T> sampleRate(final int sampleRate) {
         this.result.setSampleRate(sampleRate);
         return this;
     }
@@ -157,7 +157,7 @@ public class ConfigurationBuilder<T> {
      * @param flushSize Flush size as integer
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> flushSize(int flushSize) {
+    public ConfigurationBuilder<T> flushSize(final int flushSize) {
         this.result.setFlushSize(flushSize);
         return this;
     }
@@ -168,7 +168,7 @@ public class ConfigurationBuilder<T> {
      * @param flushInterval The flush interval as long
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> flushInterval(long flushInterval) {
+    public ConfigurationBuilder<T> flushInterval(final long flushInterval) {
         this.result.setFlushIntervalMillis(flushInterval);
         return this;
     }
@@ -179,7 +179,7 @@ public class ConfigurationBuilder<T> {
      * @param tagBuilders An array of tag builders to use, which can be imported statically
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> timer(TagBuilder... tagBuilders) {
+    public ConfigurationBuilder<T> timer(final TagBuilder... tagBuilders) {
         if (tagBuilders != null) {
             for (TagBuilder tagBuilder : tagBuilders) {
                 this.result.mergeTimerTag(tagBuilder.getType(), tagBuilder.getValue());
@@ -194,7 +194,7 @@ public class ConfigurationBuilder<T> {
      * @param aggregationBuilders An array of aggregation builders to use, which can be imported statically
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> timer(AggregationBuilder... aggregationBuilders) {
+    public ConfigurationBuilder<T> timer(final AggregationBuilder... aggregationBuilders) {
         if (aggregationBuilders != null) {
             for (AggregationBuilder aggregationBuilder : aggregationBuilders) {
                 this.result.mergeTimerAggregation(aggregationBuilder.getAggregation());
@@ -209,7 +209,7 @@ public class ConfigurationBuilder<T> {
      * @param aggregationFreqBuilder An aggregation frequency builder
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> timer(AggregationFreqBuilder aggregationFreqBuilder) {
+    public ConfigurationBuilder<T> timer(final AggregationFreqBuilder aggregationFreqBuilder) {
         if (aggregationFreqBuilder != null) {
             this.result.setTimerAggregationFreq(aggregationFreqBuilder.getAggFreq());
         }
@@ -222,7 +222,7 @@ public class ConfigurationBuilder<T> {
      * @param tagBuilders An array of tag builders to use, which can be imported statically
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> counter(TagBuilder... tagBuilders) {
+    public ConfigurationBuilder<T> counter(final TagBuilder... tagBuilders) {
         if (tagBuilders != null) {
             for (TagBuilder tagBuilder : tagBuilders) {
                 this.result.mergeCounterTag(tagBuilder.getType(), tagBuilder.getValue());
@@ -237,7 +237,7 @@ public class ConfigurationBuilder<T> {
      * @param aggregationBuilders An array of aggregation builders to use, which can be imported statically
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> counter(AggregationBuilder... aggregationBuilders) {
+    public ConfigurationBuilder<T> counter(final AggregationBuilder... aggregationBuilders) {
         if (aggregationBuilders != null) {
             for (AggregationBuilder aggregationBuilder : aggregationBuilders) {
                 this.result.mergeCounterAggregation(aggregationBuilder.getAggregation());
@@ -252,7 +252,7 @@ public class ConfigurationBuilder<T> {
      * @param aggregationFreqBuilder An aggregation frequency builder
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> counter(AggregationFreqBuilder aggregationFreqBuilder) {
+    public ConfigurationBuilder<T> counter(final AggregationFreqBuilder aggregationFreqBuilder) {
         if (aggregationFreqBuilder != null) {
             this.result.setCounterAggregationFreq(aggregationFreqBuilder.getAggFreq());
         }
@@ -265,7 +265,7 @@ public class ConfigurationBuilder<T> {
      * @param tagBuilders An array of tag builders to use, which can be imported statically
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> gauge(TagBuilder... tagBuilders) {
+    public ConfigurationBuilder<T> gauge(final TagBuilder... tagBuilders) {
         if (tagBuilders != null) {
             for (TagBuilder tagBuilder : tagBuilders) {
                 this.result.mergeGaugeTag(tagBuilder.getType(), tagBuilder.getValue());
@@ -280,7 +280,7 @@ public class ConfigurationBuilder<T> {
      * @param aggregationBuilders An array of aggregation builders to use, which can be imported statically
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> gauge(AggregationBuilder... aggregationBuilders) {
+    public ConfigurationBuilder<T> gauge(final AggregationBuilder... aggregationBuilders) {
         if (aggregationBuilders != null) {
             for (AggregationBuilder aggregationBuilder : aggregationBuilders) {
                 this.result.mergeGaugeAggregation(aggregationBuilder.getAggregation());
@@ -295,7 +295,7 @@ public class ConfigurationBuilder<T> {
      * @param aggregationFreqBuilder An aggregation frequency builder
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> gauge(AggregationFreqBuilder aggregationFreqBuilder) {
+    public ConfigurationBuilder<T> gauge(final AggregationFreqBuilder aggregationFreqBuilder) {
         if (aggregationFreqBuilder != null) {
             this.result.setGaugeAggregationFreq(aggregationFreqBuilder.getAggFreq());
         }

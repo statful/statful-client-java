@@ -9,31 +9,31 @@ public class Tags {
 
     private final Map<String, String> tags = new HashMap<String, String>();
 
-    public static Tags from(String type, String name) {
+    public static Tags from(final String type, final String name) {
         Tags result = new Tags();
         result.putTag(type, name);
         return result;
     }
 
-    public static Tags from(Tags tags) {
+    public static Tags from(final Tags tags) {
         Tags result = new Tags();
         result.merge(tags);
         return result;
     }
 
-    public void putTag(String type, String value) {
+    public final void putTag(final String type, final String value) {
         tags.put(type, value);
     }
 
-    public Map<String, String> getTags() {
+    public final Map<String, String> getTags() {
         return tags;
     }
 
-    public String getTagValue(String type) {
+    public final String getTagValue(final String type) {
         return tags.get(type);
     }
 
-    public Tags merge(Tags tags) {
+    public final Tags merge(final Tags tags) {
         if (nonNull(tags)) {
             this.tags.putAll(tags.getTags());
         }

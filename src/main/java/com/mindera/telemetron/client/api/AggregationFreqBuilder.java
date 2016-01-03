@@ -4,7 +4,7 @@ public final class AggregationFreqBuilder {
 
     private final AggregationFreq aggFreq;
 
-    AggregationFreqBuilder(AggregationFreq aggFreq) {
+    AggregationFreqBuilder(final AggregationFreq aggFreq) {
         this.aggFreq = aggFreq;
     }
 

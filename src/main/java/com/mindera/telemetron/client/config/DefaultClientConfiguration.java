@@ -2,7 +2,25 @@ package com.mindera.telemetron.client.config;
 
 import com.mindera.telemetron.client.api.*;
 
+import static com.mindera.telemetron.client.api.Aggregation.*;
+import static com.mindera.telemetron.client.api.Aggregation.LAST;
+import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
+
 public class DefaultClientConfiguration implements ClientConfiguration {
+
+    private static final String DEFAULT_HOST = "127.0.0.1";
+    private static final int DEFAULT_PORT = 2013;
+    private static final int DEFAULT_SAMPLE_RATE = 100;
+    private static final String DEFAULT_NAMESPACE = "application";
+    private static final int DEFAULT_FLUSH_SIZE = 10;
+    private static final AggregationFreq DEFAULT_AGGREGATION_FREQ = FREQ_10;
+
+    private static final Tags DEFAULT_APP_TAGS = Tags.from("telemetron_client", "java");
+    private static final Tags DEFAULT_TIMER_TAGS = Tags.from("unit", "ms");
+
+    private static final Aggregation[] DEFAULT_TIMER_AGGREGATIONS = new Aggregation[] {AVG, P90, COUNT, COUNT_PS};
+    private static final Aggregation[] DEFAULT_COUNTER_AGGREGATIONS = new Aggregation[] {AVG, P90, COUNT_PS};
+    private static final Aggregation[] DEFAULT_GAUGE_AGGREGATIONS = new Aggregation[] {LAST};
 
     private String host = DEFAULT_HOST;
     private int port = DEFAULT_PORT;
@@ -31,202 +49,202 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private AggregationFreq gaugeAggregationFreq = DEFAULT_AGGREGATION_FREQ;
 
     @Override
-    public boolean isValid() {
+    public final boolean isValid() {
         return prefix != null && transport != null;
     }
 
     @Override
-    public Tags getApplicationTags() {
+    public final Tags getApplicationTags() {
         return applicationTags;
     }
 
     @Override
-    public int getSampleRate() {
+    public final int getSampleRate() {
         return sampleRate;
     }
 
     @Override
-    public String getNamespace() {
+    public final String getNamespace() {
         return namespace;
     }
 
     @Override
-    public String getPrefix() {
+    public final String getPrefix() {
         return prefix;
     }
 
     @Override
-    public int getFlushSize() {
+    public final int getFlushSize() {
         return flushSize;
     }
 
     @Override
-    public long getFlushIntervalMillis() {
+    public final long getFlushIntervalMillis() {
         return flushIntervalMillis;
     }
 
     @Override
-    public boolean isDryRun() {
+    public final boolean isDryRun() {
         return isDryRun;
     }
 
     @Override
-    public String getHost() {
+    public final String getHost() {
         return host;
     }
 
     @Override
-    public int getPort() {
+    public final int getPort() {
         return port;
     }
 
     @Override
-    public Transport getTransport() {
+    public final Transport getTransport() {
         return transport;
     }
 
     @Override
-    public String getToken() {
+    public final String getToken() {
         return token;
     }
 
     @Override
-    public String getApp() {
+    public final String getApp() {
         return app;
     }
 
     @Override
-    public Tags getTimerTags() {
+    public final Tags getTimerTags() {
         return timerTags;
     }
 
     @Override
-    public Aggregations getTimerAggregations() {
+    public final Aggregations getTimerAggregations() {
         return timerAggregations;
     }
 
     @Override
-    public AggregationFreq getTimerAggregationFreq() {
+    public final AggregationFreq getTimerAggregationFreq() {
         return timerAggregationFreq;
     }
 
     @Override
-    public Tags getCounterTags() {
+    public final Tags getCounterTags() {
         return counterTags;
     }
 
     @Override
-    public Aggregations getCounterAggregations() {
+    public final Aggregations getCounterAggregations() {
         return counterAggregations;
     }
 
     @Override
-    public AggregationFreq getCounterAggregationFreq() {
+    public final AggregationFreq getCounterAggregationFreq() {
         return counterAggregationFreq;
     }
 
     @Override
-    public Tags getGaugeTags() {
+    public final Tags getGaugeTags() {
         return gaugeTags;
     }
 
     @Override
-    public Aggregations getGaugeAggregations() {
+    public final Aggregations getGaugeAggregations() {
         return gaugeAggregations;
     }
 
     @Override
-    public AggregationFreq getGaugeAggregationFreq() {
+    public final AggregationFreq getGaugeAggregationFreq() {
         return gaugeAggregationFreq;
     }
 
-    public void setHost(String host) {
+    public final void setHost(final String host) {
         this.host = host;
     }
 
-    public void setPort(int port) {
+    public final void setPort(final int port) {
         this.port = port;
     }
 
-    public void setSampleRate(int sampleRate) {
+    public final void setSampleRate(final int sampleRate) {
         this.sampleRate = sampleRate;
     }
 
-    public void setNamespace(String namespace) {
+    public final void setNamespace(final String namespace) {
         this.namespace = namespace;
     }
 
-    public void setFlushSize(int flushSize) {
+    public final void setFlushSize(final int flushSize) {
         this.flushSize = flushSize;
     }
 
-    public void setPrefix(String prefix) {
+    public final void setPrefix(final String prefix) {
         this.prefix = prefix;
     }
 
-    public void setDryRun(boolean isDryRun) {
+    public final void setDryRun(final boolean isDryRun) {
         this.isDryRun = isDryRun;
     }
 
-    public void setFlushIntervalMillis(long flushIntervalMillis) {
+    public final void setFlushIntervalMillis(final long flushIntervalMillis) {
         this.flushIntervalMillis = flushIntervalMillis;
     }
 
-    public void setTransport(Transport transport) {
+    public final void setTransport(final Transport transport) {
         this.transport = transport;
     }
 
-    public void setToken(String token) {
+    public final void setToken(final String token) {
         this.token = token;
     }
 
-    public void setApp(String app) {
+    public final void setApp(final String app) {
         this.app = app;
         mergeTagIntoMethods("app", app);
     }
 
-    public void setTimerAggregationFreq(AggregationFreq timerAggregationFreq) {
+    public final void setTimerAggregationFreq(final AggregationFreq timerAggregationFreq) {
         this.timerAggregationFreq = timerAggregationFreq;
     }
 
-    public void mergeTimerTag(String type, String value) {
+    public final void mergeTimerTag(final String type, final String value) {
         this.timerTags.putTag(type, value);
     }
 
-    public void mergeTimerAggregation(Aggregation aggregation) {
+    public final void mergeTimerAggregation(final Aggregation aggregation) {
         this.timerAggregations.put(aggregation);
     }
 
-    public void setCounterAggregationFreq(AggregationFreq counterAggregationFreq) {
+    public final void setCounterAggregationFreq(final AggregationFreq counterAggregationFreq) {
         this.counterAggregationFreq = counterAggregationFreq;
     }
 
-    public void mergeCounterTag(String type, String value) {
+    public final void mergeCounterTag(final String type, final String value) {
         getSafeCounterTags().putTag(type, value);
     }
 
-    public void mergeCounterAggregation(Aggregation aggregation) {
+    public final void mergeCounterAggregation(final Aggregation aggregation) {
         this.counterAggregations.put(aggregation);
     }
 
-    public void setGaugeAggregationFreq(AggregationFreq gaugeAggregationFreq) {
+    public final void setGaugeAggregationFreq(final AggregationFreq gaugeAggregationFreq) {
         this.gaugeAggregationFreq = gaugeAggregationFreq;
     }
 
-    public void mergeGaugeTag(String type, String value) {
+    public final void mergeGaugeTag(final String type, final String value) {
         getSafeGaugeTags().putTag(type, value);
     }
 
-    public void mergeGaugeAggregation(Aggregation aggregation) {
+    public final void mergeGaugeAggregation(final Aggregation aggregation) {
         this.gaugeAggregations.put(aggregation);
     }
 
-    public void mergeApplicationTag(String type, String value) {
+    public final void mergeApplicationTag(final String type, final String value) {
         getSafeApplicationTags().putTag(type, value);
         mergeTagIntoMethods(type, value);
     }
 
-    private void mergeTagIntoMethods(String type, String value) {
+    private void mergeTagIntoMethods(final String type, final String value) {
         timerTags.putTag(type, value);
         getSafeCounterTags().putTag(type, value);
         getSafeGaugeTags().putTag(type, value);
