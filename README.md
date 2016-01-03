@@ -8,7 +8,7 @@ telemetron-client-java is intended to gather application and JVM metrics and sen
 
 To bootstrap a Telemetron client to use UDP protocol, the quickest way is to do the following:
 
-    TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix").build();
+    TelemetronClient telemetron = TelemetronClient.buildUDPClient("prefix").build();
 
 
 The _prefix_ option is always required and it will be a prefix for all metric names sent to Telemetron. This configuration uses the default _host_ and _port_.
@@ -49,7 +49,7 @@ To bootstrap the client, the following options can be used:
 
 ### Configuration example ###
 
-    TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix").with()
+    TelemetronClient telemetron = TelemetronClient.buildUDPClient("prefix").with()
         .host("telemetry-relay.youcompany.com")
         .port(2001)
         .token("MyAppToken")
@@ -61,7 +61,7 @@ To bootstrap the client, the following options can be used:
 
 The bellow example uses the _timer_ method to configure default timer tags, timer aggregations and timer aggregation frequency.
 
-    TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix").with()
+    TelemetronClient telemetron = TelemetronClient.buildUDPClient("prefix").with()
         .timer(tag("unit", "s"))
         .timer(agg(LAST))
         .timer(aggrFreq(100))
