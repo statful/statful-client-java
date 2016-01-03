@@ -11,19 +11,19 @@ public class MetricBuilderTest {
 
     @Test
     public void shouldBuildWithAggregation() throws Exception {
-        assertEquals("Should build with aggregation", P90, agg(P90).getAggregation());
+        assertEquals("Should build withTags aggregation", P90, agg(P90).getAggregation());
     }
 
     @Test
     public void shouldBuildWithAggregationFrequency() throws Exception {
-        assertEquals("Should build with aggregation frequency", FREQ_10, aggFreq(FREQ_10).getAggFreq());
+        assertEquals("Should build withTags aggregation frequency", FREQ_10, aggFreq(FREQ_10).getAggFreq());
     }
 
     @Test
     public void shouldBuildWithTag() throws Exception {
         TagBuilder tagBuilder = tag("host", "localhost");
 
-        assertEquals("Should build with tag", "host", tagBuilder.getType());
-        assertEquals("Should build with tag", "localhost", tagBuilder.getValue());
+        assertEquals("Should build withTags tag", "host", tagBuilder.getType());
+        assertEquals("Should build withTags tag", "localhost", tagBuilder.getValue());
     }
 }

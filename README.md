@@ -32,37 +32,36 @@ And finally, a _gauge_ metric to Telemetron can be preformed in the following wa
 
 To bootstrap the client, the following options can be used:
 
-* **prefix** [required] - global metrics prefix
-* **host** [optional] [default: '127.0.0.1']
-* **port** [optional] [default: 2013]
-* **secure** [optional] [default: true] - enable or disable https
-* **timeout** [optional] [default: 2000ms] - timeout for http/tcp transports
-* **token** [optional] - An authentication token to send to Telemetron
-* **app** [optional] - if specified set a tag ‘app=foo’
-* **dryrun** [optional] [default: false] - do not actually send metrics when flushing the buffer
-* **logger** [optional] - logger object which supports at least debug/error methods
-* **tags** [optional] - global list of tags to set
-* **sampleRate** [optional] [default: 100] [between: 1-100] - global rate sampling
-* **namespace** [optional] [default: ‘application’] - default namespace (can be overridden in method calls)
-* **flushSize** [optional] [default: 10] - defines the periodicity of buffer flushes
-* **flushInterval** [optional] [default: 0] - Defines an interval to flush the metrics
+* __prefix__ [required] - global metrics prefix
+* __host__ [optional] [default: '127.0.0.1']
+* __port__ [optional] [default: 2013]
+* __secure__ [__not supported yet__] [default: true] - enable or disable https
+* __timeout__ [__not supported yet__] [default: 2000ms] - timeout for http/tcp transports
+* __token__ [optional] - An authentication token to send to Telemetron
+* __app__ [optional] - if specified set a tag ‘app=foo’
+* __dryrun__ [optional] [default: false] - do not actually send metrics when flushing the buffer
+* __logger__ [__not supported yet__] - logger object which supports at least debug/error methods
+* __tags__ [optional] - global list of tags to set
+* __sampleRate__ [optional] [default: 100] [between: 1-100] - global rate sampling
+* __namespace__ [optional] [default: ‘application’] - default namespace (can be overridden in method calls)
+* __flushSize__ [optional] [default: 10] - defines the periodicity of buffer flushes
+* __flushInterval__ [optional] [default: 0] - Defines an interval to flush the metrics
 
 ### Configuration example ###
 
-    TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix")
-        .with
-            .host("telemetry-relay.youcompany.com")
-            .port(2001)
-            .token("MyAppToken")
-            .app("AccountService")
-            .tag("cluster", "production")
-            .build();
+    TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix").with()
+        .host("telemetry-relay.youcompany.com")
+        .port(2001)
+        .token("MyAppToken")
+        .app("AccountService")
+        .tag("cluster", "production")
+        .build();
 
 ### Timer defaults configuration ###
 
 The bellow example uses the _timer_ method to configure default timer tags, timer aggregations and timer aggregation frequency.
 
-    TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix").with
+    TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix").with()
         .timer(tag("unit", "s"))
         .timer(agg(LAST))
         .timer(aggrFreq(100))
@@ -80,15 +79,15 @@ To configure Gauge defaults configuration, you should use the _gauge_ method. Pl
 
 ### Building metrics tags ###
 
-    subject.counter("transactions").with.tag("host", "localhost").tag("status", "SUCCESS").send();
+    subject.counter("transactions").with().tag("host", "localhost").tag("status", "SUCCESS").send();
         
 ### Adding metrics with aggregations ###
 
-    subject.counter("transactions").with.aggregations(AVG, P90)).aggFreq(FREQ_10).send();
+    subject.counter("transactions").with().aggregations(AVG, P90)).aggFreq(FREQ_10).send();
         
 ### Adding metrics with namespace ###
 
-    subject.counter("transactions").with.namespace("my-namespace").send();
+    subject.counter("transactions").with().namespace("my-namespace").send();
 
 ## Setup tips ##
 
