@@ -136,8 +136,8 @@ public class DefaultClientConfigurationTest {
     }
 
     @Test
-    public void shouldMergeTimerTags() {
-        subject.mergeTimerTags(Tags.from("host", "localhost"));
+    public void shouldMergeTimerTag() {
+        subject.mergeTimerTag("host", "localhost");
         subject.mergeApplicationTag("cluster", "production");
 
         Tags tags = subject.getTimerTags();
@@ -146,8 +146,8 @@ public class DefaultClientConfigurationTest {
     }
 
     @Test
-    public void shouldMergeTimerAggregations() {
-        subject.mergeTimerAggregations(Aggregations.from(LAST));
+    public void shouldMergeTimerAggregation() {
+        subject.mergeTimerAggregation(LAST);
 
         Aggregations aggregations = subject.getTimerAggregations();
         assertThat("Should merge timer aggregations", aggregations.getAggregations(), containsInAnyOrder(AVG, P90, COUNT, COUNT_PS, LAST));
@@ -161,7 +161,7 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldMergeCounterTags() {
-        subject.mergeCounterTags(Tags.from("host", "localhost"));
+        subject.mergeCounterTag("host", "localhost");
         subject.mergeApplicationTag("cluster", "production");
 
         Tags tags = subject.getCounterTags();
@@ -171,7 +171,7 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldMergeCounterAggregations() {
-        subject.mergeCounterAggregations(Aggregations.from(LAST));
+        subject.mergeCounterAggregation(LAST);
 
         Aggregations aggregations = subject.getCounterAggregations();
         assertThat("Should merge counter aggregations", aggregations.getAggregations(), containsInAnyOrder(AVG, P90, COUNT_PS, LAST));
@@ -185,7 +185,7 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldMergeGaugeTags() {
-        subject.mergeGaugeTags(Tags.from("host", "localhost"));
+        subject.mergeGaugeTag("host", "localhost");
         subject.mergeApplicationTag("cluster", "production");
 
         Tags tags = subject.getGaugeTags();
@@ -195,10 +195,10 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldMergeGaugeAggregations() {
-        subject.mergeGaugeAggregations(Aggregations.from(P90, AVG));
+        subject.mergeGaugeAggregation(AVG);
 
         Aggregations aggregations = subject.getGaugeAggregations();
-        assertThat("Should merge gauge aggregations", aggregations.getAggregations(), containsInAnyOrder(P90, AVG, LAST));
+        assertThat("Should merge gauge aggregations", aggregations.getAggregations(), containsInAnyOrder(AVG, LAST));
     }
 
     @Test

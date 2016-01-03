@@ -192,16 +192,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         this.timerAggregationFreq = timerAggregationFreq;
     }
 
-    public void mergeTimerTags(Tags tags) {
-        this.timerTags.merge(tags);
-    }
-
     public void mergeTimerTag(String type, String value) {
         this.timerTags.putTag(type, value);
-    }
-
-    public void mergeTimerAggregations(Aggregations aggregations) {
-        this.timerAggregations.merge(aggregations);
     }
 
     public void mergeTimerAggregation(Aggregation aggregation) {
@@ -212,16 +204,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         this.counterAggregationFreq = counterAggregationFreq;
     }
 
-    public void mergeCounterTags(Tags tags) {
-        getSafeCounterTags().merge(tags);
-    }
-
     public void mergeCounterTag(String type, String value) {
         getSafeCounterTags().putTag(type, value);
-    }
-
-    public void mergeCounterAggregations(Aggregations aggregations) {
-        this.counterAggregations.merge(aggregations);
     }
 
     public void mergeCounterAggregation(Aggregation aggregation) {
@@ -232,16 +216,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         this.gaugeAggregationFreq = gaugeAggregationFreq;
     }
 
-    public void mergeGaugeTags(Tags tags) {
-        getSafeGaugeTags().merge(tags);
-    }
-
     public void mergeGaugeTag(String type, String value) {
         getSafeGaugeTags().putTag(type, value);
-    }
-
-    public void mergeGaugeAggregations(Aggregations aggregations) {
-        this.gaugeAggregations.merge(aggregations);
     }
 
     public void mergeGaugeAggregation(Aggregation aggregation) {

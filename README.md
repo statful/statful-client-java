@@ -50,37 +50,45 @@ To bootstrap the client, the following options can be used:
 ### Configuration example ###
 
     TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix")
-        .with(host("telemetry-relay.youcompany.com"))
-        .with(port(2001))
-        .with(token("MyAppToken"))
-        .with(app("AccountService"))
-        .with(tag("cluster", "production"))
-        .build();
+        .with
+            .host("telemetry-relay.youcompany.com")
+            .port(2001)
+            .token("MyAppToken")
+            .app("AccountService")
+            .tag("cluster", "production")
+            .build();
 
-### Timer global configuration ###
-    TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix")
-        .with(timer(tag("unit", "s")))
-        .with(timer(agg(LAST)))
-        .with(timer(aggrFreq(100)))
+### Timer defaults configuration ###
+
+The bellow example uses the _timer_ method to configure default timer tags, timer aggregations and timer aggregation frequency.
+
+    TelemetronClient telemetron = TelemetronClient.newUDPClient("prefix").with
+        .timer(tag("unit", "s"))
+        .timer(agg(LAST))
+        .timer(aggrFreq(100))
         .build();
         
-### Counter global configuration ###
+### Counter defaults configuration ###
 
-### Gauge global configuration ###
+To configure Counter defaults configuration, you should use the _counter_ method. Please check the Timer defaults configuration for an example.
+
+### Gauge defaults configuration ###
+
+To configure Gauge defaults configuration, you should use the _gauge_ method. Please check the Timer defaults configuration for an example.
         
 ## Building metrics ##
 
-### Adding tags ###
+### Building metrics tags ###
 
-    subject.counter("transactions").with(tag("host", "localhost"),tag("status", "SUCCESS")).send();
+    subject.counter("transactions").with.tag("host", "localhost").tag("status", "SUCCESS").send();
         
-### Adding aggregations ###
+### Adding metrics with aggregations ###
 
-    subject.counter("transactions").with(agg(AVG), agg(P90)).with(aggrFreq(10)).send();
+    subject.counter("transactions").with.aggregations(AVG, P90)).aggrFreq(10).send();
         
-### Adding Namespace ###
+### Adding metrics with namespace ###
 
-    subject.counter("transactions").with(namespace("my-namespace")).send();
+    subject.counter("transactions").with.namespace("my-namespace").send();
 
 ## Setup tips ##
 
