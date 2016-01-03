@@ -19,11 +19,6 @@ public class MetricBuilderTest {
     }
 
     @Test
-    public void shouldBuildWithNamespace() throws Exception {
-        assertEquals("Should build with namespace", "namespace", namespace("namespace").getNamespace());
-    }
-
-    @Test
     public void shouldBuildWithTag() throws Exception {
         TagBuilder tagBuilder = tag("host", "localhost");
 

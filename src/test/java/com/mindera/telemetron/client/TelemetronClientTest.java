@@ -17,8 +17,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
-import static com.mindera.telemetron.client.api.MetricBuilder.*;
-import static com.mindera.telemetron.client.api.NullMetricBuilders.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -74,7 +72,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendTimerWithTags() {
         // When
-        subject.timer("response_time", 1000).with(tag("host", "localhost"), tag("cluster", "prod")).send();
+        subject.timer("response_time", 1000).with.tag("host", "localhost").tag("cluster", "prod").send();
 
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
@@ -93,7 +91,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendTimerWithAggregations() {
         // When
-        subject.timer("response_time", 1000).with(agg(LAST)).send();
+        subject.timer("response_time", 1000).with.aggregations(LAST).send();
 
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
@@ -115,7 +113,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendTimerWithAggregationFrequency() {
         // When
-        subject.timer("response_time", 1000).with(aggrFreq(5)).send();
+        subject.timer("response_time", 1000).with.aggrFreq(5).send();
 
         // Then
         ArgumentCaptor<Integer> aggrFreqArg = ArgumentCaptor.forClass(Integer.class);
@@ -129,7 +127,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendTimerWithNameSpace() {
         // When
-        subject.timer("response_time", 1000).with(namespace("client")).send();
+        subject.timer("response_time", 1000).with.namespace("client").send();
 
         // Then
         ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);
@@ -156,7 +154,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendCounterWithTags() {
         // When
-        subject.counter("transactions").with(tag("host", "localhost")).send();
+        subject.counter("transactions").with.tag("host", "localhost").send();
 
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
@@ -173,7 +171,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendCounterWithAggregations() {
         // When
-        subject.counter("transactions").with(AVG, LAST).send();
+        subject.counter("transactions").with.aggregations(AVG, LAST).send();
 
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
@@ -194,7 +192,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendCounterWithAggregationFrequency() {
         // When
-        subject.counter("transactions").with(aggrFreq(5)).send();
+        subject.counter("transactions").with.aggrFreq(5).send();
 
         // Then
         ArgumentCaptor<Integer> aggrFreqArg = ArgumentCaptor.forClass(Integer.class);
@@ -208,7 +206,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendCounterWithNamespace() {
         // When
-        subject.counter("transactions").with(namespace("client")).send();
+        subject.counter("transactions").with.namespace("client").send();
 
         // Then
         ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);
@@ -244,7 +242,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendGaugeWithTags() {
         // When
-        subject.gauge("current_sessions", "2").with(tag("host", "localhost")).send();
+        subject.gauge("current_sessions", "2").with.tag("host", "localhost").send();
 
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
@@ -261,7 +259,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendGaugeWithAggregations() {
         // When
-        subject.gauge("current_sessions", "2").with(AVG, P90).send();
+        subject.gauge("current_sessions", "2").with.aggregations(AVG, P90).send();
 
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
@@ -281,7 +279,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendGaugeWithAggregationFrequency() {
         // When
-        subject.gauge("current_sessions", "2").with(aggrFreq(5)).send();
+        subject.gauge("current_sessions", "2").with.aggrFreq(5).send();
 
         // Then
         ArgumentCaptor<Integer> aggrFreqArg = ArgumentCaptor.forClass(Integer.class);
@@ -295,7 +293,7 @@ public class TelemetronClientTest {
     @Test
     public void shouldSendGaugeWithNamespace() {
         // When
-        subject.gauge("current_sessions", "2").with(namespace("client")).send();
+        subject.gauge("current_sessions", "2").with.namespace("client").send();
 
         // Then
         ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);
@@ -312,13 +310,11 @@ public class TelemetronClientTest {
 
         // When
         subject.timer("response_time", 1000)
-                .with((Aggregation)null)
-                .with(nullAggBuilder())
-                .with(nullAggrFreqBuilder())
-                .with(nullTagBuilder())
-                .with(nullNamespaceBuilder())
-                .withAggrFreq(null)
-                .withNamespace(null)
+                .with
+                .aggregations((Aggregation) null)
+                .tag(null, null)
+                .aggrFreq(null)
+                .namespace(null)
                 .send();
     }
 
@@ -329,13 +325,11 @@ public class TelemetronClientTest {
 
         // When
         subject.gauge("current_sessions", "2")
-                .with((Aggregation)null)
-                .with(nullAggBuilder())
-                .with(nullAggrFreqBuilder())
-                .with(nullTagBuilder())
-                .with(nullNamespaceBuilder())
-                .withAggrFreq(null)
-                .withNamespace(null)
+                .with
+                .aggregations((Aggregation) null)
+                .tag(null, null)
+                .aggrFreq(null)
+                .namespace(null)
                 .send();
     }
 
@@ -347,13 +341,11 @@ public class TelemetronClientTest {
         // When
         subject.counter("transactions").send();
         subject.counter("transactions", 2)
-                .with((Aggregation)null)
-                .with(nullAggBuilder())
-                .with(nullAggrFreqBuilder())
-                .with(nullTagBuilder())
-                .with(nullNamespaceBuilder())
-                .withAggrFreq(null)
-                .withNamespace(null)
+                .with
+                .aggregations((Aggregation) null)
+                .tag(null, null)
+                .aggrFreq(null)
+                .namespace(null)
                 .send();
     }
 
@@ -368,7 +360,7 @@ public class TelemetronClientTest {
         TelemetronClient subject = new TelemetronClient(metricsSender, configuration);
 
         // When
-        subject.timer("response_time", 1000).with(tag("cluster", "prod")).send();
+        subject.timer("response_time", 1000).with.tag("cluster", "prod").send();
 
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
@@ -427,8 +419,8 @@ public class TelemetronClientTest {
         Future<String> response = executorService.submit(new UdpEcho(2013));
 
         // When
-        TelemetronClient client = TelemetronClient.newUDPClient("test_prefix")
-                .withFlushInterval(100)
+        TelemetronClient client = TelemetronClient.newUDPClient("test_prefix").with
+                .flushInterval(100)
                 .build();
         client.counter("test_counter").send();
 

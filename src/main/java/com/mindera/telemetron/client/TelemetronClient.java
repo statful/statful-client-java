@@ -27,7 +27,7 @@ public class TelemetronClient implements MetricsSender {
         return new APIBuilder(this)
                 .withConfiguration(configuration)
                 .with(configuration.getTimerAggregations())
-                .withAggrFreq(configuration.getTimerAggregationFreq())
+                .aggrFreq(configuration.getTimerAggregationFreq())
                 .with(configuration.getTimerTags())
                 .withMetricName("timer." + metricName)
                 .withValue(Long.toString(value));
@@ -41,7 +41,7 @@ public class TelemetronClient implements MetricsSender {
         return new APIBuilder(this)
                 .withConfiguration(configuration)
                 .with(configuration.getCounterAggregations())
-                .withAggrFreq(configuration.getCounterAggregationFreq())
+                .aggrFreq(configuration.getCounterAggregationFreq())
                 .with(configuration.getCounterTags())
                 .withMetricName("counter." + metricName)
                 .withValue(Integer.toString(value));
@@ -51,7 +51,7 @@ public class TelemetronClient implements MetricsSender {
         return new APIBuilder(this)
                 .withConfiguration(configuration)
                 .with(configuration.getGaugeAggregations())
-                .withAggrFreq(configuration.getGaugeAggregationFreq())
+                .aggrFreq(configuration.getGaugeAggregationFreq())
                 .with(configuration.getGaugeTags())
                 .withMetricName("gauge." + metricName)
                 .withValue(value);
@@ -80,8 +80,8 @@ public class TelemetronClient implements MetricsSender {
                         MetricsSender bufferedMetricsSender = new BufferedMetricsSender(transportSender, configuration);
                         return new TelemetronClient(bufferedMetricsSender, configuration);
                     }
-                })
-                .withTransport(UDP)
-                .withPrefix(prefix);
+                }).with
+                .transport(UDP)
+                .prefix(prefix);
     }
 }

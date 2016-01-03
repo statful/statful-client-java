@@ -12,10 +12,6 @@ public final class MetricBuilder {
         return new AggregationFreqBuilder(aggregationFreq);
     }
 
-    public static NamespaceBuilder namespace(String namespace) {
-        return new NamespaceBuilder(namespace);
-    }
-
     public static TagBuilder tag(String type, String value) {
         return new TagBuilder(type, value);
     }

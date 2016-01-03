@@ -1,5 +1,6 @@
 package com.mindera.telemetron.client.config;
 
+import com.mindera.telemetron.client.api.Aggregation;
 import com.mindera.telemetron.client.api.Aggregations;
 import com.mindera.telemetron.client.api.Tags;
 import com.mindera.telemetron.client.api.Transport;
@@ -195,8 +196,16 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         this.timerTags.merge(tags);
     }
 
+    public void mergeTimerTag(String type, String value) {
+        this.timerTags.putTag(type, value);
+    }
+
     public void mergeTimerAggregations(Aggregations aggregations) {
         this.timerAggregations.merge(aggregations);
+    }
+
+    public void mergeTimerAggregation(Aggregation aggregation) {
+        this.timerAggregations.put(aggregation);
     }
 
     public void setCounterAggregationFreq(int counterAggregationFreq) {
@@ -207,8 +216,16 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         getSafeCounterTags().merge(tags);
     }
 
+    public void mergeCounterTag(String type, String value) {
+        getSafeCounterTags().putTag(type, value);
+    }
+
     public void mergeCounterAggregations(Aggregations aggregations) {
         this.counterAggregations.merge(aggregations);
+    }
+
+    public void mergeCounterAggregation(Aggregation aggregation) {
+        this.counterAggregations.put(aggregation);
     }
 
     public void setGaugeAggregationFreq(int gaugeAggregationFreq) {
@@ -219,8 +236,16 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         getSafeGaugeTags().merge(tags);
     }
 
+    public void mergeGaugeTag(String type, String value) {
+        getSafeGaugeTags().putTag(type, value);
+    }
+
     public void mergeGaugeAggregations(Aggregations aggregations) {
         this.gaugeAggregations.merge(aggregations);
+    }
+
+    public void mergeGaugeAggregation(Aggregation aggregation) {
+        this.gaugeAggregations.put(aggregation);
     }
 
     public void mergeApplicationTag(String type, String value) {
