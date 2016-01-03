@@ -1,13 +1,14 @@
 package com.mindera.telemetron.client.api;
 
 public final class AggregationFreqBuilder {
-    private final Integer aggrFreq;
 
-    AggregationFreqBuilder(Integer aggrFreq) {
-        this.aggrFreq = aggrFreq;
+    private final AggregationFreq aggFreq;
+
+    AggregationFreqBuilder(AggregationFreq aggFreq) {
+        this.aggFreq = aggFreq;
     }
 
-    Integer getAggrFreq() {
-        return aggrFreq;
+    AggregationFreq getAggFreq() {
+        return aggFreq;
     }
 }

@@ -1,5 +1,6 @@
 package com.mindera.telemetron.client.sender;
 
+import com.mindera.telemetron.client.api.AggregationFreq;
 import com.mindera.telemetron.client.api.Aggregations;
 import com.mindera.telemetron.client.api.Tags;
 import com.mindera.telemetron.client.config.ClientConfiguration;
@@ -56,7 +57,7 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     @Override
-    public void put(String name, String value, Tags tags, Aggregations aggregations, Integer aggregationFreq, Integer sampleRate, String namespace, String timestamp) {
+    public void put(String name, String value, Tags tags, Aggregations aggregations, AggregationFreq aggregationFreq, Integer sampleRate, String namespace, String timestamp) {
         if (!dryRun && shouldPutMetric(sampleRate)) {
             String rawMessage = newBuilder()
                     .withPrefix(metricPrefix)

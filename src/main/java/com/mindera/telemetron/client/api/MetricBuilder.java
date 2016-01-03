@@ -8,7 +8,7 @@ public final class MetricBuilder {
         return new AggregationBuilder(aggregation);
     }
 
-    public static AggregationFreqBuilder aggrFreq(Integer aggregationFreq) {
+    public static AggregationFreqBuilder aggFreq(AggregationFreq aggregationFreq) {
         return new AggregationFreqBuilder(aggregationFreq);
     }
 

@@ -1,11 +1,9 @@
 package com.mindera.telemetron.client.config;
 
-import com.mindera.telemetron.client.api.Aggregation;
-import com.mindera.telemetron.client.api.Aggregations;
-import com.mindera.telemetron.client.api.Tags;
-import com.mindera.telemetron.client.api.Transport;
+import com.mindera.telemetron.client.api.*;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
+import static com.mindera.telemetron.client.api.AggregationFreq.*;
 
 public interface ClientConfiguration {
 
@@ -14,11 +12,12 @@ public interface ClientConfiguration {
     static final int DEFAULT_SAMPLE_RATE = 100;
     static final String DEFAULT_NAMESPACE = "application";
     static final int DEFAULT_FLUSH_SIZE = 10;
-    static final int DEFAULT_AGGREGATION_FREQ = 10;
+    static final AggregationFreq DEFAULT_AGGREGATION_FREQ = FREQ_10;
 
+    static final Tags DEFAULT_APP_TAGS = Tags.from("telemetron_client", "java");
     static final Tags DEFAULT_TIMER_TAGS = Tags.from("unit", "ms");
 
-    static final Aggregation[] DEFAULT_TIMER_AGREGATIONS = new Aggregation[] { AVG, P90, COUNT, COUNT_PS };
+    static final Aggregation[] DEFAULT_TIMER_AGGREGATIONS = new Aggregation[] { AVG, P90, COUNT, COUNT_PS };
     static final Aggregation[] DEFAULT_COUNTER_AGGREGATIONS = new Aggregation[] { AVG, P90, COUNT_PS };
     static final Aggregation[] DEFAULT_GAUGE_AGGREGATIONS = new Aggregation[] { LAST };
 
@@ -46,19 +45,19 @@ public interface ClientConfiguration {
 
     Aggregations getTimerAggregations();
 
-    int getTimerAggregationFreq();
+    AggregationFreq getTimerAggregationFreq();
 
     Tags getCounterTags();
 
     Aggregations getCounterAggregations();
 
-    int getCounterAggregationFreq();
+    AggregationFreq getCounterAggregationFreq();
 
     Tags getGaugeTags();
 
     Aggregations getGaugeAggregations();
 
-    int getGaugeAggregationFreq();
+    AggregationFreq getGaugeAggregationFreq();
 
     Transport getTransport();
 

@@ -12,7 +12,7 @@ public class APIBuilder {
     private String namespace;
     private Tags tags;
     private Aggregations aggregations;
-    private Integer aggregationFreq;
+    private AggregationFreq aggregationFreq;
     private Integer sampleRate;
 
     public APIBuilder with = this;
@@ -74,8 +74,8 @@ public class APIBuilder {
         return this;
     }
 
-    public APIBuilder aggrFreq(Integer aggrFreq) {
-        aggregationFreq = aggrFreq;
+    public APIBuilder aggFreq(AggregationFreq aggFreq) {
+        aggregationFreq = aggFreq;
         return this;
     }
 

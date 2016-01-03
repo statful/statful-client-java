@@ -27,7 +27,7 @@ public class TelemetronClient implements MetricsSender {
         return new APIBuilder(this)
                 .withConfiguration(configuration)
                 .with(configuration.getTimerAggregations())
-                .aggrFreq(configuration.getTimerAggregationFreq())
+                .aggFreq(configuration.getTimerAggregationFreq())
                 .with(configuration.getTimerTags())
                 .withMetricName("timer." + metricName)
                 .withValue(Long.toString(value));
@@ -41,7 +41,7 @@ public class TelemetronClient implements MetricsSender {
         return new APIBuilder(this)
                 .withConfiguration(configuration)
                 .with(configuration.getCounterAggregations())
-                .aggrFreq(configuration.getCounterAggregationFreq())
+                .aggFreq(configuration.getCounterAggregationFreq())
                 .with(configuration.getCounterTags())
                 .withMetricName("counter." + metricName)
                 .withValue(Integer.toString(value));
@@ -51,14 +51,14 @@ public class TelemetronClient implements MetricsSender {
         return new APIBuilder(this)
                 .withConfiguration(configuration)
                 .with(configuration.getGaugeAggregations())
-                .aggrFreq(configuration.getGaugeAggregationFreq())
+                .aggFreq(configuration.getGaugeAggregationFreq())
                 .with(configuration.getGaugeTags())
                 .withMetricName("gauge." + metricName)
                 .withValue(value);
     }
 
     @Override
-    public void put(String name, String value, Tags tags, Aggregations aggregations, Integer aggregationFreq, Integer sampleRate, String namespace, String timestamp) {
+    public void put(String name, String value, Tags tags, Aggregations aggregations, AggregationFreq aggregationFreq, Integer sampleRate, String namespace, String timestamp) {
         try {
             metricsSender.put(name, value, tags, aggregations, aggregationFreq, sampleRate, namespace, timestamp);
         } catch (Exception e) {

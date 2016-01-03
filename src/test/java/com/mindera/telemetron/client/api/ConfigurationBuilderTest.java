@@ -6,6 +6,8 @@ import org.junit.Test;
 import java.util.Collection;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
+import static com.mindera.telemetron.client.api.AggregationFreq.*;
+import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
 import static com.mindera.telemetron.client.api.ConfigurationBuilder.*;
 import static com.mindera.telemetron.client.api.MetricBuilder.*;
 import static com.mindera.telemetron.client.api.Transport.UDP;
@@ -57,7 +59,7 @@ public class ConfigurationBuilderTest {
 
         Collection<Aggregation> aggregations = config.getTimerAggregations().getAggregations();
         assertThat("Timer should have default aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT, COUNT_PS));
-        assertEquals("Should have default timer aggregation frequency", 10, config.getTimerAggregationFreq());
+        assertEquals("Should have default timer aggregation frequency", FREQ_10, config.getTimerAggregationFreq());
     }
 
     @Test
@@ -71,7 +73,7 @@ public class ConfigurationBuilderTest {
 
         Collection<Aggregation> aggregations = config.getCounterAggregations().getAggregations();
         assertThat("Should have default counter aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT_PS));
-        assertEquals("Should have default counter aggregation frequency", 10, config.getCounterAggregationFreq());
+        assertEquals("Should have default counter aggregation frequency", FREQ_10, config.getCounterAggregationFreq());
     }
 
     @Test
@@ -85,7 +87,7 @@ public class ConfigurationBuilderTest {
 
         Collection<Aggregation> aggregations = config.getGaugeAggregations().getAggregations();
         assertThat("Should have default gauge aggregations", aggregations, containsInAnyOrder(LAST));
-        assertEquals("Should have default gauge aggregation frequency", 10, config.getGaugeAggregationFreq());
+        assertEquals("Should have default gauge aggregation frequency", FREQ_10, config.getGaugeAggregationFreq());
     }
 
     @Test
@@ -240,12 +242,12 @@ public class ConfigurationBuilderTest {
                 .prefix("test_prefix")
                 .transport(UDP)
                 .timer(agg(LAST))
-                .timer(aggrFreq(100))
+                .timer(aggFreq(FREQ_120))
                 .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getTimerAggregations().getAggregations();
         assertThat("Should configure timer aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT, COUNT_PS, LAST));
-        assertEquals("Should timer aggregation frequency", 100, config.getTimerAggregationFreq());
+        assertEquals("Should timer aggregation frequency", FREQ_120, config.getTimerAggregationFreq());
     }
 
     @Test
@@ -281,12 +283,12 @@ public class ConfigurationBuilderTest {
                 .prefix("test_prefix")
                 .transport(UDP)
                 .counter(agg(LAST))
-                .counter(aggrFreq(100))
+                .counter(aggFreq(FREQ_120))
                 .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getCounterAggregations().getAggregations();
         assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT_PS, LAST));
-        assertEquals("Should counter aggregation frequency", 100, config.getCounterAggregationFreq());
+        assertEquals("Should counter aggregation frequency", FREQ_120, config.getCounterAggregationFreq());
     }
 
     @Test
@@ -322,12 +324,12 @@ public class ConfigurationBuilderTest {
                 .prefix("test_prefix")
                 .transport(UDP)
                 .gauge(agg(P90))
-                .gauge(aggrFreq(100))
+                .gauge(aggFreq(FREQ_120))
                 .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getGaugeAggregations().getAggregations();
         assertThat("Should configure gauge aggregations", aggregations, containsInAnyOrder(LAST, P90));
-        assertEquals("Should gauge aggregation frequency", 100, config.getGaugeAggregationFreq());
+        assertEquals("Should gauge aggregation frequency", FREQ_120, config.getGaugeAggregationFreq());
     }
 
     @Test

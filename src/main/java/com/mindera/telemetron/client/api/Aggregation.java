@@ -5,8 +5,13 @@ public enum Aggregation {
     P90("p90"),
     COUNT("count"),
     COUNT_PS("count_ps"),
+    LAST("last"),
     SUM("sum"),
-    LAST("last");
+    FIRST("first"),
+    P95("p95"),
+    MIN("min"),
+    MAX("max"),
+    DERIVATIVE("derivative");
 
     private String name;
 

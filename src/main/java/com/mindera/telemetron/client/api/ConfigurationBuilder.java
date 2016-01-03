@@ -110,7 +110,7 @@ public class ConfigurationBuilder<T> {
 
     public ConfigurationBuilder<T> timer(AggregationFreqBuilder aggregationFreqBuilder) {
         if (aggregationFreqBuilder != null) {
-            this.result.setTimerAggregationFreq(aggregationFreqBuilder.getAggrFreq());
+            this.result.setTimerAggregationFreq(aggregationFreqBuilder.getAggFreq());
         }
         return this;
     }
@@ -135,7 +135,7 @@ public class ConfigurationBuilder<T> {
 
     public ConfigurationBuilder<T> counter(AggregationFreqBuilder aggregationFreqBuilder) {
         if (aggregationFreqBuilder != null) {
-            this.result.setCounterAggregationFreq(aggregationFreqBuilder.getAggrFreq());
+            this.result.setCounterAggregationFreq(aggregationFreqBuilder.getAggFreq());
         }
         return this;
     }
@@ -160,7 +160,7 @@ public class ConfigurationBuilder<T> {
 
     public ConfigurationBuilder<T> gauge(AggregationFreqBuilder aggregationFreqBuilder) {
         if (aggregationFreqBuilder != null) {
-            this.result.setGaugeAggregationFreq(aggregationFreqBuilder.getAggrFreq());
+            this.result.setGaugeAggregationFreq(aggregationFreqBuilder.getAggFreq());
         }
         return this;
     }

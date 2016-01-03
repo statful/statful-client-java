@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
+import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -51,7 +52,7 @@ public class BufferedMetricsSenderTest {
         tags.putTag("app", "test_app");
         tags.putTag("unit", "ms");
 
-        subject.put("test_metric", "500", tags, null, 10, 100, "application", "123456789");
+        subject.put("test_metric", "500", tags, null, FREQ_10, 100, "application", "123456789");
 
         // Then
         List<String> buffer = subject.getBuffer();
@@ -68,7 +69,7 @@ public class BufferedMetricsSenderTest {
         Aggregations aggregations = new Aggregations();
         aggregations.putAll(asList(AVG, P90, COUNT, COUNT_PS));
 
-        subject.put("test_metric", "500", null, aggregations, 10, 100, "application", "123456789");
+        subject.put("test_metric", "500", null, aggregations, FREQ_10, 100, "application", "123456789");
 
         // Then
         List<String> buffer = subject.getBuffer();
@@ -79,7 +80,7 @@ public class BufferedMetricsSenderTest {
     @Test
     public void shouldSendSimpleRawMetric() {
         // When
-        subject.put("test_metric", "500", null, null, 10, 100, "application", "123456789");
+        subject.put("test_metric", "500", null, null, FREQ_10, 100, "application", "123456789");
 
         // Then
         List<String> buffer = subject.getBuffer();
@@ -97,7 +98,7 @@ public class BufferedMetricsSenderTest {
         Aggregations aggregations = new Aggregations();
         aggregations.putAll(asList(AVG, P90, COUNT, COUNT_PS));
 
-        subject.put("test_metric", "500", tags, aggregations, 10, 100, "application", "123456789");
+        subject.put("test_metric", "500", tags, aggregations, FREQ_10, 100, "application", "123456789");
 
         // Then
         List<String> buffer = subject.getBuffer();
@@ -111,8 +112,8 @@ public class BufferedMetricsSenderTest {
     @Test
     public void shouldBufferMetrics() {
         // When
-        subject.put("test_metric0", "100", null, null, 10, 100, "application", "123456789");
-        subject.put("test_metric1", "101", null, null, 10, 100, "application", "123456790");
+        subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", "123456789");
+        subject.put("test_metric1", "101", null, null, FREQ_10, 100, "application", "123456790");
 
         // Then
         List<String> buffer = subject.getBuffer();
@@ -124,10 +125,10 @@ public class BufferedMetricsSenderTest {
     @Test
     public void shouldFlushMetricsBySize() {
         // When
-        subject.put("test_metric0", "100", null, null, 10, 100, "application", "123456789");
-        subject.put("test_metric1", "101", null, null, 10, 100, "application", "123456790");
-        subject.put("test_metric2", "102", null, null, 10, 100, "application", "123456791");
-        subject.put("test_metric3", "103", null, null, 10, 100, "application", "123456792");
+        subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", "123456789");
+        subject.put("test_metric1", "101", null, null, FREQ_10, 100, "application", "123456790");
+        subject.put("test_metric2", "102", null, null, FREQ_10, 100, "application", "123456791");
+        subject.put("test_metric3", "103", null, null, FREQ_10, 100, "application", "123456792");
 
         // Then
         List<String> buffer = subject.getBuffer();
@@ -142,8 +143,8 @@ public class BufferedMetricsSenderTest {
         subject = new BufferedMetricsSender(transportSender, configuration);
 
         // When
-        subject.put("test_metric0", "100", null, null, 10, 100, "application", "123456789");
-        subject.put("test_metric1", "101", null, null, 10, 100, "application", "123456790");
+        subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", "123456789");
+        subject.put("test_metric1", "101", null, null, FREQ_10, 100, "application", "123456790");
 
         // Then
         List<String> buffer = subject.getBuffer();
@@ -173,7 +174,7 @@ public class BufferedMetricsSenderTest {
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
-                    subject.put("test_metric", "100", null, null, 10, 100, "application", "123456789");
+                    subject.put("test_metric", "100", null, null, FREQ_10, 100, "application", "123456789");
                 }
             });
         }
@@ -198,9 +199,9 @@ public class BufferedMetricsSenderTest {
     @Test
     public void shouldSendWithSampleRate() {
         // When
-        subject.put("test_metric0", "100", null, null, 10, 0, "application", "123456789");
-        subject.put("test_metric0", "100", null, null, 10, 50, "application", "123456789");
-        subject.put("test_metric0", "100", null, null, 10, 100, "application", "123456789");
+        subject.put("test_metric0", "100", null, null, FREQ_10, 0, "application", "123456789");
+        subject.put("test_metric0", "100", null, null, FREQ_10, 50, "application", "123456789");
+        subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", "123456789");
 
         // Then
         int size = subject.getBuffer().size();
@@ -210,7 +211,7 @@ public class BufferedMetricsSenderTest {
     @Test
     public void shouldSendMetricWhenSampleRateIsAbove100() {
         // When
-        subject.put("test_metric0", "100", null, null, 10, 101, "application", "123456789");
+        subject.put("test_metric0", "100", null, null, FREQ_10, 101, "application", "123456789");
 
         // Then
         int size = subject.getBuffer().size();
@@ -220,7 +221,7 @@ public class BufferedMetricsSenderTest {
     @Test
     public void shouldNotSendMetricWhenSampleRateIsBellow0() {
         // When
-        subject.put("test_metric0", "100", null, null, 10, -1, "application", "123456789");
+        subject.put("test_metric0", "100", null, null, FREQ_10, -1, "application", "123456789");
 
         // Then
         int size = subject.getBuffer().size();
@@ -235,7 +236,7 @@ public class BufferedMetricsSenderTest {
 
         final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration);
 
-        subject.put("test_metric0", "100", null, null, 10, 100, "application", "123456789");
+        subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", "123456789");
 
         // When
         subject.shutdown();

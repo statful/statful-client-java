@@ -84,7 +84,7 @@ To configure Gauge defaults configuration, you should use the _gauge_ method. Pl
         
 ### Adding metrics with aggregations ###
 
-    subject.counter("transactions").with.aggregations(AVG, P90)).aggrFreq(10).send();
+    subject.counter("transactions").with.aggregations(AVG, P90)).aggFreq(FREQ_10).send();
         
 ### Adding metrics with namespace ###
 

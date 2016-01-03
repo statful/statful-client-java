@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static com.mindera.telemetron.client.api.Aggregation.AVG;
 import static com.mindera.telemetron.client.api.Aggregation.COUNT;
+import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +38,7 @@ public class MessageBuilderTest {
                 .withValue("3")
                 .withTags(TAGS)
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(10)
+                .withAggregationFreq(FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
 
@@ -54,7 +55,7 @@ public class MessageBuilderTest {
                 .withValue("3")
                 .withTags(TAGS)
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(10)
+                .withAggregationFreq(FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
     }
@@ -67,7 +68,7 @@ public class MessageBuilderTest {
                 .withValue("3")
                 .withTags(TAGS)
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(10)
+                .withAggregationFreq(FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
     }
@@ -80,7 +81,7 @@ public class MessageBuilderTest {
                 .withName(NAME)
                 .withTags(TAGS)
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(10)
+                .withAggregationFreq(FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
     }
@@ -93,7 +94,7 @@ public class MessageBuilderTest {
                 .withName(NAME)
                 .withValue("3")
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(10)
+                .withAggregationFreq(FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
 
@@ -109,7 +110,7 @@ public class MessageBuilderTest {
                 .withTags(new Tags())
                 .withValue("3")
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(10)
+                .withAggregationFreq(FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
 
@@ -124,7 +125,7 @@ public class MessageBuilderTest {
                 .withName(NAME)
                 .withValue("3")
                 .withTags(TAGS)
-                .withAggregationFreq(10)
+                .withAggregationFreq(FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
 
@@ -142,7 +143,7 @@ public class MessageBuilderTest {
                 .withValue("3")
                 .withTags(TAGS)
                 .withAggregations(new Aggregations())
-                .withAggregationFreq(10)
+                .withAggregationFreq(FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
 

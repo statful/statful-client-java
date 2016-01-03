@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
+import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
+import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_120;
 import static com.mindera.telemetron.client.api.Transport.UDP;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
@@ -155,8 +157,8 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldGetTimerAggregationFreq() {
-        subject.setTimerAggregationFreq(100);
-        assertEquals("Should get timer aggregation frequency", 100, subject.getTimerAggregationFreq());
+        subject.setTimerAggregationFreq(FREQ_120);
+        assertEquals("Should get timer aggregation frequency", FREQ_120, subject.getTimerAggregationFreq());
     }
 
     @Test
@@ -179,8 +181,8 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldGetCounterAggregationFreq() {
-        subject.setCounterAggregationFreq(100);
-        assertEquals("Should get counter aggregation frequency", 100, subject.getCounterAggregationFreq());
+        subject.setCounterAggregationFreq(FREQ_120);
+        assertEquals("Should get counter aggregation frequency", FREQ_120, subject.getCounterAggregationFreq());
     }
 
     @Test
@@ -203,8 +205,8 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldGetGaugeAggregationFreq() {
-        subject.setGaugeAggregationFreq(100);
-        assertEquals("Should get gauge aggregation frequency", 100, subject.getGaugeAggregationFreq());
+        subject.setGaugeAggregationFreq(FREQ_120);
+        assertEquals("Should get gauge aggregation frequency", FREQ_120, subject.getGaugeAggregationFreq());
     }
 
     @Test
@@ -218,18 +220,18 @@ public class DefaultClientConfigurationTest {
         assertEquals(0, subject.getFlushIntervalMillis());
         assertFalse(subject.isDryRun());
 
-        assertEquals(10, subject.getTimerAggregationFreq());
-        assertEquals(10, subject.getCounterAggregationFreq());
-        assertEquals(10, subject.getGaugeAggregationFreq());
+        assertEquals(FREQ_10, subject.getTimerAggregationFreq());
+        assertEquals(FREQ_10, subject.getCounterAggregationFreq());
+        assertEquals(FREQ_10, subject.getGaugeAggregationFreq());
 
         assertNull(subject.getPrefix());
         assertNull(subject.getTransport());
         assertNull(subject.getToken());
         assertNull(subject.getApp());
-        assertNull(subject.getApplicationTags());
         assertNull(subject.getCounterTags());
         assertNull(subject.getGaugeTags());
 
+        assertEquals("java", subject.getApplicationTags().getTagValue("telemetron_client"));
         assertEquals("ms", subject.getTimerTags().getTagValue("unit"));
         assertThat(subject.getTimerAggregations().getAggregations(), containsInAnyOrder(AVG, P90, COUNT, COUNT_PS));
         assertThat(subject.getCounterAggregations().getAggregations(), containsInAnyOrder(AVG, P90, COUNT_PS));

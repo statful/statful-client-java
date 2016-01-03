@@ -1,6 +1,7 @@
 package com.mindera.telemetron.client.message;
 
 import com.mindera.telemetron.client.api.Aggregation;
+import com.mindera.telemetron.client.api.AggregationFreq;
 import com.mindera.telemetron.client.api.Aggregations;
 import com.mindera.telemetron.client.api.Tags;
 
@@ -22,7 +23,7 @@ public class MessageBuilder {
     private List<Aggregation> aggregations = new ArrayList<Aggregation>();
     private String value;
     private String timestamp;
-    private int aggregationFreq;
+    private AggregationFreq aggregationFreq;
 
     private MessageBuilder() {}
 
@@ -64,7 +65,7 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder withAggregationFreq(int aggregationFreq) {
+    public MessageBuilder withAggregationFreq(AggregationFreq aggregationFreq) {
         this.aggregationFreq = aggregationFreq;
         return this;
     }
@@ -102,7 +103,7 @@ public class MessageBuilder {
             for (Aggregation aggr : aggregations) {
                 sb.append(aggr.getName()).append(",");
             }
-            sb.append(aggregationFreq);
+            sb.append(aggregationFreq.getValue());
         }
 
         return sb.toString();

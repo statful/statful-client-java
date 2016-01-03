@@ -1,9 +1,6 @@
 package com.mindera.telemetron.client.config;
 
-import com.mindera.telemetron.client.api.Aggregation;
-import com.mindera.telemetron.client.api.Aggregations;
-import com.mindera.telemetron.client.api.Tags;
-import com.mindera.telemetron.client.api.Transport;
+import com.mindera.telemetron.client.api.*;
 
 public class DefaultClientConfiguration implements ClientConfiguration {
 
@@ -20,18 +17,18 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private String token;
     private String app;
 
-    private Tags applicationTags;
+    private Tags applicationTags = Tags.from(DEFAULT_APP_TAGS);
     private Tags timerTags = Tags.from(DEFAULT_TIMER_TAGS);
     private Tags counterTags;
     private Tags gaugeTags;
 
-    private Aggregations timerAggregations = Aggregations.from(DEFAULT_TIMER_AGREGATIONS);
+    private Aggregations timerAggregations = Aggregations.from(DEFAULT_TIMER_AGGREGATIONS);
     private Aggregations counterAggregations = Aggregations.from(DEFAULT_COUNTER_AGGREGATIONS);
     private Aggregations gaugeAggregations = Aggregations.from(DEFAULT_GAUGE_AGGREGATIONS);
 
-    private int timerAggregationFreq = DEFAULT_AGGREGATION_FREQ;
-    private int counterAggregationFreq = DEFAULT_AGGREGATION_FREQ;
-    private int gaugeAggregationFreq = DEFAULT_AGGREGATION_FREQ;
+    private AggregationFreq timerAggregationFreq = DEFAULT_AGGREGATION_FREQ;
+    private AggregationFreq counterAggregationFreq = DEFAULT_AGGREGATION_FREQ;
+    private AggregationFreq gaugeAggregationFreq = DEFAULT_AGGREGATION_FREQ;
 
     @Override
     public boolean isValid() {
@@ -109,7 +106,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     @Override
-    public int getTimerAggregationFreq() {
+    public AggregationFreq getTimerAggregationFreq() {
         return timerAggregationFreq;
     }
 
@@ -124,7 +121,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     @Override
-    public int getCounterAggregationFreq() {
+    public AggregationFreq getCounterAggregationFreq() {
         return counterAggregationFreq;
     }
 
@@ -139,7 +136,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     @Override
-    public int getGaugeAggregationFreq() {
+    public AggregationFreq getGaugeAggregationFreq() {
         return gaugeAggregationFreq;
     }
 
@@ -188,7 +185,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         mergeTagIntoMethods("app", app);
     }
 
-    public void setTimerAggregationFreq(int timerAggregationFreq) {
+    public void setTimerAggregationFreq(AggregationFreq timerAggregationFreq) {
         this.timerAggregationFreq = timerAggregationFreq;
     }
 
@@ -200,7 +197,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         this.timerAggregations.put(aggregation);
     }
 
-    public void setCounterAggregationFreq(int counterAggregationFreq) {
+    public void setCounterAggregationFreq(AggregationFreq counterAggregationFreq) {
         this.counterAggregationFreq = counterAggregationFreq;
     }
 
@@ -212,7 +209,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         this.counterAggregations.put(aggregation);
     }
 
-    public void setGaugeAggregationFreq(int gaugeAggregationFreq) {
+    public void setGaugeAggregationFreq(AggregationFreq gaugeAggregationFreq) {
         this.gaugeAggregationFreq = gaugeAggregationFreq;
     }
 
