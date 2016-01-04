@@ -161,15 +161,15 @@ public class BufferedMetricsSenderTest {
     @Test
     public void shouldPutMetricsConcurrently() throws Exception {
         // Given
-        when(configuration.getFlushSize()).thenReturn(999);
-        when(configuration.getFlushIntervalMillis()).thenReturn(200L);
+        when(configuration.getFlushSize()).thenReturn(19);
+        when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
         final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration);
 
         ExecutorService executorService = Executors.newFixedThreadPool(20);
 
         // When
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 20; i++) {
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -178,7 +178,7 @@ public class BufferedMetricsSenderTest {
             });
         }
 
-        executorService.awaitTermination(150, TimeUnit.MILLISECONDS);
+        executorService.awaitTermination(10, TimeUnit.MILLISECONDS);
 
         // Then
         verify(transportSender, times(1)).send(anyString());
@@ -198,7 +198,6 @@ public class BufferedMetricsSenderTest {
     @Test
     public void shouldSendWithSampleRate() {
         // When
-        subject.put("test_metric0", "100", null, null, FREQ_10, 0, "application", "123456789");
         subject.put("test_metric0", "100", null, null, FREQ_10, 50, "application", "123456789");
         subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", "123456789");
 
