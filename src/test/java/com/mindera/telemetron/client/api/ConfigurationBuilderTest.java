@@ -385,4 +385,36 @@ public class ConfigurationBuilderTest {
         assertEquals("Should build tags prefix configuration", "test_prefix", subject.configuration.getPrefix());
         assertEquals("Should build tags transport configuration", UDP, subject.configuration.getTransport());
     }
+
+    @Test
+    public void shouldIgnoreNullBuilderAttributes() {
+        ClientConfiguration config = newBuilder()
+                .prefix("test_prefix")
+                .transport(UDP)
+                .tag(null, null)
+                .timer((AggregationBuilder[]) null)
+                .timer((TagBuilder[]) null)
+                .timer((AggregationFreqBuilder) null)
+                .counter((AggregationBuilder[]) null)
+                .counter((TagBuilder[]) null)
+                .counter((AggregationFreqBuilder) null)
+                .gauge((AggregationBuilder[]) null)
+                .gauge((TagBuilder[]) null)
+                .gauge((AggregationFreqBuilder) null)
+                .buildConfiguration();
+
+        assertEquals("Should have default application tags", 1, config.getApplicationTags().getTags().size());
+
+        assertEquals("Should have default timer tags", 1, config.getTimerTags().getTags().size());
+        assertEquals("Should have default timer aggregations", 4, config.getTimerAggregations().getAggregations().size());
+        assertEquals("Should have default timer aggregation frequency", FREQ_10, config.getTimerAggregationFreq());
+
+        assertNull("Should not have counter tags", config.getCounterTags());
+        assertEquals("Should have default counter aggregations", 3, config.getCounterAggregations().getAggregations().size());
+        assertEquals("Should have default counter aggregation frequency", FREQ_10, config.getCounterAggregationFreq());
+
+        assertNull("Should not have gauge tags", config.getGaugeTags());
+        assertEquals("Should have default gauge aggregations", 1, config.getGaugeAggregations().getAggregations().size());
+        assertEquals("Should have default gauge aggregation frequency", FREQ_10, config.getGaugeAggregationFreq());
+    }
 }

@@ -3,8 +3,6 @@ package com.mindera.telemetron.client.api;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.util.Objects.nonNull;
-
 public class Tags {
 
     private final Map<String, String> tags = new HashMap<String, String>();
@@ -34,7 +32,7 @@ public class Tags {
     }
 
     public final Tags merge(final Tags tags) {
-        if (nonNull(tags)) {
+        if (tags != null) {
             this.tags.putAll(tags.getTags());
         }
         return this;

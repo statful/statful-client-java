@@ -246,4 +246,18 @@ public class BufferedMetricsSenderTest {
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should have metrics", 1, buffer.size());
     }
+
+    @Test
+    public void shouldNotSendWhenRunIsDry() {
+        // Given
+        when(configuration.getFlushSize()).thenReturn(1);
+        when(configuration.isDryRun()).thenReturn(true);
+
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration);
+
+        subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", "123456789");
+        subject.put("test_metric1", "100", null, null, FREQ_10, 100, "application", "123456790");
+
+        verify(transportSender, times(0)).send(anyString());
+    }
 }

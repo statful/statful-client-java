@@ -3,8 +3,6 @@ package com.mindera.telemetron.client.api;
 import java.util.Collection;
 import java.util.EnumSet;
 
-import static java.util.Objects.nonNull;
-
 public class Aggregations {
 
     private final Collection<Aggregation> aggregations = EnumSet.noneOf(Aggregation.class);
@@ -30,7 +28,7 @@ public class Aggregations {
     }
 
     public final Aggregations merge(final Aggregations aggregations) {
-        if (nonNull(aggregations)) {
+        if (aggregations != null) {
             this.aggregations.addAll(aggregations.getAggregations());
         }
         return this;

@@ -240,7 +240,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     public final void mergeApplicationTag(final String type, final String value) {
-        getSafeApplicationTags().putTag(type, value);
+        applicationTags.putTag(type, value);
         mergeTagIntoMethods(type, value);
     }
 
@@ -248,13 +248,6 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         timerTags.putTag(type, value);
         getSafeCounterTags().putTag(type, value);
         getSafeGaugeTags().putTag(type, value);
-    }
-
-    private Tags getSafeApplicationTags() {
-        if (applicationTags == null) {
-            applicationTags = new Tags();
-        }
-        return applicationTags;
     }
 
     private Tags getSafeCounterTags() {

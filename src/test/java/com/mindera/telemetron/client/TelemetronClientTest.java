@@ -417,8 +417,9 @@ public class TelemetronClientTest {
 
         // When
         TelemetronClient client = TelemetronClient.buildUDPClient("test_prefix").with()
-                .flushInterval(100)
+                .flushSize(1)
                 .build();
+        client.counter("test_counter").send();
         client.counter("test_counter").send();
 
         String responseString = response.get();
@@ -426,6 +427,13 @@ public class TelemetronClientTest {
         // Then
         assertTrue("Should receive message", responseString.startsWith("test_prefix.application.counter.test_counter 0"));
         executorService.shutdown();
+    }
+
+    @Test
+    public void shouldCreateUdpClientWithoutOptionalConfigurations() throws Exception {
+        TelemetronClient client = TelemetronClient.buildUDPClient("test_prefix").build();
+
+        assertNotNull(client);
     }
 
     private void shouldContainDefaultTimerTags(Tags tags) {
