@@ -133,8 +133,7 @@ public final class ConfigurationBuilder<T> {
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> tag(final String type, final String value) {
-        // TODO - simplify
-        if (type != null && !type.isEmpty() && value != null && !value.isEmpty()) {
+        if (!Tags.isEmpty(type, value)) {
             this.result.mergeApplicationTag(type, value);
         }
         return this;

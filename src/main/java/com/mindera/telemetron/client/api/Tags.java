@@ -39,4 +39,12 @@ public class Tags {
         }
         return this;
     }
+
+    public static  boolean isEmpty(final String type, final String value) {
+        return isEmpty(type) || isEmpty(value);
+    }
+
+    private static boolean isEmpty(final String value) {
+        return value == null || value.isEmpty();
+    }
 }

@@ -34,13 +34,13 @@ public class TelemetronClient implements MetricsSender {
      * @return A Counter metric builder, ready to be sent or configure
      */
     public final TelemetronMetricBuilder timer(final String metricName, final long timestamp) {
-        APIBuilder apiBuilder = new APIBuilder(this)
-                .withConfiguration(configuration)
-                .withAggregations(configuration.getTimerAggregations())
+        APIBuilder apiBuilder = new APIBuilder(this).with()
+                .configuration(configuration)
+                .aggregations(configuration.getTimerAggregations())
                 .aggFreq(configuration.getTimerAggregationFreq())
-                .withTags(configuration.getTimerTags())
-                .withMetricName("timer." + metricName)
-                .withValue(Long.toString(timestamp));
+                .tags(configuration.getTimerTags())
+                .metricName("timer." + metricName)
+                .value(Long.toString(timestamp));
 
         return new TelemetronMetricBuilder(apiBuilder);
     }
@@ -63,13 +63,13 @@ public class TelemetronClient implements MetricsSender {
      * @return A Counter metric builder, ready to be sent or configure
      */
     public final TelemetronMetricBuilder counter(final String metricName, final int value) {
-        APIBuilder apiBuilder = new APIBuilder(this)
-                .withConfiguration(configuration)
-                .withAggregations(configuration.getCounterAggregations())
+        APIBuilder apiBuilder = new APIBuilder(this).with()
+                .configuration(configuration)
+                .aggregations(configuration.getCounterAggregations())
                 .aggFreq(configuration.getCounterAggregationFreq())
-                .withTags(configuration.getCounterTags())
-                .withMetricName("counter." + metricName)
-                .withValue(Integer.toString(value));
+                .tags(configuration.getCounterTags())
+                .metricName("counter." + metricName)
+                .value(Integer.toString(value));
 
         return new TelemetronMetricBuilder(apiBuilder);
     }
@@ -82,13 +82,13 @@ public class TelemetronClient implements MetricsSender {
      * @return A Gauge metric builder, ready to be sent or configure
      */
     public final TelemetronMetricBuilder gauge(final String metricName, final String value) {
-        APIBuilder apiBuilder = new APIBuilder(this)
-                .withConfiguration(configuration)
-                .withAggregations(configuration.getGaugeAggregations())
+        APIBuilder apiBuilder = new APIBuilder(this).with()
+                .configuration(configuration)
+                .aggregations(configuration.getGaugeAggregations())
                 .aggFreq(configuration.getGaugeAggregationFreq())
-                .withTags(configuration.getGaugeTags())
-                .withMetricName("gauge." + metricName)
-                .withValue(value);
+                .tags(configuration.getGaugeTags())
+                .metricName("gauge." + metricName)
+                .value(value);
 
         return new TelemetronMetricBuilder(apiBuilder);
     }

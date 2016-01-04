@@ -382,7 +382,7 @@ public class ConfigurationBuilderTest {
             }
         }).prefix("test_prefix").transport(UDP).build();
 
-        assertEquals("Should build withTags prefix configuration", "test_prefix", subject.configuration.getPrefix());
-        assertEquals("Should build withTags transport configuration", UDP, subject.configuration.getTransport());
+        assertEquals("Should build tags prefix configuration", "test_prefix", subject.configuration.getPrefix());
+        assertEquals("Should build tags transport configuration", UDP, subject.configuration.getTransport());
     }
 }

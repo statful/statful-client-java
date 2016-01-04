@@ -25,12 +25,21 @@ public class APIBuilder {
     }
 
     /**
+     * Just a syntax sugar method.
+     *
+     * @return A reference to this builder
+     */
+    public final APIBuilder with() {
+        return this;
+    }
+
+    /**
      * Sets the metric name.
      *
      * @param metricName Metric name as string
      * @return A reference to this builder
      */
-    public final APIBuilder withMetricName(final String metricName) {
+    public final APIBuilder metricName(final String metricName) {
         this.metricName = metricName;
         return this;
     }
@@ -41,7 +50,7 @@ public class APIBuilder {
      * @param value The value as string
      * @return A reference to this builder
      */
-    public final APIBuilder withValue(final String value) {
+    public final APIBuilder value(final String value) {
         this.value = value;
         return this;
     }
@@ -52,7 +61,7 @@ public class APIBuilder {
      * @param configuration Client configuration
      * @return A reference to this builder
      */
-    public final APIBuilder withConfiguration(final ClientConfiguration configuration) {
+    public final APIBuilder configuration(final ClientConfiguration configuration) {
         return this.withNamespace(configuration.getNamespace())
                 .withSampleRate(configuration.getSampleRate());
     }
@@ -76,8 +85,7 @@ public class APIBuilder {
      * @return A reference to this builder
      */
     public final APIBuilder tag(final String type, final String value) {
-        // TODO - simplify
-        if (type != null && !type.isEmpty() && value != null && !value.isEmpty()) {
+        if (!Tags.isEmpty(type, value)) {
             getSafeTags().putTag(type, value);
         }
         return this;
@@ -89,7 +97,7 @@ public class APIBuilder {
      * @param tags Tags to use
      * @return A reference to this builder
      */
-    public final APIBuilder withTags(final Tags tags) {
+    public final APIBuilder tags(final Tags tags) {
         if (tags != null) {
             getSafeTags().merge(tags);
         }
@@ -103,12 +111,9 @@ public class APIBuilder {
      * @return A reference to this builder
      */
     public final APIBuilder aggregations(final Aggregation... aggregations) {
-        // TODO - simplify
         if (aggregations != null) {
             for (Aggregation aggregation : aggregations) {
-                if (aggregation != null) {
-                    getSafeAggregations().put(aggregation);
-                }
+                withAggregation(aggregation);
             }
         }
         return this;
@@ -120,9 +125,16 @@ public class APIBuilder {
      * @param aggregations Aggregations to use
      * @return A reference to this builder
      */
-    public final APIBuilder withAggregations(final Aggregations aggregations) {
+    public final APIBuilder aggregations(final Aggregations aggregations) {
         if (aggregations != null) {
             getSafeAggregations().merge(aggregations);
+        }
+        return this;
+    }
+
+    private APIBuilder withAggregation(final Aggregation aggregation) {
+        if (aggregation != null) {
+            getSafeAggregations().put(aggregation);
         }
         return this;
     }
@@ -158,9 +170,12 @@ public class APIBuilder {
      * Sends the metric to Telemetron.
      */
     public final void send() {
-        // TODO - UTC Timestamp?
-        String epochTime = Long.toString(System.currentTimeMillis() / TIMESTAMP_DIVIDER);
-        metricsSender.put(metricName, value, tags, aggregations, aggregationFreq, sampleRate, namespace, epochTime);
+        String unixTimestamp = getUnixTimestampAsString();
+        metricsSender.put(metricName, value, tags, aggregations, aggregationFreq, sampleRate, namespace, unixTimestamp);
+    }
+
+    private String getUnixTimestampAsString() {
+        return Long.toString(System.currentTimeMillis() / TIMESTAMP_DIVIDER);
     }
 
     private Tags getSafeTags() {
