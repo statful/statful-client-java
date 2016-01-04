@@ -4,6 +4,7 @@ import com.mindera.telemetron.client.api.Aggregations;
 import com.mindera.telemetron.client.api.Tags;
 import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.transport.TransportSender;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
@@ -23,6 +25,8 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class BufferedMetricsSenderTest {
+
+    private ScheduledExecutorService executorService;
 
     @Mock
     private ClientConfiguration configuration;
@@ -41,7 +45,13 @@ public class BufferedMetricsSenderTest {
         when(configuration.getPrefix()).thenReturn("test_prefix");
         when(configuration.getSampleRate()).thenReturn(100);
 
-        subject = new BufferedMetricsSender(transportSender, configuration);
+        executorService = Executors.newScheduledThreadPool(1);
+        subject = new BufferedMetricsSender(transportSender, configuration, executorService);
+    }
+
+    @After
+    public void tearDown() {
+        executorService.shutdownNow();
     }
 
     @Test
@@ -139,7 +149,7 @@ public class BufferedMetricsSenderTest {
         // Given
         when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
-        subject = new BufferedMetricsSender(transportSender, configuration);
+        subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
         // When
         subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", "123456789");
@@ -164,7 +174,7 @@ public class BufferedMetricsSenderTest {
         when(configuration.getFlushSize()).thenReturn(19);
         when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
-        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration);
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
         ExecutorService executorService = Executors.newFixedThreadPool(20);
 
@@ -178,7 +188,8 @@ public class BufferedMetricsSenderTest {
             });
         }
 
-        executorService.awaitTermination(10, TimeUnit.MILLISECONDS);
+        executorService.shutdown();
+        executorService.awaitTermination(500, TimeUnit.MILLISECONDS);
 
         // Then
         verify(transportSender, times(1)).send(anyString());
@@ -227,23 +238,23 @@ public class BufferedMetricsSenderTest {
     }
 
     @Test
-    public void shouldShutdown() throws Exception {
+    public void shouldShutdownAndClearMetrics() throws Exception {
         // Given
         when(configuration.getFlushSize()).thenReturn(2);
         when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
-        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration);
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
         subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", "123456789");
 
         // When
         subject.shutdown();
 
-        Thread.sleep(150);
+        Thread.sleep(500);
 
         // Then
         List<String> buffer = subject.getBuffer();
-        assertEquals("Buffer should have metrics", 1, buffer.size());
+        assertEquals("Buffer should not have metrics", 0, buffer.size());
     }
 
     @Test
@@ -252,11 +263,39 @@ public class BufferedMetricsSenderTest {
         when(configuration.getFlushSize()).thenReturn(1);
         when(configuration.isDryRun()).thenReturn(true);
 
-        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration);
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
         subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", "123456789");
         subject.put("test_metric1", "100", null, null, FREQ_10, 100, "application", "123456790");
 
         verify(transportSender, times(0)).send(anyString());
+    }
+
+
+    @Test(timeout = 2000)
+    public void shouldPutOneHundredMetricsInLessThan2Seconds() throws Exception {
+        // Given
+        when(configuration.getFlushSize()).thenReturn(1);
+
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
+
+        // When
+        int counter = 0;
+        for (int i = 0; i < 100000; i++) {
+            subject.put("test_metric" + i, "100", null, null, FREQ_10, 100, "application", "123456789");
+            counter++;
+        }
+
+        // Then
+        assertEquals(100000, counter);
+
+        this.executorService.shutdown();
+        this.executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
+
+        verify(transportSender, times(100000)).send(anyString());
+
+        List<String> buffer = subject.getBuffer();
+        assertEquals("Buffer should not have metrics", 0, buffer.size());
+
     }
 }

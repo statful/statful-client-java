@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -22,32 +21,36 @@ public class BufferedMetricsSender implements MetricsSender {
 
     private static final Logger LOGGER = Logger.getLogger(BufferedMetricsSender.class.getName());
 
+    private static final int MAX_BUFFER_SIZE = 5000;
     private static final int MIN_SAMPLE_RATE = 1;
     private static final int MAX_SAMPLE_RATE = 100;
     private static final int SAMPLE_RATE_DIVIDER = 100;
     private static final int MIN_FLUSH_INTERVAL = 100;
 
     private final TransportSender transportSender;
+    private final ScheduledExecutorService executorService;
     private final boolean dryRun;
     private final String metricPrefix;
     private final int flushSize;
     private final ArrayBlockingQueue<String> buffer;
 
-    private ScheduledExecutorService executorService;
-
-    public BufferedMetricsSender(final TransportSender transportSender, final ClientConfiguration configuration) {
+    public BufferedMetricsSender(
+            final TransportSender transportSender,
+            final ClientConfiguration configuration,
+            final ScheduledExecutorService executorService
+    ) {
         this.transportSender = transportSender;
+        this.executorService = executorService;
         this.dryRun = configuration.isDryRun();
         this.metricPrefix = configuration.getPrefix();
         this.flushSize = configuration.getFlushSize();
-        this.buffer = new ArrayBlockingQueue<String>(flushSize);
+        this.buffer = new ArrayBlockingQueue<String>(MAX_BUFFER_SIZE);
 
         startFlushInterval(configuration.getFlushIntervalMillis());
     }
 
     private void startFlushInterval(final long flushInterval) {
         if (flushInterval >= MIN_FLUSH_INTERVAL) {
-            executorService = Executors.newScheduledThreadPool(1);
             executorService.scheduleAtFixedRate(flusher(), flushInterval, flushInterval, TimeUnit.MILLISECONDS);
         }
     }
@@ -86,9 +89,6 @@ public class BufferedMetricsSender implements MetricsSender {
     @Override
     public final void shutdown() {
         transportSender.shutdown();
-        if (executorService != null) {
-            executorService.shutdown();
-        }
     }
 
     private boolean shouldPutMetric(final int sampleRate) {
@@ -110,19 +110,19 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     private void putRaw(final String metric) {
-        if (isTimeToFlush()) {
-            flush();
-        }
 
         boolean inserted = buffer.offer(metric);
         if (!inserted) {
             LOGGER.warning("The buffer is full, sending metric to Telemetron now.");
             sendMetric(metric);
         }
+        if (isTimeToFlush()) {
+            flush();
+        }
     }
 
     private boolean isTimeToFlush() {
-        return  flushSize <= buffer.size();
+        return flushSize <= buffer.size();
     }
 
     private void flush() {
@@ -133,13 +133,18 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     private void sendMetric(final String metric) {
-        transportSender.send(metric);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                transportSender.send(metric);
+            }
+        });
     }
 
     private String getMessageBuffer() {
         @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         Collection<String> messages = new ArrayList<String>();
-        buffer.drainTo(messages);
+        buffer.drainTo(messages, flushSize);
 
         StringBuilder sb = new StringBuilder();
         for (String metric : messages) {

@@ -7,6 +7,8 @@ import com.mindera.telemetron.client.sender.MetricsSender;
 import com.mindera.telemetron.client.transport.TransportSender;
 import com.mindera.telemetron.client.transport.UDPSender;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Logger;
 
 import static com.mindera.telemetron.client.api.Transport.UDP;
@@ -128,8 +130,11 @@ public class TelemetronClient implements MetricsSender {
             new ConfigurationBuilderChain<TelemetronClient>() {
         @Override
         public TelemetronClient build(final ClientConfiguration configuration) {
+            int poolSize = configuration.getWorkersPoolSize();
+            ScheduledExecutorService executorService = Executors.newScheduledThreadPool(poolSize);
+
             TransportSender transportSender = new UDPSender(configuration.getHost(), configuration.getPort());
-            MetricsSender bufferedMetricsSender = new BufferedMetricsSender(transportSender, configuration);
+            MetricsSender bufferedMetricsSender = new BufferedMetricsSender(transportSender, configuration, executorService);
             return new TelemetronClient(bufferedMetricsSender, configuration);
         }
     };

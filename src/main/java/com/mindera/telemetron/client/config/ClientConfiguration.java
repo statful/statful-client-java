@@ -163,4 +163,11 @@ public interface ClientConfiguration {
      * @return App as string
      */
     String getApp();
+
+    /**
+     * Default is 1.
+     *
+     * @return
+     */
+    int getWorkersPoolSize();
 }

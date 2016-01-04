@@ -8,6 +8,8 @@ import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
 
 public class DefaultClientConfiguration implements ClientConfiguration {
 
+    private static final int WORKER_POOL_SIZE = 1;
+
     private static final String DEFAULT_HOST = "127.0.0.1";
     private static final int DEFAULT_PORT = 2013;
     private static final int DEFAULT_SAMPLE_RATE = 100;
@@ -34,6 +36,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private Transport transport;
     private String token;
     private String app;
+    private int workersPoolSize = WORKER_POOL_SIZE;
 
     private Tags applicationTags = Tags.from(DEFAULT_APP_TAGS);
     private Tags timerTags = Tags.from(DEFAULT_TIMER_TAGS);
@@ -111,6 +114,11 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     @Override
     public final String getApp() {
         return app;
+    }
+
+    @Override
+    public final int getWorkersPoolSize() {
+        return workersPoolSize;
     }
 
     @Override
