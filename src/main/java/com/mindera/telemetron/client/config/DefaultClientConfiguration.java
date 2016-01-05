@@ -20,8 +20,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private static final Tags DEFAULT_APP_TAGS = Tags.from("telemetron_client", "java");
     private static final Tags DEFAULT_TIMER_TAGS = Tags.from("unit", "ms");
 
-    private static final Aggregation[] DEFAULT_TIMER_AGGREGATIONS = new Aggregation[] {AVG, P90, COUNT, COUNT_PS};
-    private static final Aggregation[] DEFAULT_COUNTER_AGGREGATIONS = new Aggregation[] {AVG, P90, COUNT_PS};
+    private static final Aggregation[] DEFAULT_TIMER_AGGREGATIONS = new Aggregation[] {AVG, P90, COUNT};
+    private static final Aggregation[] DEFAULT_COUNTER_AGGREGATIONS = new Aggregation[] {AVG, P90};
     private static final Aggregation[] DEFAULT_GAUGE_AGGREGATIONS = new Aggregation[] {LAST};
 
     private String host = DEFAULT_HOST;

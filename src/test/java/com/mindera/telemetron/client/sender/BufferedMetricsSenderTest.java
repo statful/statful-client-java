@@ -79,14 +79,14 @@ public class BufferedMetricsSenderTest {
     public void shouldSendRawMetricWithAggregations() {
         // When
         Aggregations aggregations = new Aggregations();
-        aggregations.putAll(asList(AVG, P90, COUNT, COUNT_PS));
+        aggregations.putAll(asList(AVG, P90, COUNT));
 
         subject.put("test_metric", "500", null, aggregations, FREQ_10, 100, "application", "123456789");
 
         // Then
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should not be empty", 1, buffer.size());
-        assertEquals("Should buffer timer metric", "test_prefix.application.test_metric 500 123456789 avg,p90,count,count_ps,10", buffer.get(0));
+        assertEquals("Should buffer timer metric", "test_prefix.application.test_metric 500 123456789 avg,p90,count,10", buffer.get(0));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class BufferedMetricsSenderTest {
         tags.putTag("unit", "ms");
 
         Aggregations aggregations = new Aggregations();
-        aggregations.putAll(asList(AVG, P90, COUNT, COUNT_PS));
+        aggregations.putAll(asList(AVG, P90, COUNT));
 
         subject.put("test_metric", "500", tags, aggregations, FREQ_10, 100, "application", "123456789");
 
@@ -117,8 +117,8 @@ public class BufferedMetricsSenderTest {
         assertEquals("Buffer should not be empty", 1, buffer.size());
 
         assertThat("Should buffer timer metric", buffer.get(0), anyOf(
-                is("test_prefix.application.test_metric,app=test_app,unit=ms 500 123456789 avg,p90,count,count_ps,10"),
-                is("test_prefix.application.test_metric,unit=ms,app=test_app 500 123456789 avg,p90,count,count_ps,10")));
+                is("test_prefix.application.test_metric,app=test_app,unit=ms 500 123456789 avg,p90,count,10"),
+                is("test_prefix.application.test_metric,unit=ms,app=test_app 500 123456789 avg,p90,count,10")));
     }
 
     @Test
@@ -274,7 +274,7 @@ public class BufferedMetricsSenderTest {
         verify(transportSender, times(0)).send(anyString());
     }
 
-    @Test(timeout = 1000)
+    @Test
     public void shouldBeAbleToIngest50000MetricsInLessThan1second() throws Exception {
         // Given
         when(configuration.getFlushSize()).thenReturn(200);
@@ -284,6 +284,8 @@ public class BufferedMetricsSenderTest {
         final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
         ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+        long start = System.currentTimeMillis();
 
         // When
         final AtomicInteger counter = new AtomicInteger();
@@ -301,13 +303,15 @@ public class BufferedMetricsSenderTest {
         executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
 
         // Then
-        assertEquals(50000, counter.get());
+        Thread.sleep(600);
 
-        Thread.sleep(500);
+        long end = System.currentTimeMillis();
+
+        assertTrue("Should ingest in less that 1 second", (end - start) < 1000);
 
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should not have metrics", 0, buffer.size());
-
+        assertEquals(50000, counter.get());
     }
 
     private Answer<String> mockedTransportResponse = new Answer<String>() {

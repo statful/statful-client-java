@@ -88,7 +88,7 @@ public interface ClientConfiguration {
     Tags getTimerTags();
 
     /**
-     * Returns the timer default aggregations. Default are: AVG, P90, COUNT, COUNT_PS.
+     * Returns the timer default aggregations. Default are: AVG, P90, COUNT.
      *
      * @return Aggregations object, which may contain a collection
      */
@@ -109,7 +109,7 @@ public interface ClientConfiguration {
     Tags getCounterTags();
 
     /**
-     * Returns the counter default aggregations. Default are: AVG, P90, COUNT_PS.
+     * Returns the counter default aggregations. Default are: AVG, P90.
      *
      * @return Aggregations object, which may contain a collection
      */

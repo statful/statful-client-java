@@ -152,7 +152,7 @@ public class DefaultClientConfigurationTest {
         subject.mergeTimerAggregation(LAST);
 
         Aggregations aggregations = subject.getTimerAggregations();
-        assertThat("Should merge timer aggregations", aggregations.getAggregations(), containsInAnyOrder(AVG, P90, COUNT, COUNT_PS, LAST));
+        assertThat("Should merge timer aggregations", aggregations.getAggregations(), containsInAnyOrder(AVG, P90, COUNT, LAST));
     }
 
     @Test
@@ -176,7 +176,7 @@ public class DefaultClientConfigurationTest {
         subject.mergeCounterAggregation(LAST);
 
         Aggregations aggregations = subject.getCounterAggregations();
-        assertThat("Should merge counter aggregations", aggregations.getAggregations(), containsInAnyOrder(AVG, P90, COUNT_PS, LAST));
+        assertThat("Should merge counter aggregations", aggregations.getAggregations(), containsInAnyOrder(AVG, P90, LAST));
     }
 
     @Test
@@ -233,8 +233,8 @@ public class DefaultClientConfigurationTest {
 
         assertEquals("java", subject.getApplicationTags().getTagValue("telemetron_client"));
         assertEquals("ms", subject.getTimerTags().getTagValue("unit"));
-        assertThat(subject.getTimerAggregations().getAggregations(), containsInAnyOrder(AVG, P90, COUNT, COUNT_PS));
-        assertThat(subject.getCounterAggregations().getAggregations(), containsInAnyOrder(AVG, P90, COUNT_PS));
+        assertThat(subject.getTimerAggregations().getAggregations(), containsInAnyOrder(AVG, P90, COUNT));
+        assertThat(subject.getCounterAggregations().getAggregations(), containsInAnyOrder(AVG, P90));
         assertThat(subject.getGaugeAggregations().getAggregations(), containsInAnyOrder(LAST));
     }
 }

@@ -41,8 +41,8 @@ public class TelemetronClientTest {
         when(configuration.getNamespace()).thenReturn("application");
         when(configuration.getSampleRate()).thenReturn(10);
         when(configuration.getTimerTags()).thenReturn(Tags.from("unit", "ms"));
-        when(configuration.getTimerAggregations()).thenReturn(Aggregations.from(AVG, P90, COUNT, COUNT_PS));
-        when(configuration.getCounterAggregations()).thenReturn(Aggregations.from(AVG, P90, COUNT_PS));
+        when(configuration.getTimerAggregations()).thenReturn(Aggregations.from(AVG, P90, COUNT));
+        when(configuration.getCounterAggregations()).thenReturn(Aggregations.from(AVG, P90));
         when(configuration.getGaugeAggregations()).thenReturn(Aggregations.from(LAST));
         when(configuration.getTimerAggregationFreq()).thenReturn(FREQ_10);
         when(configuration.getCounterAggregationFreq()).thenReturn(FREQ_10);
@@ -102,11 +102,10 @@ public class TelemetronClientTest {
         assertNotNull("Aggregations should not be null", aggrArg.getValue());
 
         Collection<Aggregation> aggregations = aggrArg.getValue().getAggregations();
-        assertEquals("Should contain 5 aggregations", 5, aggregations.size());
+        assertEquals("Should contain 5 aggregations", 4, aggregations.size());
         assertTrue("Should contain AVG aggregation", aggregations.contains(AVG));
         assertTrue("Should contain P90 aggregation", aggregations.contains(P90));
         assertTrue("Should contain COUNT aggregation", aggregations.contains(COUNT));
-        assertTrue("Should contain COUNT_PS aggregation", aggregations.contains(COUNT_PS));
         assertTrue("Should contain LAST aggregation", aggregations.contains(LAST));
     }
 
@@ -182,10 +181,9 @@ public class TelemetronClientTest {
         assertNotNull("Aggregations should not be null", aggrArg.getValue());
 
         Collection<Aggregation> aggregations = aggrArg.getValue().getAggregations();
-        assertEquals("Should contain 4 aggregations", 4, aggregations.size());
+        assertEquals("Should contain 4 aggregations", 3, aggregations.size());
         assertTrue("Should contain AVG aggregation", aggregations.contains(AVG));
         assertTrue("Should contain P90 aggregation", aggregations.contains(P90));
-        assertTrue("Should contain COUNT_PS aggregation", aggregations.contains(COUNT_PS));
         assertTrue("Should contain LAST aggregation", aggregations.contains(LAST));
     }
 
@@ -380,7 +378,7 @@ public class TelemetronClientTest {
         tags.putTag("unit", "ms");
 
         Aggregations aggregations = new Aggregations();
-        aggregations.putAll(asList(AVG, P90, COUNT, COUNT_PS));
+        aggregations.putAll(asList(AVG, P90, COUNT));
 
         subject.put("timer.response_time", "1000", tags, aggregations, FREQ_120, 10, "application", "100000");
 
@@ -447,11 +445,10 @@ public class TelemetronClientTest {
 
         Collection<Aggregation> aggregationsValue = aggregations.getAggregations();
 
-        assertEquals("Should contain 4 aggregations", 4, aggregationsValue.size());
+        assertEquals("Should contain 4 aggregations", 3, aggregationsValue.size());
         assertTrue("Should contain AVG aggregation", aggregationsValue.contains(AVG));
         assertTrue("Should contain P90 aggregation", aggregationsValue.contains(P90));
         assertTrue("Should contain COUNT aggregation", aggregationsValue.contains(COUNT));
-        assertTrue("Should contain COUNT_PS aggregation", aggregationsValue.contains(COUNT_PS));
     }
 
     private void shouldContainDefaultCounterAggregations(Aggregations aggregations) {
@@ -459,10 +456,9 @@ public class TelemetronClientTest {
 
         Collection<Aggregation> aggregationsValue = aggregations.getAggregations();
 
-        assertEquals("Should contain 3 aggregations", 3, aggregationsValue.size());
+        assertEquals("Should contain 3 aggregations", 2, aggregationsValue.size());
         assertTrue("Should contain SUM aggregation", aggregationsValue.contains(AVG));
         assertTrue("Should contain COUNT aggregation", aggregationsValue.contains(P90));
-        assertTrue("Should contain COUNT_PS aggregation", aggregationsValue.contains(COUNT_PS));
     }
 
     private void shouldContainDefaultGaugeAggregations(Aggregations aggregations) {

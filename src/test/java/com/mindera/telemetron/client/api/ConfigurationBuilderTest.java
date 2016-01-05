@@ -57,7 +57,7 @@ public class ConfigurationBuilderTest {
         assertEquals("Timer should have 'unit' tag in ms", "ms", tags.getTagValue("unit"));
 
         Collection<Aggregation> aggregations = config.getTimerAggregations().getAggregations();
-        assertThat("Timer should have default aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT, COUNT_PS));
+        assertThat("Timer should have default aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT));
         assertEquals("Should have default timer aggregation frequency", FREQ_10, config.getTimerAggregationFreq());
     }
 
@@ -71,7 +71,7 @@ public class ConfigurationBuilderTest {
         assertNull("Should not have default counter tags", config.getCounterTags());
 
         Collection<Aggregation> aggregations = config.getCounterAggregations().getAggregations();
-        assertThat("Should have default counter aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT_PS));
+        assertThat("Should have default counter aggregations", aggregations, containsInAnyOrder(AVG, P90));
         assertEquals("Should have default counter aggregation frequency", FREQ_10, config.getCounterAggregationFreq());
     }
 
@@ -243,7 +243,7 @@ public class ConfigurationBuilderTest {
                 .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getTimerAggregations().getAggregations();
-        assertThat("Should configure timer aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT, COUNT_PS, LAST));
+        assertThat("Should configure timer aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT, LAST));
         assertEquals("Should timer aggregation frequency", FREQ_120, config.getTimerAggregationFreq());
     }
 
@@ -284,7 +284,7 @@ public class ConfigurationBuilderTest {
                 .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getCounterAggregations().getAggregations();
-        assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT_PS, LAST));
+        assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(AVG, P90, LAST));
         assertEquals("Should counter aggregation frequency", FREQ_120, config.getCounterAggregationFreq());
     }
 
@@ -338,7 +338,7 @@ public class ConfigurationBuilderTest {
                 .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getTimerAggregations().getAggregations();
-        assertThat("Should configure timer aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT, COUNT_PS, LAST));
+        assertThat("Should configure timer aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT, LAST));
     }
 
     @Test
@@ -350,7 +350,7 @@ public class ConfigurationBuilderTest {
                 .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getCounterAggregations().getAggregations();
-        assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(AVG, P90, COUNT_PS, LAST));
+        assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(AVG, P90, LAST));
     }
 
     @Test
@@ -406,11 +406,11 @@ public class ConfigurationBuilderTest {
         assertEquals("Should have default application tags", 1, config.getApplicationTags().getTags().size());
 
         assertEquals("Should have default timer tags", 1, config.getTimerTags().getTags().size());
-        assertEquals("Should have default timer aggregations", 4, config.getTimerAggregations().getAggregations().size());
+        assertEquals("Should have default timer aggregations", 3, config.getTimerAggregations().getAggregations().size());
         assertEquals("Should have default timer aggregation frequency", FREQ_10, config.getTimerAggregationFreq());
 
         assertNull("Should not have counter tags", config.getCounterTags());
-        assertEquals("Should have default counter aggregations", 3, config.getCounterAggregations().getAggregations().size());
+        assertEquals("Should have default counter aggregations", 2, config.getCounterAggregations().getAggregations().size());
         assertEquals("Should have default counter aggregation frequency", FREQ_10, config.getCounterAggregationFreq());
 
         assertNull("Should not have gauge tags", config.getGaugeTags());
