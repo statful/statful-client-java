@@ -25,7 +25,7 @@ public class BufferedMetricsSender implements MetricsSender {
     private static final int MIN_SAMPLE_RATE = 1;
     private static final int MAX_SAMPLE_RATE = 100;
     private static final int SAMPLE_RATE_DIVIDER = 100;
-    private static final int MIN_FLUSH_INTERVAL = 100;
+    private static final int MIN_FLUSH_INTERVAL = 50;
 
     private final TransportSender transportSender;
     private final ScheduledExecutorService executorService;

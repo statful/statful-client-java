@@ -8,12 +8,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
 import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
@@ -271,31 +274,48 @@ public class BufferedMetricsSenderTest {
         verify(transportSender, times(0)).send(anyString());
     }
 
-
-    @Test(timeout = 2000)
-    public void shouldPutOneHundredMetricsInLessThan2Seconds() throws Exception {
+    @Test(timeout = 1000)
+    public void shouldBeAbleToIngest50000MetricsInLessThan1second() throws Exception {
         // Given
-        when(configuration.getFlushSize()).thenReturn(1);
+        when(configuration.getFlushSize()).thenReturn(200);
+        when(configuration.getFlushIntervalMillis()).thenReturn(50L);
+        doAnswer(mockedTransportResponse).when(transportSender).send(anyString());
 
         final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+
         // When
-        int counter = 0;
-        for (int i = 0; i < 100000; i++) {
-            subject.put("test_metric" + i, "100", null, null, FREQ_10, 100, "application", "123456789");
-            counter++;
+        final AtomicInteger counter = new AtomicInteger();
+        for (int i = 0; i < 50000; i++) {
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    subject.put("test_metric", "100", null, null, FREQ_10, 100, "application", "123456789");
+                    counter.incrementAndGet();
+                }
+            });
         }
 
+        executorService.shutdown();
+        executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
+
         // Then
-        assertEquals(100000, counter);
+        assertEquals(50000, counter.get());
 
-        this.executorService.shutdown();
-        this.executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
-
-        verify(transportSender, times(100000)).send(anyString());
+        Thread.sleep(500);
 
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should not have metrics", 0, buffer.size());
 
     }
+
+    private Answer<String> mockedTransportResponse = new Answer<String>() {
+        @Override
+        public String answer(InvocationOnMock invocationOnMock) throws Throwable {
+            // Simulates transport latency
+            Thread.sleep(5);
+            return null;
+        }
+    };
 }
