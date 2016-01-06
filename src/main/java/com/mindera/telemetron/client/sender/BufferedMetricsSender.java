@@ -68,7 +68,7 @@ public class BufferedMetricsSender implements MetricsSender {
      public final void put(
             final String name, final String value, final Tags tags, final Aggregations aggregations,
             final AggregationFreq aggregationFreq, final Integer sampleRate, final String namespace,
-            final String timestamp
+            final long timestamp
     ) {
         if (!dryRun && shouldPutMetric(sampleRate)) {
             String rawMessage = newBuilder()

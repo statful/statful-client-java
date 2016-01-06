@@ -78,22 +78,6 @@ public class UDPSenderTest {
     }
 
     @Test
-    public void shouldTryToResendAfterError() throws Exception {
-        // Given
-        DatagramSocket socket = mock(DatagramSocket.class);
-        doThrow(new IOException()).when(socket).send(any(DatagramPacket.class));
-
-        UDPSender subject = new UDPSender("127.0.0.1", 2015);
-        subject.setMockedSocket(socket);
-
-        // When
-        subject.send("Hello world");
-
-        // Then
-        verify(socket, times(2)).send(any(DatagramPacket.class));
-    }
-
-    @Test
     public void shouldResendAfterError() throws Exception {
         Future<String> response = executorService.submit(new UdpEcho(2015));
 

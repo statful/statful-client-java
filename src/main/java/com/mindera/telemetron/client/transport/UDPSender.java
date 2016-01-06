@@ -31,17 +31,7 @@ public class UDPSender implements TransportSender {
         try {
             sendMessage(message);
         } catch (IOException e) {
-            LOGGER.warning("I/O exception while sending message. Trying again...");
-            retrySendMessage(message);
-        }
-    }
-
-    private void retrySendMessage(final String message) {
-        try {
-            sendMessage(message);
-        } catch (IOException e) {
-            LOGGER.warning("Unable to send metric: " + e.toString());
-            socket.close();
+            LOGGER.warning("I/O exception while sending message.");
         }
     }
 

@@ -99,7 +99,7 @@ public class TelemetronClient implements MetricsSender {
     public final void put(
             final String name, final String value, final Tags tags, final Aggregations aggregations,
             final AggregationFreq aggregationFreq, final Integer sampleRate, final String namespace,
-            final String timestamp
+            final long timestamp
     ) {
         try {
             metricsSender.put(name, value, tags, aggregations, aggregationFreq, sampleRate, namespace, timestamp);

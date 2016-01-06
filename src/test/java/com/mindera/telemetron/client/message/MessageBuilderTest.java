@@ -19,7 +19,7 @@ public class MessageBuilderTest {
     private final static String NAME = "response_time";
     private final static Tags TAGS = new Tags();
     private final static Aggregations AGGREGATIONS = new Aggregations();
-    private final static String TIMESTAMP = "121232323";
+    private final static long TIMESTAMP = 121232323;
 
     static {
         TAGS.putTag("unit", "s");

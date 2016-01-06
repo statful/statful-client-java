@@ -24,7 +24,7 @@ public final class MessageBuilder {
     private Map<String, String> tags = new HashMap<String, String>();
     private List<Aggregation> aggregations = new ArrayList<Aggregation>();
     private String value;
-    private String timestamp;
+    private long timestamp;
     private AggregationFreq aggregationFreq = FREQ_10;
 
     private MessageBuilder() { }
@@ -72,7 +72,7 @@ public final class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder withTimestamp(final String timestamp) {
+    public MessageBuilder withTimestamp(final long timestamp) {
         this.timestamp = timestamp;
         return this;
     }

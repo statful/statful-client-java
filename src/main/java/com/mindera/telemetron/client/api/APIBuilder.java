@@ -187,15 +187,23 @@ public final class APIBuilder {
      */
     public void send() {
         try {
-            String unixTimestamp = getUnixTimestampAsString();
-            metricsSender.put(metricName, value, tags, aggregations, aggregationFreq, sampleRate, namespace, unixTimestamp);
+            if (isValid()) {
+                long unixTimestamp = getUnixTimestampAsString();
+                metricsSender.put(metricName, value, tags, aggregations, aggregationFreq, sampleRate, namespace, unixTimestamp);
+            } else {
+                LOGGER.warning("Unable to send metric because it's not valid. Please send metric name and value.");
+            }
         } catch (Exception e) {
             LOGGER.warning("An exception has occurred while sending the metric to Telemetron: " + e.toString());
         }
     }
 
-    private String getUnixTimestampAsString() {
-        return Long.toString(System.currentTimeMillis() / TIMESTAMP_DIVIDER);
+    private boolean isValid() {
+        return isStringSafe(metricName) && isStringSafe(value);
+    }
+
+    private long getUnixTimestampAsString() {
+        return System.currentTimeMillis() / TIMESTAMP_DIVIDER;
     }
 
     private Tags getSafeTags() {
@@ -214,5 +222,33 @@ public final class APIBuilder {
 
     private boolean isStringSafe(final String string) {
         return string != null && !string.isEmpty();
+    }
+
+    String getMetricName() {
+        return metricName;
+    }
+
+    String getValue() {
+        return value;
+    }
+
+    String getNamespace() {
+        return namespace;
+    }
+
+    Tags getTags() {
+        return tags;
+    }
+
+    Aggregations getAggregations() {
+        return aggregations;
+    }
+
+    AggregationFreq getAggregationFreq() {
+        return aggregationFreq;
+    }
+
+    Integer getSampleRate() {
+        return sampleRate;
     }
 }
