@@ -1,9 +1,10 @@
 package com.mindera.telemetron.client.api;
 
-public final class TelemetronMetricBuilder {
+public final class TelemetronClientDelegate {
+
     private final APIBuilder apiBuilder;
 
-    public TelemetronMetricBuilder(final APIBuilder apiBuilder) {
+    public TelemetronClientDelegate(final APIBuilder apiBuilder) {
         this.apiBuilder = apiBuilder;
     }
 

@@ -21,12 +21,12 @@ The simplest way of sending a _timer_ metric to Telemetron can be done like this
 ### Counter ###
 Or, if you prefer to send a _counter_ metric to Telemetron:
 
-    subject.counter("transactions").send();
+    telemetron.counter("transactions").send();
 
 ### Gauge ###
 And finally, a _gauge_ metric to Telemetron can be preformed in the following way:
 
-    subject.gauge("current_sessions", "2").send();
+    telemetron.gauge("current_sessions", "2").send();
 
 ## Client configuration ##
 
@@ -79,15 +79,15 @@ To configure Gauge defaults configuration, you should use the _gauge_ method. Pl
 
 ### Building metrics tags ###
 
-    subject.counter("transactions").with().tag("host", "localhost").tag("status", "SUCCESS").send();
+    telemetron.counter("transactions").with().tag("host", "localhost").tag("status", "SUCCESS").send();
         
 ### Adding metrics with aggregations ###
 
-    subject.counter("transactions").with().aggregations(AVG, P90)).aggFreq(FREQ_10).send();
+    telemetron.counter("transactions").with().aggregations(AVG, P90)).aggFreq(FREQ_10).send();
         
 ### Adding metrics with namespace ###
 
-    subject.counter("transactions").with().namespace("my-namespace").send();
+    telemetron.counter("transactions").with().namespace("my-namespace").send();
 
 ## Setup tips ##
 

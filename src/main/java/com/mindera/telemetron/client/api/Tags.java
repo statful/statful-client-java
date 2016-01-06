@@ -19,6 +19,26 @@ public class Tags {
         return result;
     }
 
+    public static Tags from(final String[] tagsArray) {
+        if (!canGroupByTwo(tagsArray.length)) {
+            return null;
+        } else {
+            return buildTagFrom(tagsArray);
+        }
+    }
+
+    private static boolean canGroupByTwo(final int length) {
+        return length > 0 && length % 2 == 0;
+    }
+
+    private static Tags buildTagFrom(final String[] tagsArray) {
+        Tags tags = new Tags();
+        for (int i = 0; i < tagsArray.length - 1; i += 2) {
+            tags.putTag(tagsArray[i], tagsArray[i + 1]);
+        }
+        return tags;
+    }
+
     public final void putTag(final String type, final String value) {
         tags.put(type, value);
     }

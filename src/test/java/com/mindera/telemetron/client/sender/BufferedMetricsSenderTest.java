@@ -303,7 +303,7 @@ public class BufferedMetricsSenderTest {
         executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
 
         // Then
-        Thread.sleep(600);
+        Thread.sleep(800);
 
         long end = System.currentTimeMillis();
 

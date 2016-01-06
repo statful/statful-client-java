@@ -3,8 +3,7 @@ package com.mindera.telemetron.client.api;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class TagsTest {
 
@@ -20,6 +19,29 @@ public class TagsTest {
         Tags tags = Tags.from(Tags.from("unit", "ms"));
 
         assertEquals("ms", tags.getTagValue("unit"));
+    }
+
+    @Test
+    public void shouldGetFromTagsArray() throws Exception {
+        Tags tags = Tags.from(new String[] {"unit", "ms", "cluster", "production"});
+
+        assertEquals(2, tags.getTags().size());
+        assertEquals("ms", tags.getTagValue("unit"));
+        assertEquals("production", tags.getTagValue("cluster"));
+    }
+
+    @Test
+    public void shouldNotGetFromTagsArrayWhenIsNotEven() throws Exception {
+        Tags tags = Tags.from(new String[] {"unit"});
+
+        assertNull(tags);
+    }
+
+    @Test
+    public void shouldNotGetFromTagsArrayWhenIsEmpty() throws Exception {
+        Tags tags = Tags.from(new String[] {});
+
+        assertNull(tags);
     }
 
     @Test

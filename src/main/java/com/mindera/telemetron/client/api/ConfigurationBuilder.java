@@ -44,7 +44,9 @@ public final class ConfigurationBuilder<T> {
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> host(final String host) {
-        this.result.setHost(host);
+        if (isStringSafe(host)) {
+            this.result.setHost(host);
+        }
         return this;
     }
 
@@ -66,7 +68,9 @@ public final class ConfigurationBuilder<T> {
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> prefix(final String prefix) {
-        this.result.setPrefix(prefix);
+        if (isStringSafe(prefix)) {
+            this.result.setPrefix(prefix);
+        }
         return this;
     }
 
@@ -77,7 +81,9 @@ public final class ConfigurationBuilder<T> {
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> transport(final Transport transport) {
-        this.result.setTransport(transport);
+        if (transport != null) {
+            this.result.setTransport(transport);
+        }
         return this;
     }
 
@@ -88,7 +94,9 @@ public final class ConfigurationBuilder<T> {
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> token(final String token) {
-        this.result.setToken(token);
+        if (isStringSafe(token)) {
+            this.result.setToken(token);
+        }
         return this;
     }
 
@@ -99,7 +107,9 @@ public final class ConfigurationBuilder<T> {
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> app(final String app) {
-        this.result.setApp(app);
+        if (isStringSafe(app)) {
+            this.result.setApp(app);
+        }
         return this;
     }
 
@@ -121,7 +131,9 @@ public final class ConfigurationBuilder<T> {
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> namespace(final String namespace) {
-        this.result.setNamespace(namespace);
+        if (isStringSafe(namespace)) {
+            this.result.setNamespace(namespace);
+        }
         return this;
     }
 
@@ -315,5 +327,9 @@ public final class ConfigurationBuilder<T> {
             throw new IllegalStateException("Configuration is not valid. Prefix and transport must be defined");
         }
         return this.result;
+    }
+
+    private boolean isStringSafe(final String string) {
+        return string != null && !string.isEmpty();
     }
 }

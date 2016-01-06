@@ -3,10 +3,14 @@ package com.mindera.telemetron.client.api;
 import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.sender.MetricsSender;
 
+import java.util.logging.Logger;
+
 /**
  * This is a builder for the metrics API. It shouldn't be imported since it's used by the Telemetron client.
  */
-public class APIBuilder {
+public final class APIBuilder {
+
+    private static final Logger LOGGER = Logger.getLogger(APIBuilder.class.getName());
 
     private static final long TIMESTAMP_DIVIDER = 1000L;
 
@@ -29,7 +33,7 @@ public class APIBuilder {
      *
      * @return A reference to this builder
      */
-    public final APIBuilder with() {
+    public APIBuilder with() {
         return this;
     }
 
@@ -39,8 +43,10 @@ public class APIBuilder {
      * @param metricName Metric name as string
      * @return A reference to this builder
      */
-    public final APIBuilder metricName(final String metricName) {
-        this.metricName = metricName;
+    public APIBuilder metricName(final String metricName) {
+        if (isStringSafe(metricName)) {
+            this.metricName = metricName;
+        }
         return this;
     }
 
@@ -50,8 +56,10 @@ public class APIBuilder {
      * @param value The value as string
      * @return A reference to this builder
      */
-    public final APIBuilder value(final String value) {
-        this.value = value;
+    public APIBuilder value(final String value) {
+        if (isStringSafe(value)) {
+            this.value = value;
+        }
         return this;
     }
 
@@ -61,9 +69,11 @@ public class APIBuilder {
      * @param configuration Client configuration
      * @return A reference to this builder
      */
-    public final APIBuilder configuration(final ClientConfiguration configuration) {
-        return this.withNamespace(configuration.getNamespace())
-                .withSampleRate(configuration.getSampleRate());
+    public APIBuilder configuration(final ClientConfiguration configuration) {
+        if (configuration != null) {
+            this.withNamespace(configuration.getNamespace()).withSampleRate(configuration.getSampleRate());
+        }
+        return this;
     }
 
     /**
@@ -73,7 +83,9 @@ public class APIBuilder {
      * @return A reference to this builder
      */
     private APIBuilder withSampleRate(final Integer sampleRate) {
-        this.sampleRate = sampleRate;
+        if (sampleRate != null) {
+            this.sampleRate = sampleRate;
+        }
         return this;
     }
 
@@ -84,7 +96,7 @@ public class APIBuilder {
      * @param value The tag value
      * @return A reference to this builder
      */
-    public final APIBuilder tag(final String type, final String value) {
+    public APIBuilder tag(final String type, final String value) {
         if (!Tags.isEmpty(type, value)) {
             getSafeTags().putTag(type, value);
         }
@@ -97,7 +109,7 @@ public class APIBuilder {
      * @param tags Tags to use
      * @return A reference to this builder
      */
-    public final APIBuilder tags(final Tags tags) {
+    public APIBuilder tags(final Tags tags) {
         if (tags != null) {
             getSafeTags().merge(tags);
         }
@@ -110,7 +122,7 @@ public class APIBuilder {
      * @param aggregations Array of aggregations to use
      * @return A reference to this builder
      */
-    public final APIBuilder aggregations(final Aggregation... aggregations) {
+    public APIBuilder aggregations(final Aggregation... aggregations) {
         if (aggregations != null) {
             for (Aggregation aggregation : aggregations) {
                 withAggregation(aggregation);
@@ -125,7 +137,7 @@ public class APIBuilder {
      * @param aggregations Aggregations to use
      * @return A reference to this builder
      */
-    public final APIBuilder aggregations(final Aggregations aggregations) {
+    public APIBuilder aggregations(final Aggregations aggregations) {
         if (aggregations != null) {
             getSafeAggregations().merge(aggregations);
         }
@@ -145,8 +157,10 @@ public class APIBuilder {
      * @param aggFreq Aggregation frequency (10, 30, 60, 120, 180, 300)
      * @return A reference to this builder
      */
-    public final APIBuilder aggFreq(final AggregationFreq aggFreq) {
-        aggregationFreq = aggFreq;
+    public APIBuilder aggFreq(final AggregationFreq aggFreq) {
+        if (aggFreq != null) {
+            aggregationFreq = aggFreq;
+        }
         return this;
     }
 
@@ -156,22 +170,28 @@ public class APIBuilder {
      * @param namespace Namespace as string
      * @return A reference to this builder
      */
-    public final APIBuilder namespace(final String namespace) {
+    public APIBuilder namespace(final String namespace) {
         withNamespace(namespace);
         return this;
     }
 
     private APIBuilder withNamespace(final String namespace) {
-        this.namespace = namespace;
+        if (isStringSafe(namespace)) {
+            this.namespace = namespace;
+        }
         return this;
     }
 
     /**
      * Sends the metric to Telemetron.
      */
-    public final void send() {
-        String unixTimestamp = getUnixTimestampAsString();
-        metricsSender.put(metricName, value, tags, aggregations, aggregationFreq, sampleRate, namespace, unixTimestamp);
+    public void send() {
+        try {
+            String unixTimestamp = getUnixTimestampAsString();
+            metricsSender.put(metricName, value, tags, aggregations, aggregationFreq, sampleRate, namespace, unixTimestamp);
+        } catch (Exception e) {
+            LOGGER.warning("An exception has occurred while sending the metric to Telemetron: " + e.toString());
+        }
     }
 
     private String getUnixTimestampAsString() {
@@ -190,5 +210,9 @@ public class APIBuilder {
             aggregations = new Aggregations();
         }
         return aggregations;
+    }
+
+    private boolean isStringSafe(final String string) {
+        return string != null && !string.isEmpty();
     }
 }
