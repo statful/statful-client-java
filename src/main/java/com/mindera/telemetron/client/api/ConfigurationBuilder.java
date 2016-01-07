@@ -125,6 +125,17 @@ public final class ConfigurationBuilder<T> {
     }
 
     /**
+     * Sets the number of workers to process the telemetry.
+     *
+     * @param workersPoolSize The size of the pool as integer
+     * @return A reference to this configuration builder
+     */
+    public ConfigurationBuilder<T> workerPoolSize(final int workersPoolSize) {
+        this.result.setWorkersPoolSize(workersPoolSize);
+        return this;
+    }
+
+    /**
      * Sets the metrics namespace.
      *
      * @param namespace The namespace
@@ -174,13 +185,13 @@ public final class ConfigurationBuilder<T> {
     }
 
     /**
-     * Sets the flush interval in milliseconds.
+     * Sets the flush interval in seconds.
      *
      * @param flushInterval The flush interval as long
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> flushInterval(final long flushInterval) {
-        this.result.setFlushIntervalMillis(flushInterval);
+    public ConfigurationBuilder<T> flushInterval(final int flushInterval) {
+        this.result.setFlushIntervalSeconds(flushInterval);
         return this;
     }
 

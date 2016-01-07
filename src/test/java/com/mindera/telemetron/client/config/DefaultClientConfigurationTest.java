@@ -96,9 +96,9 @@ public class DefaultClientConfigurationTest {
     }
 
     @Test
-    public void shouldGetFlushIntervalMillis() {
-        subject.setFlushIntervalMillis(100);
-        assertEquals("Should get flush interval", 100, subject.getFlushIntervalMillis());
+    public void shouldGetFlushIntervalSeconds() {
+        subject.setFlushIntervalSeconds(1);
+        assertEquals("Should get flush interval", 1, subject.getFlushIntervalSeconds());
     }
 
     @Test
@@ -217,7 +217,7 @@ public class DefaultClientConfigurationTest {
         assertEquals(100, subject.getSampleRate());
         assertEquals("application", subject.getNamespace());
         assertEquals(10, subject.getFlushSize());
-        assertEquals(0, subject.getFlushIntervalMillis());
+        assertEquals(0, subject.getFlushIntervalSeconds());
         assertFalse(subject.isDryRun());
 
         assertEquals(FREQ_10, subject.getTimerAggregationFreq());

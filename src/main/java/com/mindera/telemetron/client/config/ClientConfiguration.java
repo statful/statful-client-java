@@ -53,11 +53,11 @@ public interface ClientConfiguration {
     int getFlushSize();
 
     /**
-     * Returns the periodicity of buffer flushes in time period (milliseconds). Default is 0, which is disabled.
+     * Returns the periodicity of buffer flushes in time period (seconds). Default is 0, which is disabled.
      *
      * @return Flush interval as long
      */
-    long getFlushIntervalMillis();
+    int getFlushIntervalSeconds();
 
     /**
      * Returns if actually the metrics are sent when flushing the buffer.
@@ -167,7 +167,7 @@ public interface ClientConfiguration {
     /**
      * Default is 1.
      *
-     * @return
+     * @return Size as int
      */
     int getWorkersPoolSize();
 }

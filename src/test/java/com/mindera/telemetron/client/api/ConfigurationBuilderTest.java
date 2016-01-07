@@ -43,7 +43,7 @@ public class ConfigurationBuilderTest {
         assertEquals("Should have default sample rate", 100, config.getSampleRate());
         assertEquals("Should have default namespace", "application", config.getNamespace());
         assertEquals("Should have default flush size", 10, config.getFlushSize());
-        assertEquals("Should have default flush interval", 0, config.getFlushIntervalMillis());
+        assertEquals("Should have default flush interval", 0, config.getFlushIntervalSeconds());
     }
 
     @Test
@@ -143,7 +143,18 @@ public class ConfigurationBuilderTest {
                 .isDryRun(true)
                 .buildConfiguration();
 
-        assertTrue("Should configure token", config.isDryRun());
+        assertTrue("Should configure dry run", config.isDryRun());
+    }
+
+    @Test
+    public void shouldConfigureWorkersPool() {
+        ClientConfiguration config = newBuilder()
+                .prefix("test_prefix")
+                .transport(UDP)
+                .workerPoolSize(20)
+                .buildConfiguration();
+
+        assertEquals("Should configure pool size", 20, config.getWorkersPoolSize());
     }
 
     @Test
@@ -201,7 +212,7 @@ public class ConfigurationBuilderTest {
                 .flushInterval(500)
                 .buildConfiguration();
 
-        assertEquals("Should configure flush interval", 500, config.getFlushIntervalMillis());
+        assertEquals("Should configure flush interval", 500, config.getFlushIntervalSeconds());
     }
 
     @Test

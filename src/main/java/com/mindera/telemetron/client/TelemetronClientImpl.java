@@ -16,6 +16,8 @@ class TelemetronClientImpl implements TelemetronClient {
     private final MetricsSender metricsSender;
     private final ClientConfiguration configuration;
 
+    private boolean enabled = true;
+
     TelemetronClientImpl(final MetricsSender metricsSender, final ClientConfiguration configuration) {
         this.metricsSender = metricsSender;
         this.configuration = configuration;
@@ -71,11 +73,25 @@ class TelemetronClientImpl implements TelemetronClient {
             final AggregationFreq aggregationFreq, final Integer sampleRate, final String namespace,
             final long timestamp
     ) {
-        try {
-            metricsSender.put(name, value, tags, aggregations, aggregationFreq, sampleRate, namespace, timestamp);
-        } catch (Exception e) {
-            LOGGER.warning("Unable to send metric: " + e.toString());
+        if (enabled) {
+            try {
+                metricsSender.put(name, value, tags, aggregations, aggregationFreq, sampleRate, namespace, timestamp);
+            } catch (Exception e) {
+                LOGGER.warning("Unable to send metric: " + e.toString());
+            }
+        } else {
+            LOGGER.fine("Telemetry client is disabled. The metric was not sent.");
         }
+    }
+
+    @Override
+    public void enable() {
+        enabled = true;
+    }
+
+    @Override
+    public void disable() {
+        enabled = false;
     }
 
     @Override

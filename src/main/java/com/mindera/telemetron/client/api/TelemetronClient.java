@@ -41,4 +41,14 @@ public interface TelemetronClient extends MetricsSender {
      * @return A Gauge metric builder, ready to be sent or configure
      */
     SenderFacade gauge(final String metricName, final String value);
+
+    /**
+     * Enables Telemetron client.
+     */
+    void enable();
+
+    /**
+     * Disables Telemetron client.
+     */
+    void disable();
 }

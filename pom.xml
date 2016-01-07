@@ -73,7 +73,7 @@
                 <version>2.7</version>
                 <configuration>
                     <check>
-                        <haltOnFailure>false</haltOnFailure>
+                        <haltOnFailure>true</haltOnFailure>
                         <totalBranchRate>95</totalBranchRate>
                         <totalLineRate>95</totalLineRate>
                         <packageLineRate>95</packageLineRate>

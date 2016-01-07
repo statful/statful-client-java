@@ -32,7 +32,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
 
     private String prefix;
     private boolean isDryRun;
-    private long flushIntervalMillis;
+    private int flushIntervalSeconds;
     private Transport transport;
     private String token;
     private String app;
@@ -82,8 +82,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     @Override
-    public final long getFlushIntervalMillis() {
-        return flushIntervalMillis;
+    public final int getFlushIntervalSeconds() {
+        return flushIntervalSeconds;
     }
 
     @Override
@@ -194,8 +194,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         this.isDryRun = isDryRun;
     }
 
-    public final void setFlushIntervalMillis(final long flushIntervalMillis) {
-        this.flushIntervalMillis = flushIntervalMillis;
+    public final void setFlushIntervalSeconds(final int flushIntervalSeconds) {
+        this.flushIntervalSeconds = flushIntervalSeconds;
     }
 
     public final void setTransport(final Transport transport) {
@@ -209,6 +209,10 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     public final void setApp(final String app) {
         this.app = app;
         mergeTagIntoMethods("app", app);
+    }
+
+    public final void setWorkersPoolSize(final int workersPoolSize) {
+        this.workersPoolSize = workersPoolSize;
     }
 
     public final void setTimerAggregationFreq(final AggregationFreq timerAggregationFreq) {

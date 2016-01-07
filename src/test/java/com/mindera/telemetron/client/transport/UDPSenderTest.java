@@ -96,4 +96,17 @@ public class UDPSenderTest {
         // Then
         assertEquals("Should send UDP message", "Hello world", response.get());
     }
+
+    @Test
+    public void shouldNotThrowAfterIOException() throws Exception {
+        // Given
+        DatagramSocket socket = mock(DatagramSocket.class);
+        doThrow(new IOException()).when(socket).send(any(DatagramPacket.class));
+
+        UDPSender subject = new UDPSender("127.0.0.1", 2015);
+        subject.setMockedSocket(socket);
+
+        // When
+        subject.send("Hello world");
+    }
 }

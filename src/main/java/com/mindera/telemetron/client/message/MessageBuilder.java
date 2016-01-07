@@ -108,9 +108,7 @@ public final class MessageBuilder {
                 sb.append(aggr.getName()).append(",");
             }
 
-            if (aggregationFreq != null) {
-                sb.append(aggregationFreq.getValue());
-            }
+            sb.append(aggregationFreq.getValue());
         }
 
         return sb.toString();
