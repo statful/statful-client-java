@@ -68,7 +68,9 @@ public final class MessageBuilder {
     }
 
     public MessageBuilder withAggregationFreq(final AggregationFreq aggregationFreq) {
-        this.aggregationFreq = aggregationFreq;
+        if (aggregationFreq != null) {
+            this.aggregationFreq = aggregationFreq;
+        }
         return this;
     }
 
@@ -105,7 +107,10 @@ public final class MessageBuilder {
             for (Aggregation aggr : aggregations) {
                 sb.append(aggr.getName()).append(",");
             }
-            sb.append(aggregationFreq.getValue());
+
+            if (aggregationFreq != null) {
+                sb.append(aggregationFreq.getValue());
+            }
         }
 
         return sb.toString();

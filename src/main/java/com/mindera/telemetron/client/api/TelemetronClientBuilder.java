@@ -1,7 +1,5 @@
 package com.mindera.telemetron.client.api;
 
-import com.mindera.telemetron.client.TelemetronClient;
-
 public final class TelemetronClientBuilder {
     private final ConfigurationBuilder<TelemetronClient> configurationBuilder;
 

@@ -7,9 +7,9 @@ public class Tags {
 
     private final Map<String, String> tags = new HashMap<String, String>();
 
-    public static Tags from(final String type, final String name) {
+    public static Tags from(final String type, final String value) {
         Tags result = new Tags();
-        result.putTag(type, name);
+        result.putTag(type, value);
         return result;
     }
 

@@ -6,25 +6,22 @@ import com.mindera.telemetron.client.api.Aggregations;
 import com.mindera.telemetron.client.api.Tags;
 import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.sender.MetricsSender;
-import com.mindera.telemetron.client.transport.UdpEcho;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import java.util.Collection;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
-import static com.mindera.telemetron.client.api.AggregationFreq.*;
+import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
+import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_120;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class TelemetronClientTest {
+public class TelemetronClientImplTest {
 
     @Mock
     private ClientConfiguration configuration;
@@ -32,7 +29,7 @@ public class TelemetronClientTest {
     @Mock
     private MetricsSender metricsSender;
 
-    private TelemetronClient subject;
+    private TelemetronClientImpl subject;
 
     @Before
     public void setUp() {
@@ -48,7 +45,7 @@ public class TelemetronClientTest {
         when(configuration.getCounterAggregationFreq()).thenReturn(FREQ_10);
         when(configuration.getGaugeAggregationFreq()).thenReturn(FREQ_10);
 
-        subject = new TelemetronClient(metricsSender, configuration);
+        subject = new TelemetronClientImpl(metricsSender, configuration);
     }
 
     @Test
@@ -352,7 +349,7 @@ public class TelemetronClientTest {
 
         when(configuration.getTimerTags()).thenReturn(defaultTimerTags);
 
-        TelemetronClient subject = new TelemetronClient(metricsSender, configuration);
+        TelemetronClientImpl subject = new TelemetronClientImpl(metricsSender, configuration);
 
         // When
         subject.timer("response_time", 1000).with().tag("cluster", "prod").send();
@@ -398,40 +395,13 @@ public class TelemetronClientTest {
     @Test
     public void shouldShutdownClient() {
         // Given
-        TelemetronClient subject = new TelemetronClient(metricsSender, configuration);
+        TelemetronClientImpl subject = new TelemetronClientImpl(metricsSender, configuration);
 
         // When
         subject.shutdown();
 
         // Then
         verify(metricsSender, times(1)).shutdown();
-    }
-
-    @Test
-    public void shouldCreateUdpClient() throws Exception {
-        // Given
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
-        Future<String> response = executorService.submit(new UdpEcho(2013));
-
-        // When
-        TelemetronClient client = TelemetronClient.buildUDPClient("test_prefix").with()
-                .flushSize(1)
-                .build();
-        client.counter("test_counter").send();
-        client.counter("test_counter").send();
-
-        String responseString = response.get();
-
-        // Then
-        assertTrue("Should receive message", responseString.startsWith("test_prefix.application.counter.test_counter 1"));
-        executorService.shutdown();
-    }
-
-    @Test
-    public void shouldCreateUdpClientWithoutOptionalConfigurations() throws Exception {
-        TelemetronClient client = TelemetronClient.buildUDPClient("test_prefix").build();
-
-        assertNotNull(client);
     }
 
     private void shouldContainDefaultTimerTags(Tags tags) {
