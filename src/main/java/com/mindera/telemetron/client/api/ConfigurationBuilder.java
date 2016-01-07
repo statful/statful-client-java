@@ -145,7 +145,7 @@ public final class ConfigurationBuilder<T> {
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> tag(final String type, final String value) {
-        if (!Tags.isEmpty(type, value)) {
+        if (!Tags.isEmptyOrNull(type, value)) {
             this.result.mergeApplicationTag(type, value);
         }
         return this;

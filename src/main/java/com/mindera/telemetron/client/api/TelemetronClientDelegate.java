@@ -2,17 +2,17 @@ package com.mindera.telemetron.client.api;
 
 public final class TelemetronClientDelegate {
 
-    private final APIBuilder apiBuilder;
+    private final MetricsSenderAPI metricsSenderAPI;
 
-    public TelemetronClientDelegate(final APIBuilder apiBuilder) {
-        this.apiBuilder = apiBuilder;
+    public TelemetronClientDelegate(final MetricsSenderAPI metricsSenderAPI) {
+        this.metricsSenderAPI = metricsSenderAPI;
     }
 
-    public APIBuilder with() {
-        return apiBuilder;
+    public MetricsSenderAPI with() {
+        return metricsSenderAPI;
     }
 
     public void send() {
-        apiBuilder.send();
+        metricsSenderAPI.send();
     }
 }

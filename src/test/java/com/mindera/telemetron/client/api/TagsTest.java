@@ -81,36 +81,36 @@ public class TagsTest {
 
     @Test
     public void shouldCheckIfTagTypeIsEmpty() throws Exception {
-        assertTrue(Tags.isEmpty("", "ms"));
+        assertTrue(Tags.isEmptyOrNull("", "ms"));
     }
 
     @Test
     public void shouldCheckIfTagTypeIsNull() throws Exception {
-        assertTrue(Tags.isEmpty(null, "ms"));
+        assertTrue(Tags.isEmptyOrNull(null, "ms"));
     }
 
     @Test
     public void shouldCheckIfTagValueIsEmpty() throws Exception {
-        assertTrue(Tags.isEmpty("unit", ""));
+        assertTrue(Tags.isEmptyOrNull("unit", ""));
     }
 
     @Test
     public void shouldCheckIfTagValueIsNull() throws Exception {
-        assertTrue(Tags.isEmpty("unit", null));
+        assertTrue(Tags.isEmptyOrNull("unit", null));
     }
 
     @Test
     public void shouldCheckIfTypeAndValueAreEmpty() throws Exception {
-        assertTrue(Tags.isEmpty("", ""));
+        assertTrue(Tags.isEmptyOrNull("", ""));
     }
 
     @Test
     public void shouldCheckIfTypeAndValueAreNull() throws Exception {
-        assertTrue(Tags.isEmpty(null, null));
+        assertTrue(Tags.isEmptyOrNull(null, null));
     }
 
     @Test
     public void shouldCheckIfTagIsNotEmpty() throws Exception {
-        assertFalse(Tags.isEmpty("unit", "ms"));
+        assertFalse(Tags.isEmptyOrNull("unit", "ms"));
     }
 }

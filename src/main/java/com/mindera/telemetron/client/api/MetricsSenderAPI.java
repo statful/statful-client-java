@@ -6,11 +6,11 @@ import com.mindera.telemetron.client.sender.MetricsSender;
 import java.util.logging.Logger;
 
 /**
- * This is a builder for the metrics API. It shouldn't be imported since it's used by the Telemetron client.
+ * This is the metrics sender API, which is exposed to allow building metrics and sending them to Telemetron.
  */
-public final class APIBuilder {
+public final class MetricsSenderAPI {
 
-    private static final Logger LOGGER = Logger.getLogger(APIBuilder.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MetricsSenderAPI.class.getName());
 
     private static final long TIMESTAMP_DIVIDER = 1000L;
 
@@ -24,7 +24,7 @@ public final class APIBuilder {
     private AggregationFreq aggregationFreq;
     private Integer sampleRate;
 
-    public APIBuilder(final MetricsSender metricsSender) {
+    public MetricsSenderAPI(final MetricsSender metricsSender) {
         this.metricsSender = metricsSender;
     }
 
@@ -33,7 +33,7 @@ public final class APIBuilder {
      *
      * @return A reference to this builder
      */
-    public APIBuilder with() {
+    public MetricsSenderAPI with() {
         return this;
     }
 
@@ -43,7 +43,7 @@ public final class APIBuilder {
      * @param metricName Metric name as string
      * @return A reference to this builder
      */
-    public APIBuilder metricName(final String metricName) {
+    public MetricsSenderAPI metricName(final String metricName) {
         if (isStringSafe(metricName)) {
             this.metricName = metricName;
         }
@@ -56,7 +56,7 @@ public final class APIBuilder {
      * @param value The value as string
      * @return A reference to this builder
      */
-    public APIBuilder value(final String value) {
+    public MetricsSenderAPI value(final String value) {
         if (isStringSafe(value)) {
             this.value = value;
         }
@@ -69,7 +69,7 @@ public final class APIBuilder {
      * @param configuration Client configuration
      * @return A reference to this builder
      */
-    public APIBuilder configuration(final ClientConfiguration configuration) {
+    public MetricsSenderAPI configuration(final ClientConfiguration configuration) {
         if (configuration != null) {
             this.withNamespace(configuration.getNamespace()).withSampleRate(configuration.getSampleRate());
         }
@@ -82,7 +82,7 @@ public final class APIBuilder {
      * @param sampleRate Sample rate as integer
      * @return A reference to this builder
      */
-    private APIBuilder withSampleRate(final Integer sampleRate) {
+    private MetricsSenderAPI withSampleRate(final Integer sampleRate) {
         if (sampleRate != null) {
             this.sampleRate = sampleRate;
         }
@@ -96,8 +96,8 @@ public final class APIBuilder {
      * @param value The tag value
      * @return A reference to this builder
      */
-    public APIBuilder tag(final String type, final String value) {
-        if (!Tags.isEmpty(type, value)) {
+    public MetricsSenderAPI tag(final String type, final String value) {
+        if (!Tags.isEmptyOrNull(type, value)) {
             getSafeTags().putTag(type, value);
         }
         return this;
@@ -109,7 +109,7 @@ public final class APIBuilder {
      * @param tags Tags to use
      * @return A reference to this builder
      */
-    public APIBuilder tags(final Tags tags) {
+    public MetricsSenderAPI tags(final Tags tags) {
         if (tags != null) {
             getSafeTags().merge(tags);
         }
@@ -122,7 +122,7 @@ public final class APIBuilder {
      * @param aggregations Array of aggregations to use
      * @return A reference to this builder
      */
-    public APIBuilder aggregations(final Aggregation... aggregations) {
+    public MetricsSenderAPI aggregations(final Aggregation... aggregations) {
         if (aggregations != null) {
             for (Aggregation aggregation : aggregations) {
                 withAggregation(aggregation);
@@ -137,14 +137,14 @@ public final class APIBuilder {
      * @param aggregations Aggregations to use
      * @return A reference to this builder
      */
-    public APIBuilder aggregations(final Aggregations aggregations) {
+    public MetricsSenderAPI aggregations(final Aggregations aggregations) {
         if (aggregations != null) {
             getSafeAggregations().merge(aggregations);
         }
         return this;
     }
 
-    private APIBuilder withAggregation(final Aggregation aggregation) {
+    private MetricsSenderAPI withAggregation(final Aggregation aggregation) {
         if (aggregation != null) {
             getSafeAggregations().put(aggregation);
         }
@@ -157,7 +157,7 @@ public final class APIBuilder {
      * @param aggFreq Aggregation frequency (10, 30, 60, 120, 180, 300)
      * @return A reference to this builder
      */
-    public APIBuilder aggFreq(final AggregationFreq aggFreq) {
+    public MetricsSenderAPI aggFreq(final AggregationFreq aggFreq) {
         if (aggFreq != null) {
             aggregationFreq = aggFreq;
         }
@@ -170,12 +170,12 @@ public final class APIBuilder {
      * @param namespace Namespace as string
      * @return A reference to this builder
      */
-    public APIBuilder namespace(final String namespace) {
+    public MetricsSenderAPI namespace(final String namespace) {
         withNamespace(namespace);
         return this;
     }
 
-    private APIBuilder withNamespace(final String namespace) {
+    private MetricsSenderAPI withNamespace(final String namespace) {
         if (isStringSafe(namespace)) {
             this.namespace = namespace;
         }

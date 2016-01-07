@@ -13,7 +13,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class APIBuilderTest {
+public class MetricsSenderAPITest {
 
     @Mock
     private MetricsSender metricsSender;
@@ -25,7 +25,7 @@ public class APIBuilderTest {
 
     @Test
     public void shouldNotSendWhenNameIsInvalid() {
-        APIBuilder builder = new APIBuilder(metricsSender);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
         builder.value("something");
 
         builder.send();
@@ -36,7 +36,7 @@ public class APIBuilderTest {
 
     @Test
     public void shouldNotSendWhenValueIsInvalid() {
-        APIBuilder builder = new APIBuilder(metricsSender);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
         builder.metricName("something");
 
         builder.send();
@@ -47,7 +47,7 @@ public class APIBuilderTest {
 
     @Test
     public void shouldIgnoreMetricNameWhenEmpty() {
-        APIBuilder builder = new APIBuilder(metricsSender);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
         builder.metricName("");
 
         assertNull(builder.getMetricName());
@@ -55,7 +55,7 @@ public class APIBuilderTest {
 
     @Test
     public void shouldIgnoreValueWhenEmpty() {
-        APIBuilder builder = new APIBuilder(metricsSender);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
         builder.value("");
 
         assertNull(builder.getValue());
@@ -63,14 +63,14 @@ public class APIBuilderTest {
 
     @Test
     public void shouldIgnoreConfigurationWhenNull() {
-        APIBuilder builder = new APIBuilder(metricsSender);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
         builder.configuration(null);
         // Doesn't throw anything
     }
 
     @Test
     public void shouldIgnoreSampleRateWhenNull() {
-        APIBuilder builder = new APIBuilder(metricsSender);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
 
         DefaultClientConfiguration config = new DefaultClientConfiguration();
         config.setNamespace("namespace");
@@ -82,7 +82,7 @@ public class APIBuilderTest {
 
     @Test
     public void shouldIgnoreNamespaceWhenNull() {
-        APIBuilder builder = new APIBuilder(metricsSender);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
         DefaultClientConfiguration config = new DefaultClientConfiguration();
         config.setSampleRate(20);
 
@@ -93,7 +93,7 @@ public class APIBuilderTest {
 
     @Test
     public void shouldIgnoreAggregationFreqWhenNull() {
-        APIBuilder builder = new APIBuilder(metricsSender);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
         builder.aggFreq(null);
 
         assertNull(builder.getAggregationFreq());
@@ -101,21 +101,21 @@ public class APIBuilderTest {
 
     @Test
     public void shouldIgnoreAggregationsArrayWhenNull() {
-        APIBuilder builder = new APIBuilder(metricsSender);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
         builder.aggregations((Aggregation[]) null);
         // Doesn't throw anything
     }
 
     @Test
     public void shouldIgnoreAggregationsWhenNull() {
-        APIBuilder builder = new APIBuilder(metricsSender);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
         builder.aggregations((Aggregations)null);
         // Doesn't throw anything
     }
 
     @Test
     public void shouldNotThrowWhenSendingHasException() {
-        APIBuilder builder = new APIBuilder(null);
+        MetricsSenderAPI builder = new MetricsSenderAPI(null);
         builder.metricName("namespace").value("value");
 
         builder.send();

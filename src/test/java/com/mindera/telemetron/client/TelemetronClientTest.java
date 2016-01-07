@@ -144,7 +144,7 @@ public class TelemetronClientTest {
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("counter.transactions"), eq("0"), isNull(Tags.class), aggrArg.capture(), eq(FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("counter.transactions"), eq("1"), isNull(Tags.class), aggrArg.capture(), eq(FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         shouldContainDefaultCounterAggregations(aggrArg.getValue());
@@ -158,7 +158,7 @@ public class TelemetronClientTest {
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
 
-        verify(metricsSender).put(eq("counter.transactions"), eq("0"), tagsArg.capture(), any(Aggregations.class), eq(FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("counter.transactions"), eq("1"), tagsArg.capture(), any(Aggregations.class), eq(FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have tags
         Tags tags = tagsArg.getValue();
@@ -175,7 +175,7 @@ public class TelemetronClientTest {
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("counter.transactions"), eq("0"), any(Tags.class), aggrArg.capture(), eq(FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("counter.transactions"), eq("1"), any(Tags.class), aggrArg.capture(), eq(FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         assertNotNull("Aggregations should not be null", aggrArg.getValue());
@@ -195,7 +195,7 @@ public class TelemetronClientTest {
         // Then
         ArgumentCaptor<AggregationFreq> aggrFreqArg = ArgumentCaptor.forClass(AggregationFreq.class);
 
-        verify(metricsSender).put(eq("counter.transactions"), eq("0"), any(Tags.class), any(Aggregations.class), aggrFreqArg.capture(), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("counter.transactions"), eq("1"), any(Tags.class), any(Aggregations.class), aggrFreqArg.capture(), eq(10), eq("application"), anyLong());
 
         assertNotNull("Aggregation frequency should not be null", aggrFreqArg.getValue());
         assertEquals("Aggregation frequency should be 5", FREQ_120, aggrFreqArg.getValue());
@@ -209,7 +209,7 @@ public class TelemetronClientTest {
         // Then
         ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);
 
-        verify(metricsSender).put(eq("counter.transactions"), eq("0"), isNull(Tags.class), any(Aggregations.class), eq(FREQ_10), eq(10), namespaceArg.capture(), anyLong());
+        verify(metricsSender).put(eq("counter.transactions"), eq("1"), isNull(Tags.class), any(Aggregations.class), eq(FREQ_10), eq(10), namespaceArg.capture(), anyLong());
 
         assertEquals("Namespace should be 'client'", "client", namespaceArg.getValue());
     }
@@ -423,7 +423,7 @@ public class TelemetronClientTest {
         String responseString = response.get();
 
         // Then
-        assertTrue("Should receive message", responseString.startsWith("test_prefix.application.counter.test_counter 0"));
+        assertTrue("Should receive message", responseString.startsWith("test_prefix.application.counter.test_counter 1"));
         executorService.shutdown();
     }
 

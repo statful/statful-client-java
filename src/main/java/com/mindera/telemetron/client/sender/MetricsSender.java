@@ -25,7 +25,7 @@ public interface MetricsSender {
              Integer sampleRate, String namespace, long timestamp);
 
     /**
-     * Shutdows the metrics sender. This typically means realising resources or stopping flush mechanism.
+     * Shutdowns the metrics sender. This typically means releasing resources or stopping flush mechanism.
      */
     void shutdown();
 }

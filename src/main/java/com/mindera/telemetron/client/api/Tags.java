@@ -58,7 +58,7 @@ public class Tags {
         return this;
     }
 
-    public static  boolean isEmpty(final String type, final String value) {
+    public static boolean isEmptyOrNull(final String type, final String value) {
         return isEmpty(type) || isEmpty(value);
     }
 
