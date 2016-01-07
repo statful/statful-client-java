@@ -275,21 +275,22 @@ public class BufferedMetricsSenderTest {
     }
 
     @Test
-    public void shouldBeAbleToIngest50000MetricsInLessThan1second() throws Exception {
+    public void shouldBeAbleToIngest4999MetricsInLessThan100msWithContention() throws Exception {
         // Given
-        when(configuration.getFlushSize()).thenReturn(200);
-        when(configuration.getFlushIntervalMillis()).thenReturn(50L);
+        when(configuration.getFlushSize()).thenReturn(5000);
         doAnswer(mockedTransportResponse).when(transportSender).send(anyString());
 
         final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-
-        long start = System.currentTimeMillis();
+        // Adding a lot of contention
+        ExecutorService executorService = Executors.newFixedThreadPool(200);
 
         // When
         final AtomicInteger counter = new AtomicInteger();
-        for (int i = 0; i < 50000; i++) {
+
+        long start = System.currentTimeMillis();
+
+        for (int i = 0; i < 4999; i++) {
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -300,18 +301,19 @@ public class BufferedMetricsSenderTest {
         }
 
         executorService.shutdown();
-        executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
-
-        // Then
-        Thread.sleep(800);
+        executorService.awaitTermination(500, TimeUnit.MILLISECONDS);
 
         long end = System.currentTimeMillis();
 
-        assertTrue("Should ingest in less that 1 second", (end - start) < 1000);
+        // Then
+        assertEquals(4999, counter.get());
+
+        System.out.println((end - start));
+        assertTrue("Should ingest in less that 1 second", (end - start) < 100);
 
         List<String> buffer = subject.getBuffer();
-        assertEquals("Buffer should not have metrics", 0, buffer.size());
-        assertEquals(50000, counter.get());
+        assertEquals("Buffer should have all metrics in the buffer", 4999, buffer.size());
+
     }
 
     private Answer<String> mockedTransportResponse = new Answer<String>() {
