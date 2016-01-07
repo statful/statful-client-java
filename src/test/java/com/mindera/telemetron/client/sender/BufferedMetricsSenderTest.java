@@ -308,7 +308,6 @@ public class BufferedMetricsSenderTest {
         // Then
         assertEquals(4999, counter.get());
 
-        System.out.println((end - start));
         assertTrue("Should ingest in less that 1 second", (end - start) < 100);
 
         List<String> buffer = subject.getBuffer();
