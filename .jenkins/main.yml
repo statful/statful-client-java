@@ -1,0 +1,52 @@
+---
+
+### x_ are macros: https://bitbucket.org/mindera/mind-meta-jjb-root for more information
+
+
+###############
+### PROJECT
+- project:
+    name: 'telemetron-client-java'
+    project_version: '1.0.0'
+    giturl: git@bitbucket.org:mindera/telemetron-client-java.git
+    jobs:
+      - '{name}-build'
+
+###############
+### DEFAULTS
+- defaults:
+    name: global
+    description: 'Do NOT edit this job through the web! '
+    project-type: freestyle
+    node: ordinary
+    jdk: java-1.6.0
+    wrappers:
+      - timestamps
+      - ansicolor
+
+###############
+### TEMPLATES
+# Build
+- job-template:
+    name: "{name}-build"
+    project-type: maven
+
+    properties:
+      - x_pipeline__build
+
+    wrappers:
+      - timestamps
+
+    scm:
+      - git_shallow_clone_v2:
+          url: '{giturl}'
+          excluded-region: '.jenkins'
+
+    triggers:
+      - pollscm: "H/5 * * * *"
+
+    maven:
+      maven-name: "maven-3.1.1"
+      root-pom: pom.xml
+      goals: -Pci clean deploy -X -B
+      maven-opts: -Dmaven.test.failure.ignore=false
