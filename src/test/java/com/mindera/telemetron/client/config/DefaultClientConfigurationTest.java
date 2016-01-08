@@ -96,9 +96,9 @@ public class DefaultClientConfigurationTest {
     }
 
     @Test
-    public void shouldGetFlushIntervalSeconds() {
-        subject.setFlushIntervalMillis(1);
-        assertEquals("Should get flush interval", 1, subject.getFlushIntervalMillis());
+    public void shouldGetFlushIntervalMillis() {
+        subject.setFlushIntervalMillis(100);
+        assertEquals("Should get flush interval", 100, subject.getFlushIntervalMillis());
     }
 
     @Test
