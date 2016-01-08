@@ -126,4 +126,17 @@
         </repository>
     </repositories>
 
+    <distributionManagement>
+        <repository>
+            <id>mindera-releases</id>
+            <name>Mindera Nexus Releases Repository</name>
+            <url>http://nexus.mindera/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>mindera-snapshots</id>
+            <name>Mindera Nexus Snapshots Repository</name>
+            <url>http://nexus.mindera/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>
