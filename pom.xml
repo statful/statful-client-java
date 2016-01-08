@@ -11,7 +11,7 @@
     <scm>
         <connection>scm:git:ssh://bitbucket.org/mindera/telemetron-client-java.git</connection>
         <developerConnection>scm:git@bitbucket.org:mindera/telemetron-client-java.git</developerConnection>
-        <url>https://bitbucket.org/mindera/tel.git</url>
+        <url>https://bitbucket.org/mindera/telemetron-client-java.git</url>
     </scm>
 
     <dependencies>
