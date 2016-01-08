@@ -135,6 +135,21 @@ public class MessageBuilderTest {
     }
 
     @Test
+    public void shouldBuildMessageWithoutAggregationFreq() throws Exception {
+        String message = MessageBuilder.newBuilder()
+                .withPrefix(PREFIX)
+                .withNamespace(NAMESPACE)
+                .withName(NAME)
+                .withValue("3")
+                .withAggregations(AGGREGATIONS)
+                .withAggregationFreq(null)
+                .withTimestamp(TIMESTAMP)
+                .build();
+
+        assertEquals("TEST_PREF.TEST_NS.response_time 3 121232323 avg,count,10", message);
+    }
+
+    @Test
     public void shouldBuildMessageWithEmptyAggregations() throws Exception {
         String message = MessageBuilder.newBuilder()
                 .withPrefix(PREFIX)

@@ -167,7 +167,7 @@ public interface ClientConfiguration {
     /**
      * Default is 1.
      *
-     * @return
+     * @return Size as int
      */
     int getWorkersPoolSize();
 }

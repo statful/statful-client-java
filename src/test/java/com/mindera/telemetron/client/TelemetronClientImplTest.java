@@ -404,6 +404,20 @@ public class TelemetronClientImplTest {
         verify(metricsSender, times(1)).shutdown();
     }
 
+    @Test
+    public void shouldDisableAndDisableTelemetronClient() {
+        // When
+        subject.timer("response_time", 1000).send();
+        subject.disable();
+        subject.timer("response_time", 1000).send();
+        subject.enable();
+        subject.timer("response_time", 1000).send();
+
+        // Then
+        verify(metricsSender, times(2)).put(anyString(), anyString(), any(Tags.class), any(Aggregations.class),
+                any(AggregationFreq.class), anyInt(), anyString(), anyLong());
+    }
+
     private void shouldContainDefaultTimerTags(Tags tags) {
         assertNotNull("Tags should not be null", tags);
         assertEquals("Should contain 1 tag", 1, tags.getTags().size());

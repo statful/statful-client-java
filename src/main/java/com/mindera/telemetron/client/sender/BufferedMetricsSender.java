@@ -122,7 +122,8 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     private boolean isTimeToFlush() {
-        return flushSize <= buffer.size();
+        int bufferSize = buffer.size();
+        return bufferSize > 0 && flushSize <= bufferSize;
     }
 
     private void flush() {

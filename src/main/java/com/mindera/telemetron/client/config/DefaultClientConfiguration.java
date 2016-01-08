@@ -211,6 +211,10 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         mergeTagIntoMethods("app", app);
     }
 
+    public final void setWorkersPoolSize(final int workersPoolSize) {
+        this.workersPoolSize = workersPoolSize;
+    }
+
     public final void setTimerAggregationFreq(final AggregationFreq timerAggregationFreq) {
         this.timerAggregationFreq = timerAggregationFreq;
     }

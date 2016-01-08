@@ -143,7 +143,18 @@ public class ConfigurationBuilderTest {
                 .isDryRun(true)
                 .buildConfiguration();
 
-        assertTrue("Should configure token", config.isDryRun());
+        assertTrue("Should configure dry run", config.isDryRun());
+    }
+
+    @Test
+    public void shouldConfigureWorkersPool() {
+        ClientConfiguration config = newBuilder()
+                .prefix("test_prefix")
+                .transport(UDP)
+                .workerPoolSize(20)
+                .buildConfiguration();
+
+        assertEquals("Should configure pool size", 20, config.getWorkersPoolSize());
     }
 
     @Test

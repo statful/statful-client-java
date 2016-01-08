@@ -24,11 +24,9 @@ public class TelemetronFactoryTest {
                 .flushSize(1)
                 .build();
         client.counter("test_counter").send();
-        client.counter("test_counter").send();
-
-        String responseString = response.get();
 
         // Then
+        String responseString = response.get();
         assertTrue("Should receive message", responseString.startsWith("test_prefix.application.counter.test_counter 1"));
         executorService.shutdown();
     }
@@ -39,5 +37,4 @@ public class TelemetronFactoryTest {
 
         assertNotNull(client);
     }
-
 }

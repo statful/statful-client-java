@@ -40,7 +40,6 @@ To bootstrap the client, the following options can be used:
 * __token__ [optional] - An authentication token to send to Telemetron
 * __app__ [optional] - if specified set a tag ‘app=foo’
 * __dryrun__ [optional] [default: false] - do not actually send metrics when flushing the buffer
-* __logger__ [__not supported yet__] - logger object which supports at least debug/error methods
 * __tags__ [optional] - global list of tags to set
 * __sampleRate__ [optional] [default: 100] [between: 1-100] - global rate sampling
 * __namespace__ [optional] [default: ‘application’] - default namespace (can be overridden in method calls)
@@ -88,6 +87,14 @@ To configure Gauge defaults configuration, you should use the _gauge_ method. Pl
 ### Adding metrics with namespace ###
 
     telemetron.counter("transactions").with().namespace("my-namespace").send();
+    
+### Enabling/disabling Telemetron ###
+
+    telemetron.enable();
+    telemetron.counter("transactions").send(); // This metric will be sent to Telemetron
+    
+    telemetron.disable();
+    telemetron.counter("transactions").send(); // This metric will NOT be sent to Telemetron
 
 ## Setup tips ##
 
