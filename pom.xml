@@ -8,6 +8,12 @@
     <artifactId>telemetron-client-java</artifactId>
     <version>1.0.0-alpha-1-SNAPSHOT</version>
 
+    <scm>
+        <connection>scm:git:ssh://bitbucket.org/mindera/telemetron-client-java.git</connection>
+        <developerConnection>scm:git@bitbucket.org:mindera/telemetron-client-java.git</developerConnection>
+        <url>https://bitbucket.org/mindera/tel.git</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.hamcrest</groupId>
