@@ -151,4 +151,18 @@ public class MessageBuilderTest {
                 is("TEST_PREF.TEST_NS.response_time,unit=s,app=telemetron 3 121232323"),
                 is("TEST_PREF.TEST_NS.response_time,app=telemetron,unit=s 3 121232323")));
     }
+
+    @Test
+    public void shouldEscapeMessage() {
+        String message = MessageBuilder.newBuilder()
+                .withPrefix("a prefix, with comma")
+                .withNamespace("a namespace, with comma")
+                .withName("a name, with =equal")
+                .withValue("a value, with comma and =equal")
+                .withTags(Tags.from(new String[]{"tag, key=", "tag, value="}))
+                .withTimestamp(TIMESTAMP)
+                .build();
+
+        assertEquals("a\\ prefix\\,\\ with\\ comma.a\\ namespace\\,\\ with\\ comma.a\\ name\\,\\ with\\ =equal,tag\\,\\ key\\==tag\\,\\ value\\= a value, with comma and =equal 121232323", message);
+    }
 }

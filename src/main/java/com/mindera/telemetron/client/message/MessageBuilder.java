@@ -85,14 +85,19 @@ public final class MessageBuilder {
         StringBuilder sb = new StringBuilder();
 
         //append prefix and namespace
-        sb.append(prefix).append(".").append(namespace);
+        sb.append(escapeMeasurement(prefix))
+                .append(".")
+                .append(escapeMeasurement(namespace));
 
         //append name
-        sb.append(".").append(name);
+        sb.append(".").append(escapeMeasurement(name));
 
         //append tags
         for (Map.Entry<String, String> entry : tags.entrySet()) {
-            sb.append(",").append(entry.getKey()).append("=").append(entry.getValue());
+            sb.append(",")
+                    .append(escapeTag(entry.getKey()))
+                    .append("=")
+                    .append(escapeTag(entry.getValue()));
         }
 
         //append value
@@ -114,6 +119,14 @@ public final class MessageBuilder {
         }
 
         return sb.toString();
+    }
+
+    private static String escapeTag(final String string) {
+        return string.replaceAll("[\\s,=]", "\\\\$0");
+    }
+
+    private static String escapeMeasurement(final String string) {
+        return string.replaceAll("[\\s,]", "\\\\$0");
     }
 
     private void validate() {
