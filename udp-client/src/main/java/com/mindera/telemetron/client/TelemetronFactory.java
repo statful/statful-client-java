@@ -31,7 +31,7 @@ public final class TelemetronFactory {
      * @param prefix The metric prefix
      * @return A Telemetron client builder, ready for configure or bootstrap
      */
-    public static TelemetronClientBuilder buildClient(final String prefix) {
+    public static TelemetronClientBuilder buildUDPClient(final String prefix) {
         LOGGER.info("Starting Telemetron client.");
         ConfigurationBuilder<TelemetronClient> configurationBuilder = ConfigurationBuilder
                 .newBuilder(builderChain).transport(UDP).prefix(prefix);

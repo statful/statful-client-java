@@ -20,7 +20,7 @@ public class TelemetronFactoryTest {
         Future<String> response = executorService.submit(new UdpEcho(2013));
 
         // When
-        TelemetronClient client = TelemetronFactory.buildClient("test_prefix").with()
+        TelemetronClient client = TelemetronFactory.buildUDPClient("test_prefix").with()
                 .flushSize(1)
                 .build();
         client.counter("test_counter").send();
@@ -33,7 +33,7 @@ public class TelemetronFactoryTest {
 
     @Test
     public void shouldCreateUdpClientWithoutOptionalConfigurations() throws Exception {
-        TelemetronClient client = TelemetronFactory.buildClient("test_prefix").build();
+        TelemetronClient client = TelemetronFactory.buildUDPClient("test_prefix").build();
 
         assertNotNull(client);
     }
