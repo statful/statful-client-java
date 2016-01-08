@@ -275,7 +275,7 @@ public class BufferedMetricsSenderTest {
     }
 
     @Test
-    public void shouldBeAbleToIngest4999MetricsInLessThan100msWithContention() throws Exception {
+    public void shouldBeAbleToIngest4999MetricsInLessThan200msWithContention() throws Exception {
         // Given
         when(configuration.getFlushSize()).thenReturn(5000);
         doAnswer(mockedTransportResponse).when(transportSender).send(anyString());
@@ -308,7 +308,7 @@ public class BufferedMetricsSenderTest {
         // Then
         assertEquals(4999, counter.get());
 
-        assertTrue("Should ingest in less that 1 second", (end - start) < 100);
+        assertTrue("Should ingest in less that 200ms", (end - start) < 200);
 
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should have all metrics in the buffer", 4999, buffer.size());
