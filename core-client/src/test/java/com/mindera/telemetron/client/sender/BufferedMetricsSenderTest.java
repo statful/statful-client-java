@@ -44,12 +44,12 @@ public class BufferedMetricsSenderTest {
         initMocks(this);
 
         when(configuration.getFlushSize()).thenReturn(3);
-        when(configuration.getFlushIntervalSeconds()).thenReturn(0);
+        when(configuration.getFlushIntervalMillis()).thenReturn(0L);
         when(configuration.getPrefix()).thenReturn("test_prefix");
         when(configuration.getSampleRate()).thenReturn(100);
 
         executorService = Executors.newScheduledThreadPool(1);
-        subject = new BufferedMetricsSender(transportSender, configuration, executorService, TimeUnit.MILLISECONDS);
+        subject = new BufferedMetricsSender(transportSender, configuration, executorService);
     }
 
     @After
@@ -150,9 +150,9 @@ public class BufferedMetricsSenderTest {
     @Test
     public void shouldFlushMetricsByTime() throws Exception {
         // Given
-        when(configuration.getFlushIntervalSeconds()).thenReturn(100);
+        when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
-        subject = new BufferedMetricsSender(transportSender, configuration, executorService, TimeUnit.MILLISECONDS);
+        subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
         // When
         subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", 123456789);
@@ -175,9 +175,9 @@ public class BufferedMetricsSenderTest {
     public void shouldPutMetricsConcurrently() throws Exception {
         // Given
         when(configuration.getFlushSize()).thenReturn(19);
-        when(configuration.getFlushIntervalSeconds()).thenReturn(100);
+        when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
-        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService, TimeUnit.MILLISECONDS);
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
         ExecutorService executorService = Executors.newFixedThreadPool(20);
 
@@ -244,9 +244,9 @@ public class BufferedMetricsSenderTest {
     public void shouldShutdownAndClearMetrics() throws Exception {
         // Given
         when(configuration.getFlushSize()).thenReturn(2);
-        when(configuration.getFlushIntervalSeconds()).thenReturn(100);
+        when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
-        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService, TimeUnit.MILLISECONDS);
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
         subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", 123456789);
 
@@ -266,7 +266,7 @@ public class BufferedMetricsSenderTest {
         when(configuration.getFlushSize()).thenReturn(1);
         when(configuration.isDryRun()).thenReturn(true);
 
-        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService, TimeUnit.MILLISECONDS);
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
         subject.put("test_metric0", "100", null, null, FREQ_10, 100, "application", 123456789);
         subject.put("test_metric1", "100", null, null, FREQ_10, 100, "application", 123456790);
@@ -275,7 +275,7 @@ public class BufferedMetricsSenderTest {
     }
 
     @Test
-    public void shouldBeAbleToIngest4999MetricsInLessThan100msWithContention() throws Exception {
+    public void shouldBeAbleToIngest4999MetricsInLessThan200msWithContention() throws Exception {
         // Given
         when(configuration.getFlushSize()).thenReturn(5000);
         doAnswer(mockedTransportResponse).when(transportSender).send(anyString());
@@ -308,7 +308,7 @@ public class BufferedMetricsSenderTest {
         // Then
         assertEquals(4999, counter.get());
 
-        assertTrue("Should ingest in less that 1 second", (end - start) < 100);
+        assertTrue("Should ingest in less that 200ms", (end - start) < 200);
 
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should have all metrics in the buffer", 4999, buffer.size());

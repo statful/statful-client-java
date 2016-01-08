@@ -34,8 +34,6 @@ public class BufferedMetricsSender implements MetricsSender {
     private final int flushSize;
     private final ArrayBlockingQueue<String> buffer;
 
-    private TimeUnit flushTimeUnit = TimeUnit.SECONDS;
-
     public BufferedMetricsSender(
             final TransportSender transportSender,
             final ClientConfiguration configuration,
@@ -48,29 +46,12 @@ public class BufferedMetricsSender implements MetricsSender {
         this.flushSize = configuration.getFlushSize();
         this.buffer = new ArrayBlockingQueue<String>(MAX_BUFFER_SIZE);
 
-        startFlushInterval(configuration.getFlushIntervalSeconds());
-    }
-
-    /**
-     * This is a constructor just for testing.
-     *
-     * @param flushTimeUnit The TimeUnit to configure.
-     */
-    BufferedMetricsSender(
-            final TransportSender transportSender,
-            final ClientConfiguration configuration,
-            final ScheduledExecutorService executorService,
-            final TimeUnit flushTimeUnit
-    ) {
-        this(transportSender, configuration, executorService);
-        this.flushTimeUnit = flushTimeUnit;
-
-        startFlushInterval(configuration.getFlushIntervalSeconds());
+        startFlushInterval(configuration.getFlushIntervalMillis());
     }
 
     private void startFlushInterval(final long flushInterval) {
         if (flushInterval >= MIN_FLUSH_INTERVAL) {
-            executorService.scheduleAtFixedRate(flusher(), flushInterval, flushInterval, flushTimeUnit);
+            executorService.scheduleAtFixedRate(flusher(), flushInterval, flushInterval, TimeUnit.MILLISECONDS);
         }
     }
 

@@ -185,13 +185,13 @@ public final class ConfigurationBuilder<T> {
     }
 
     /**
-     * Sets the flush interval in seconds.
+     * Sets the flush interval in milliseconds.
      *
      * @param flushInterval The flush interval as long
      * @return A reference to this configuration builder
      */
-    public ConfigurationBuilder<T> flushInterval(final int flushInterval) {
-        this.result.setFlushIntervalSeconds(flushInterval);
+    public ConfigurationBuilder<T> flushInterval(final long flushInterval) {
+        this.result.setFlushIntervalMillis(flushInterval);
         return this;
     }
 

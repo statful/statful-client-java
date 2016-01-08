@@ -43,7 +43,7 @@ public class ConfigurationBuilderTest {
         assertEquals("Should have default sample rate", 100, config.getSampleRate());
         assertEquals("Should have default namespace", "application", config.getNamespace());
         assertEquals("Should have default flush size", 10, config.getFlushSize());
-        assertEquals("Should have default flush interval", 0, config.getFlushIntervalSeconds());
+        assertEquals("Should have default flush interval", 0, config.getFlushIntervalMillis());
     }
 
     @Test
@@ -212,7 +212,7 @@ public class ConfigurationBuilderTest {
                 .flushInterval(500)
                 .buildConfiguration();
 
-        assertEquals("Should configure flush interval", 500, config.getFlushIntervalSeconds());
+        assertEquals("Should configure flush interval", 500, config.getFlushIntervalMillis());
     }
 
     @Test

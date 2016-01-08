@@ -32,7 +32,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
 
     private String prefix;
     private boolean isDryRun;
-    private int flushIntervalSeconds;
+    private long flushIntervalMillis;
     private Transport transport;
     private String token;
     private String app;
@@ -82,8 +82,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     @Override
-    public final int getFlushIntervalSeconds() {
-        return flushIntervalSeconds;
+    public final long getFlushIntervalMillis() {
+        return flushIntervalMillis;
     }
 
     @Override
@@ -194,8 +194,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         this.isDryRun = isDryRun;
     }
 
-    public final void setFlushIntervalSeconds(final int flushIntervalSeconds) {
-        this.flushIntervalSeconds = flushIntervalSeconds;
+    public final void setFlushIntervalMillis(final long flushIntervalMillis) {
+        this.flushIntervalMillis = flushIntervalMillis;
     }
 
     public final void setTransport(final Transport transport) {
