@@ -13,7 +13,7 @@ import java.util.Map;
 import static com.mindera.telemetron.client.api.AggregationFreq.*;
 
 /**
- * Telemetron message builder. This is an internal class to build messages from the metric data.<br/>
+ * Telemetron message builder. This is an internal class to build messages from the metric data.
  * Message format follows the specification of Telemetron API.
  */
 public final class MessageBuilder {
