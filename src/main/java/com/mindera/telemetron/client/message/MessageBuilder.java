@@ -121,10 +121,24 @@ public final class MessageBuilder {
         return sb.toString();
     }
 
+    /**
+     * This method adds an escape character in a tag type or tag value (<code>\</code>) before any of the following
+     * characters: <code>\s</code>, <code>,</code> and <code>=</code>.
+     *
+     * @param string The tag key or tag value to escape
+     * @return The escaped string
+     */
     private static String escapeTag(final String string) {
         return string.replaceAll("[\\s,=]", "\\\\$0");
     }
 
+    /**
+     * This method adds an escape character in a measurement (<code>\</code>) before any of the following characters:
+     * <code>\s</code> and <code>,</code>.
+     *
+     * @param string The measurement to escape
+     * @return The escaped string
+     */
     private static String escapeMeasurement(final String string) {
         return string.replaceAll("[\\s,]", "\\\\$0");
     }
