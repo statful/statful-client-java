@@ -48,5 +48,5 @@
     maven:
       maven-name: "maven-3.1.1"
       root-pom: pom.xml
-      goals: -Pci clean deploy -X -B
+      goals: -Pci clean deploy -B
       maven-opts: -Dmaven.test.failure.ignore=false

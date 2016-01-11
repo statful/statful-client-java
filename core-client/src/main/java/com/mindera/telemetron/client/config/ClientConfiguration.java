@@ -81,7 +81,7 @@ public interface ClientConfiguration {
     int getPort();
 
     /**
-     * Returns the timer default tags. Default is 'unit => ms'.
+     * Returns the timer default tags. Default is 'unit = ms'.
      *
      * @return A {@link com.mindera.telemetron.client.api.Tags} for timer
      */

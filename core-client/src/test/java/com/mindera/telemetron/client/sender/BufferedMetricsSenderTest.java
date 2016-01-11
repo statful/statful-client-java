@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 import static com.mindera.telemetron.client.api.Aggregation.*;
 import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
@@ -28,6 +29,8 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class BufferedMetricsSenderTest {
+
+    private static final Logger LOGGER = Logger.getLogger(BufferedMetricsSenderTest.class.getName());
 
     private ScheduledExecutorService executorService;
 
@@ -275,15 +278,17 @@ public class BufferedMetricsSenderTest {
     }
 
     @Test
-    public void shouldBeAbleToIngest4999MetricsInLessThan200msWithContention() throws Exception {
+    public void shouldBeAbleToIngest4999MetricsInLessThan100msWithContention() throws Exception {
         // Given
         when(configuration.getFlushSize()).thenReturn(5000);
         doAnswer(mockedTransportResponse).when(transportSender).send(anyString());
 
         final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
-        // Adding a lot of contention
-        ExecutorService executorService = Executors.newFixedThreadPool(200);
+        // Adding some contention
+        int numberOfCores = Runtime.getRuntime().availableProcessors();
+        LOGGER.info("CPUs: " + numberOfCores);
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
 
         // When
         final AtomicInteger counter = new AtomicInteger();
@@ -308,7 +313,7 @@ public class BufferedMetricsSenderTest {
         // Then
         assertEquals(4999, counter.get());
 
-        assertTrue("Should ingest in less that 200ms", (end - start) < 200);
+        assertTrue("Should ingest in less that 100ms", (end - start) < 100);
 
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should have all metrics in the buffer", 4999, buffer.size());
