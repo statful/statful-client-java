@@ -1,4 +1,6 @@
-package com.mindera.telemetron.client.transport;
+package com.mindera.telemetron.transport;
+
+import com.mindera.telemetron.client.transport.TransportSender;
 
 import java.io.IOException;
 import java.net.*;

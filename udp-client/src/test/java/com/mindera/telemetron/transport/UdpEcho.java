@@ -1,4 +1,4 @@
-package com.mindera.telemetron.client.transport;
+package com.mindera.telemetron.transport;
 
 import java.net.*;
 import java.util.concurrent.Callable;

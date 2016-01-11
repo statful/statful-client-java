@@ -1,4 +1,4 @@
-package com.mindera.telemetron.client.transport;
+package com.mindera.telemetron.transport;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
