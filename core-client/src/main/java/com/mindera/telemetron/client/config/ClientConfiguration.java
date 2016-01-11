@@ -81,7 +81,7 @@ public interface ClientConfiguration {
     int getPort();
 
     /**
-     * Returns the timer default tags. Default is 'unit => ms'.
+     * Returns the timer default tags. Default is 'unit = ms'.
      *
      * @return Tags object, which may contain a collection
      */
