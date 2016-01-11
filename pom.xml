@@ -4,13 +4,13 @@
 
     <groupId>com.mindera.telemetron</groupId>
     <artifactId>telemetron-client-java</artifactId>
-    <version>1.0.0-alpha-2</version>
+    <version>1.0.0-alpha-3-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:ssh://bitbucket.org/mindera/telemetron-client-java.git</connection>
         <developerConnection>scm:git:git@bitbucket.org:mindera/telemetron-client-java.git</developerConnection>
         <url>https://bitbucket.org/mindera/telemetron-client-java.git</url>
-      <tag>telemetron-client-java-1.0.0-alpha-2</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <dependencies>
