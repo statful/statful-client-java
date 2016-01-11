@@ -275,15 +275,16 @@ public class BufferedMetricsSenderTest {
     }
 
     @Test
-    public void shouldBeAbleToIngest4999MetricsInLessThan200msWithContention() throws Exception {
+    public void shouldBeAbleToIngest4999MetricsInLessThan50msWithContention() throws Exception {
         // Given
         when(configuration.getFlushSize()).thenReturn(5000);
         doAnswer(mockedTransportResponse).when(transportSender).send(anyString());
 
         final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
-        // Adding a lot of contention
-        ExecutorService executorService = Executors.newFixedThreadPool(200);
+        // Adding some contention
+        int numberOfCores = Runtime.getRuntime().availableProcessors();
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
 
         // When
         final AtomicInteger counter = new AtomicInteger();
@@ -308,7 +309,7 @@ public class BufferedMetricsSenderTest {
         // Then
         assertEquals(4999, counter.get());
 
-        assertTrue("Should ingest in less that 200ms", (end - start) < 200);
+        assertTrue("Should ingest in less that 50ms", (end - start) < 50);
 
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should have all metrics in the buffer", 4999, buffer.size());
