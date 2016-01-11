@@ -85,14 +85,19 @@ public final class MessageBuilder {
         StringBuilder sb = new StringBuilder();
 
         //append prefix and namespace
-        sb.append(prefix).append(".").append(namespace);
+        sb.append(escapeMeasurement(prefix))
+                .append(".")
+                .append(escapeMeasurement(namespace));
 
         //append name
-        sb.append(".").append(name);
+        sb.append(".").append(escapeMeasurement(name));
 
         //append tags
         for (Map.Entry<String, String> entry : tags.entrySet()) {
-            sb.append(",").append(entry.getKey()).append("=").append(entry.getValue());
+            sb.append(",")
+                    .append(escapeTag(entry.getKey()))
+                    .append("=")
+                    .append(escapeTag(entry.getValue()));
         }
 
         //append value
@@ -112,6 +117,28 @@ public final class MessageBuilder {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * This method adds an escape character in a tag type or tag value (<code>\</code>) before any of the following
+     * characters: <code>\s</code>, <code>,</code> and <code>=</code>.
+     *
+     * @param string The tag key or tag value to escape
+     * @return The escaped string
+     */
+    private static String escapeTag(final String string) {
+        return string.replaceAll("[\\s,=]", "\\\\$0");
+    }
+
+    /**
+     * This method adds an escape character in a measurement (<code>\</code>) before any of the following characters:
+     * <code>\s</code> and <code>,</code>.
+     *
+     * @param string The measurement to escape
+     * @return The escaped string
+     */
+    private static String escapeMeasurement(final String string) {
+        return string.replaceAll("[\\s,]", "\\\\$0");
     }
 
     private void validate() {
