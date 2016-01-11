@@ -71,7 +71,7 @@ public class UDPSenderTest {
         doThrow(new SocketException()).when(socket).send(any(DatagramPacket.class));
 
         UDPSender subject = new UDPSender("127.0.0.1", 2015);
-        subject.setMockedSocket(socket);
+        subject.setSocket(socket);
 
         // When
         subject.send("Hello world");
@@ -88,7 +88,7 @@ public class UDPSenderTest {
         doThrow(new IOException()).when(socket).send(any(DatagramPacket.class));
 
         UDPSender subject = new UDPSender("127.0.0.1", 2015);
-        subject.setMockedSocket(socket);
+        subject.setSocket(socket);
 
         // When
         subject.send("Hello world");
@@ -104,7 +104,7 @@ public class UDPSenderTest {
         doThrow(new IOException()).when(socket).send(any(DatagramPacket.class));
 
         UDPSender subject = new UDPSender("127.0.0.1", 2015);
-        subject.setMockedSocket(socket);
+        subject.setSocket(socket);
 
         // When
         subject.send("Hello world");

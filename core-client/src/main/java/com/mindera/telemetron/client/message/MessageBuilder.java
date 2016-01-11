@@ -13,7 +13,8 @@ import java.util.Map;
 import static com.mindera.telemetron.client.api.AggregationFreq.*;
 
 /**
- * Telemetron message builder. This is an internal class to build messages from the metric data.<br/>
+ * Telemetron message builder. This is an internal class to build messages from the metric data.
+ * <p>
  * Message format follows the specification of Telemetron API.
  */
 public final class MessageBuilder {
@@ -27,27 +28,59 @@ public final class MessageBuilder {
     private long timestamp;
     private AggregationFreq aggregationFreq = FREQ_10;
 
+    /**
+     * Default constructor.
+     */
     private MessageBuilder() { }
 
+    /**
+     * Returns a new instance of {@link com.mindera.telemetron.client.message.MessageBuilder}.
+     *
+     * @return An instance of {@link com.mindera.telemetron.client.message.MessageBuilder}
+     */
     public static MessageBuilder newBuilder() {
         return new MessageBuilder();
     }
 
+    /**
+     * Sets the prefix.
+     *
+     * @param prefix The prefix
+     * @return A reference to this builder
+     */
     public MessageBuilder withPrefix(final String prefix) {
         this.prefix = prefix;
         return this;
     }
 
+    /**
+     * Sets the namespace.
+     *
+     * @param namespace The namespace
+     * @return A reference to this builder
+     */
     public MessageBuilder withNamespace(final String namespace) {
         this.namespace = namespace;
         return this;
     }
 
+    /**
+     * Sets the metric name.
+     *
+     * @param name The metric name
+     * @return A reference to this builder
+     */
     public MessageBuilder withName(final String name) {
         this.name = name;
         return this;
     }
 
+    /**
+     * Sets the tags of the message.
+     *
+     * @param tags The {@link com.mindera.telemetron.client.api.Tags}
+     * @return A reference to this builder
+     */
     public MessageBuilder withTags(final Tags tags) {
         if (tags != null) {
             this.tags.putAll(tags.getTags());
@@ -55,11 +88,23 @@ public final class MessageBuilder {
         return this;
     }
 
+    /**
+     * Sets the metric value.
+     *
+     * @param value The metric value
+     * @return A reference to this builder
+     */
     public MessageBuilder withValue(final String value) {
         this.value = value;
         return this;
     }
 
+    /**
+     * The aggregations of the metric.
+     *
+     * @param aggregations The {@link com.mindera.telemetron.client.api.Aggregations}
+     * @return A reference to this builder
+     */
     public MessageBuilder withAggregations(final Aggregations aggregations) {
         if (aggregations != null) {
             this.aggregations.addAll(aggregations.getAggregations());
@@ -67,6 +112,12 @@ public final class MessageBuilder {
         return this;
     }
 
+    /**
+     * Sets the aggregation frequency.
+     *
+     * @param aggregationFreq The {@link com.mindera.telemetron.client.api.AggregationFreq}
+     * @return A reference to this builder
+     */
     public MessageBuilder withAggregationFreq(final AggregationFreq aggregationFreq) {
         if (aggregationFreq != null) {
             this.aggregationFreq = aggregationFreq;
@@ -74,11 +125,22 @@ public final class MessageBuilder {
         return this;
     }
 
+    /**
+     * Sets the unix timestamp of the metric.
+     *
+     * @param timestamp The unix timestamp
+     * @return A reference to this builder
+     */
     public MessageBuilder withTimestamp(final long timestamp) {
         this.timestamp = timestamp;
         return this;
     }
 
+    /**
+     * Build the message as a metric line.
+     *
+     * @return A string representing the metric
+     */
     public String build() {
         validate();
 

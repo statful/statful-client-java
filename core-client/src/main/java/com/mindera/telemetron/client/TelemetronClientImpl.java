@@ -18,6 +18,12 @@ class TelemetronClientImpl implements TelemetronClient {
 
     private boolean enabled = true;
 
+    /**
+     * Default constructor.
+     *
+     * @param metricsSender The {@link com.mindera.telemetron.client.sender.MetricsSender} to send metrics
+     * @param configuration The {@link com.mindera.telemetron.client.config.ClientConfiguration} to configure the client
+     */
     TelemetronClientImpl(final MetricsSender metricsSender, final ClientConfiguration configuration) {
         this.metricsSender = metricsSender;
         this.configuration = configuration;

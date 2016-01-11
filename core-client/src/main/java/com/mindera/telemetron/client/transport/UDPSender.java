@@ -5,6 +5,10 @@ import java.net.*;
 import java.nio.charset.Charset;
 import java.util.logging.Logger;
 
+/**
+ * This class is an implementation of {@link com.mindera.telemetron.client.transport.TransportSender} to send metrics
+ * using UDP.
+ */
 public class UDPSender implements TransportSender {
 
     private static final Logger LOGGER = Logger.getLogger(UDPSender.class.getName());
@@ -15,6 +19,12 @@ public class UDPSender implements TransportSender {
     private InetAddress address;
     private DatagramSocket socket;
 
+    /**
+     * Default constructor.
+     *
+     * @param host The hostname of the UDP server
+     * @param port The port of the UDP server
+     */
     public UDPSender(final String host, final int port) {
         this.port = port;
         this.host = host;
@@ -68,7 +78,12 @@ public class UDPSender implements TransportSender {
         return new DatagramPacket(byteMessage, byteMessage.length, address, port);
     }
 
-    final void setMockedSocket(final DatagramSocket socket) {
+    /**
+     * Setter for datagram socket.
+     *
+     * @param socket A {@link java.net.DatagramSocket}
+     */
+    final void setSocket(final DatagramSocket socket) {
         this.socket = socket;
     }
 }

@@ -20,7 +20,7 @@ public interface ClientConfiguration {
     /**
      * Returns the global list of application tags.
      *
-     * @return A Tags object containing the tags
+     * @return A {@link com.mindera.telemetron.client.api.Tags} of the application
      */
     Tags getApplicationTags();
 
@@ -83,70 +83,75 @@ public interface ClientConfiguration {
     /**
      * Returns the timer default tags. Default is 'unit => ms'.
      *
-     * @return Tags object, which may contain a collection
+     * @return A {@link com.mindera.telemetron.client.api.Tags} for timer
      */
     Tags getTimerTags();
 
     /**
-     * Returns the timer default aggregations. Default are: AVG, P90, COUNT.
+     * Returns the timer default aggregations. Default are: {@link com.mindera.telemetron.client.api.Aggregation#AVG},
+     * {@link com.mindera.telemetron.client.api.Aggregation#P90} and
+     * {@link com.mindera.telemetron.client.api.Aggregation#COUNT}.
      *
-     * @return Aggregations object, which may contain a collection
+     * @return Default {@link com.mindera.telemetron.client.api.Aggregations} for timer
      */
     Aggregations getTimerAggregations();
 
     /**
-     * Returns the timer default aggregation frequency. Default is 10.
+     * Returns the timer default aggregation frequency. Default is
+     * {@link com.mindera.telemetron.client.api.AggregationFreq#FREQ_10}.
      *
-     * @return Aggregation frequency (10, 30, 60, 120, 180, 300)
+     * @return {@link com.mindera.telemetron.client.api.AggregationFreq} for timer
      */
     AggregationFreq getTimerAggregationFreq();
 
     /**
      * Returns the counter default tags.
      *
-     * @return Tags object, which may contain a collection
+     * @return A {@link com.mindera.telemetron.client.api.Tags} for counter
      */
     Tags getCounterTags();
 
     /**
-     * Returns the counter default aggregations. Default are: AVG, P90.
+     * Returns the counter default aggregations. Default are: {@link com.mindera.telemetron.client.api.Aggregation#AVG}
+     * and {@link com.mindera.telemetron.client.api.Aggregation#P90}.
      *
-     * @return Aggregations object, which may contain a collection
+     * @return Default {@link com.mindera.telemetron.client.api.Aggregations} for counter
      */
     Aggregations getCounterAggregations();
 
     /**
-     * Returns the counter default aggregation frequency. Default is 10.
+     * Returns the counter default aggregation frequency. Default is
+     * {@link com.mindera.telemetron.client.api.AggregationFreq#FREQ_10}.
      *
-     * @return Aggregation frequency (10, 30, 60, 120, 180, 300)
+     * @return {@link com.mindera.telemetron.client.api.AggregationFreq} for counter
      */
     AggregationFreq getCounterAggregationFreq();
 
     /**
      * Returns the gauge default tags.
      *
-     * @return Tags object, which may contain a collection
+     * @return A {@link com.mindera.telemetron.client.api.Tags} for gauge
      */
     Tags getGaugeTags();
 
     /**
-     * Returns the gauge default aggregations. Default are: LAST.
+     * Returns the gauge default aggregations. Default is: {@link com.mindera.telemetron.client.api.Aggregation#LAST}.
      *
-     * @return Aggregations object, which may contain a collection
+     * @return Default {@link com.mindera.telemetron.client.api.Aggregations} for gauge
      */
     Aggregations getGaugeAggregations();
 
     /**
      * Returns the gauge default aggregation frequency. Default is 10.
      *
-     * @return Aggregation frequency (10, 30, 60, 120, 180, 300)
+     * @return {@link com.mindera.telemetron.client.api.AggregationFreq} for gauge
      */
     AggregationFreq getGaugeAggregationFreq();
 
     /**
-     * Returns the transport to use. Mandatory to configure. (UDP, TCP or HTTP).
+     * Returns the transport to use. Mandatory to configure.
      *
-     * @return Transport to use to send the metrics
+     * @return {@link com.mindera.telemetron.client.api.Transport} to use to send the metrics
      */
     Transport getTransport();
 

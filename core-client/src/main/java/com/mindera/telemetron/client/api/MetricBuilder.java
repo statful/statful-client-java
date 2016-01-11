@@ -6,34 +6,43 @@ package com.mindera.telemetron.client.api;
  */
 public final class MetricBuilder {
 
+    /**
+     * Default constructor.
+     */
     private MetricBuilder() { }
 
     /**
-     * Instantiates a new aggregation builder. Example: timer(agg(AVG)).
+     * Instantiates a new {@link com.mindera.telemetron.client.api.AggregationBuilder}.
+     * <p>
+     * Example: <code>timer(agg(AVG)).</code>
      *
-     * @param aggregation The aggregation to use
-     * @return An aggregation builder
+     * @param aggregation The {@link com.mindera.telemetron.client.api.Aggregation} to use
+     * @return An instance of {@link com.mindera.telemetron.client.api.AggregationBuilder}
      */
     public static AggregationBuilder agg(final Aggregation aggregation) {
         return new AggregationBuilder(aggregation);
     }
 
     /**
-     * Instantiates a new aggregation frequency builder. Example: timer(aggFreq(FREQ_120)).
+     * Instantiates a new {@link com.mindera.telemetron.client.api.AggregationFreqBuilder}.
+     * <p>
+     * Example: <code>timer(aggFreq(FREQ_120)).</code>
      *
-     * @param aggregationFreq The aggregation frequency to use
-     * @return An aggregation frequency builder
+     * @param aggregationFreq The {@link com.mindera.telemetron.client.api.AggregationFreq} to use
+     * @return An instance of {@link com.mindera.telemetron.client.api.AggregationFreqBuilder}
      */
     public static AggregationFreqBuilder aggFreq(final AggregationFreq aggregationFreq) {
         return new AggregationFreqBuilder(aggregationFreq);
     }
 
     /**
-     * Instantiates a new tag builder. Example: timer(tag("cluster", "production"))
+     * Instantiates a new {@link com.mindera.telemetron.client.api.TagBuilder}.
+     * <p>
+     * Example: <code>timer(tag("cluster", "production"))</code>
      *
      * @param type The tag type to use
      * @param value The tag value to use
-     * @return A tag builder
+     * @return An instance of {@link com.mindera.telemetron.client.api.TagBuilder}
      */
     public static TagBuilder tag(final String type, final String value) {
         return new TagBuilder(type, value);
