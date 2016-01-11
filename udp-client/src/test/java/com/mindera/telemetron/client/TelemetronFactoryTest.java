@@ -1,7 +1,7 @@
 package com.mindera.telemetron.client;
 
 import com.mindera.telemetron.client.api.TelemetronClient;
-import com.mindera.telemetron.client.transport.UdpEcho;
+import com.mindera.telemetron.transport.UdpEcho;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;

@@ -8,7 +8,7 @@ import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.sender.BufferedMetricsSender;
 import com.mindera.telemetron.client.sender.MetricsSender;
 import com.mindera.telemetron.client.transport.TransportSender;
-import com.mindera.telemetron.client.transport.UDPSender;
+import com.mindera.telemetron.transport.UDPSender;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
