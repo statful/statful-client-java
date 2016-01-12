@@ -1,7 +1,5 @@
 package com.mindera.telemetron.client.api;
 
-import com.mindera.telemetron.client.sender.MetricsSender;
-
 /**
  * This interface allows to send metrics (timer, counter, gauge or raw metric) to Telemetron.
  */

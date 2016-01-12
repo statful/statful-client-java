@@ -1,6 +1,5 @@
 package com.mindera.telemetron.client.api;
 
-import com.mindera.telemetron.client.config.ClientConfiguration;
 import com.mindera.telemetron.client.config.DefaultClientConfiguration;
 
 /**

@@ -1,7 +1,6 @@
 package com.mindera.telemetron.client.api;
 
 import com.mindera.telemetron.client.config.DefaultClientConfiguration;
-import com.mindera.telemetron.client.sender.MetricsSender;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

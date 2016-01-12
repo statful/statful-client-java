@@ -1,6 +1,5 @@
 package com.mindera.telemetron.client.api;
 
-import com.mindera.telemetron.client.config.ClientConfiguration;
 import org.junit.Test;
 
 import java.util.Collection;

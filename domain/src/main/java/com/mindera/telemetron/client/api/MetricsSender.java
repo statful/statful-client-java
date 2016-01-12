@@ -1,8 +1,4 @@
-package com.mindera.telemetron.client.sender;
-
-import com.mindera.telemetron.client.api.AggregationFreq;
-import com.mindera.telemetron.client.api.Aggregations;
-import com.mindera.telemetron.client.api.Tags;
+package com.mindera.telemetron.client.api;
 
 /**
  * Interface that represents the metrics sender to Telemetron.

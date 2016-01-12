@@ -1,12 +1,7 @@
 package com.mindera.telemetron.client;
 
-import com.mindera.telemetron.client.api.ConfigurationBuilder;
-import com.mindera.telemetron.client.api.ConfigurationBuilderChain;
-import com.mindera.telemetron.client.api.TelemetronClientBuilder;
-import com.mindera.telemetron.client.api.TelemetronClient;
-import com.mindera.telemetron.client.config.ClientConfiguration;
+import com.mindera.telemetron.client.api.*;
 import com.mindera.telemetron.client.sender.BufferedMetricsSender;
-import com.mindera.telemetron.client.sender.MetricsSender;
 import com.mindera.telemetron.client.transport.TransportSender;
 import com.mindera.telemetron.transport.UDPSender;
 

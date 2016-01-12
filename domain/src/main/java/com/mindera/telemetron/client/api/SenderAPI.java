@@ -1,7 +1,5 @@
 package com.mindera.telemetron.client.api;
 
-import com.mindera.telemetron.client.config.ClientConfiguration;
-
 /**
  * This is the metrics sender API, which is exposed to allow building metrics and sending them to Telemetron.
  */
