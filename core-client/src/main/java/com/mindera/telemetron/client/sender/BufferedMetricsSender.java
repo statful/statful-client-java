@@ -17,6 +17,21 @@ import java.util.logging.Logger;
 import static com.mindera.telemetron.client.message.MessageBuilder.newBuilder;
 import static java.util.Arrays.asList;
 
+/**
+ * This class sends the metrics to Telemetron using a {@link com.mindera.telemetron.client.transport.TransportSender}.
+ * And buffers the metrics before sending them, according with
+ * {@link com.mindera.telemetron.client.config.ClientConfiguration}.
+ * <p>
+ * It sends the metrics using {@link com.mindera.telemetron.client.transport.TransportSender} in both a periodic way and
+ * by checking the number of metrics in the buffer according with the
+ * {@link com.mindera.telemetron.client.config.ClientConfiguration} passed in the constructor. The periodic flushes are
+ * handled by a {@link java.util.concurrent.ScheduledExecutorService} passed in the constructor.
+ * <p>
+ * The flushes are execute asynchronously by the passed {@link java.util.concurrent.ScheduledExecutorService}, which
+ * can be handled by a single thread in the majority of the cases.
+ * <p>
+ * Instances of this class are thread-safe.
+ */
 public class BufferedMetricsSender implements MetricsSender {
 
     private static final Logger LOGGER = Logger.getLogger(BufferedMetricsSender.class.getName());
@@ -34,6 +49,13 @@ public class BufferedMetricsSender implements MetricsSender {
     private final int flushSize;
     private final ArrayBlockingQueue<String> buffer;
 
+    /**
+     * Default constructor.
+     *
+     * @param transportSender The {@link com.mindera.telemetron.client.transport.TransportSender} to send metrics
+     * @param configuration The {@link com.mindera.telemetron.client.config.ClientConfiguration}
+     * @param executorService The {@link java.util.concurrent.ScheduledExecutorService} to handle flushes
+     */
     public BufferedMetricsSender(
             final TransportSender transportSender,
             final ClientConfiguration configuration,
@@ -154,6 +176,13 @@ public class BufferedMetricsSender implements MetricsSender {
         return sb.toString();
     }
 
+    /**
+     * Returns a copy of the representation of the buffer as a {@link java.util.List}.
+     * <p>
+     * This method returns a new copy of the buffer every time it's called. Caution is advised.
+     *
+     * @return A {@link java.util.List} containing the messages of the buffer
+     */
     final List<String> getBuffer() {
         return asList(buffer.toArray(new String[buffer.size()]));
     }

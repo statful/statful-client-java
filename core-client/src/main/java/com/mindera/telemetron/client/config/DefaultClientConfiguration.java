@@ -6,6 +6,9 @@ import static com.mindera.telemetron.client.api.Aggregation.*;
 import static com.mindera.telemetron.client.api.Aggregation.LAST;
 import static com.mindera.telemetron.client.api.AggregationFreq.FREQ_10;
 
+/**
+ * This is thh default client configuration class.
+ */
 public class DefaultClientConfiguration implements ClientConfiguration {
 
     private static final int WORKER_POOL_SIZE = 1;
@@ -166,91 +169,207 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         return gaugeAggregationFreq;
     }
 
+    /**
+     * Setter for hostname.
+     *
+     * @param host The hostname
+     */
     public final void setHost(final String host) {
         this.host = host;
     }
 
+    /**
+     * Setter for port.
+     *
+     * @param port The port
+     */
     public final void setPort(final int port) {
         this.port = port;
     }
 
+    /**
+     * Setter for sample rate.
+     *
+     * @param sampleRate The sample rate
+     */
     public final void setSampleRate(final int sampleRate) {
         this.sampleRate = sampleRate;
     }
 
+    /**
+     * Setter for namespace.
+     *
+     * @param namespace The namespace
+     */
     public final void setNamespace(final String namespace) {
         this.namespace = namespace;
     }
 
+    /**
+     * Setter for flush size
+     *
+     * @param flushSize The flush size
+     */
     public final void setFlushSize(final int flushSize) {
         this.flushSize = flushSize;
     }
 
+    /**
+     * Setter for prefix.
+     *
+     * @param prefix The prefix
+     */
     public final void setPrefix(final String prefix) {
         this.prefix = prefix;
     }
 
+    /**
+     * Setter for dry run
+     *
+     * @param isDryRun Boolean value for dry run
+     */
     public final void setDryRun(final boolean isDryRun) {
         this.isDryRun = isDryRun;
     }
 
+    /**
+     * Setter for flush interval in milliseconds.
+     *
+     * @param flushIntervalMillis The flush interval in milliseconds
+     */
     public final void setFlushIntervalMillis(final long flushIntervalMillis) {
         this.flushIntervalMillis = flushIntervalMillis;
     }
 
+    /**
+     * Setter for transport.
+     *
+     * @param transport The {@link com.mindera.telemetron.client.api.Transport} to use
+     */
     public final void setTransport(final Transport transport) {
         this.transport = transport;
     }
 
+    /**
+     * Setter for application token.
+     *
+     * @param token The token
+     */
     public final void setToken(final String token) {
         this.token = token;
     }
 
+    /**
+     * Setter for app.
+     * <p>
+     * If set, it merges the app name with the application tags.
+     *
+     * @param app The app name
+     */
     public final void setApp(final String app) {
         this.app = app;
         mergeTagIntoMethods("app", app);
     }
 
+    /**
+     * Setter for the worker pool size.
+     *
+     * @param workersPoolSize The poll size
+     */
     public final void setWorkersPoolSize(final int workersPoolSize) {
         this.workersPoolSize = workersPoolSize;
     }
 
+    /**
+     * Setter for aggregation frequency for timer.
+     *
+     * @param timerAggregationFreq The {@link com.mindera.telemetron.client.api.AggregationFreq} to use
+     */
     public final void setTimerAggregationFreq(final AggregationFreq timerAggregationFreq) {
         this.timerAggregationFreq = timerAggregationFreq;
     }
 
+    /**
+     * Merges the tag defined by <code>type</code> and <code>value</code> with the existent timer tags.
+     *
+     * @param type The type of the tag to merge
+     * @param value The value of the tag to merge
+     */
     public final void mergeTimerTag(final String type, final String value) {
         this.timerTags.putTag(type, value);
     }
 
+    /**
+     * Merges the tag defined by <code>aggregation</code> with the existent timer aggregations.
+     *
+     * @param aggregation The {@link com.mindera.telemetron.client.api.Aggregation} to merge
+     */
     public final void mergeTimerAggregation(final Aggregation aggregation) {
         this.timerAggregations.put(aggregation);
     }
 
+    /**
+     * Setter for aggregation frequency for counter.
+     *
+     * @param counterAggregationFreq The {@link com.mindera.telemetron.client.api.AggregationFreq} to use
+     */
     public final void setCounterAggregationFreq(final AggregationFreq counterAggregationFreq) {
         this.counterAggregationFreq = counterAggregationFreq;
     }
 
+    /**
+     * Merges the tag defined by <code>type</code> and <code>value</code> with the existent counter tags.
+     *
+     * @param type The type of the tag to merge
+     * @param value The value of the tag to merge
+     */
     public final void mergeCounterTag(final String type, final String value) {
         getSafeCounterTags().putTag(type, value);
     }
 
+    /**
+     * Merges the tag defined by <code>aggregation</code> with the existent counter aggregations.
+     *
+     * @param aggregation The {@link com.mindera.telemetron.client.api.Aggregation} to merge
+     */
     public final void mergeCounterAggregation(final Aggregation aggregation) {
         this.counterAggregations.put(aggregation);
     }
 
+    /**
+     * Setter for aggregation frequency for gauge.
+     *
+     * @param gaugeAggregationFreq The {@link com.mindera.telemetron.client.api.AggregationFreq} to use
+     */
     public final void setGaugeAggregationFreq(final AggregationFreq gaugeAggregationFreq) {
         this.gaugeAggregationFreq = gaugeAggregationFreq;
     }
 
+    /**
+     * Merges the tag defined by <code>type</code> and <code>value</code> with the existent gauge tags.
+     *
+     * @param type The type of the tag to merge
+     * @param value The value of the tag to merge
+     */
     public final void mergeGaugeTag(final String type, final String value) {
         getSafeGaugeTags().putTag(type, value);
     }
 
+    /**
+     * Merges the tag defined by <code>aggregation</code> with the existent gauge aggregations.
+     *
+     * @param aggregation The {@link com.mindera.telemetron.client.api.Aggregation} to merge
+     */
     public final void mergeGaugeAggregation(final Aggregation aggregation) {
         this.gaugeAggregations.put(aggregation);
     }
 
+    /**
+     * Merges the tag defined by <code>type</code> and <code>value</code> with the existent application tags.
+     *
+     * @param type The type of the tag to merge
+     * @param value The value of the tag to merge
+     */
     public final void mergeApplicationTag(final String type, final String value) {
         applicationTags.putTag(type, value);
         mergeTagIntoMethods(type, value);

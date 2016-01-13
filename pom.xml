@@ -64,16 +64,17 @@
                 <configuration>
                     <aggregate>true</aggregate>
                     <check>
-                        <haltOnFailure>false</haltOnFailure>
+                        <haltOnFailure>true</haltOnFailure>
                         <totalBranchRate>95</totalBranchRate>
                         <totalLineRate>95</totalLineRate>
-                        <packageLineRate>95</packageLineRate>
-                        <packageBranchRate>95</packageBranchRate>
                     </check>
                     <instrumentation>
                         <excludes>
                             <!-- Enumerations only -->
                             <exclude>com/mindera/telemetron/client/api/Aggregations.class</exclude>
+                            <exclude>com/mindera/telemetron/client/api/Aggregation.class</exclude>
+                            <exclude>com/mindera/telemetron/client/api/AggregationFreq.class</exclude>
+                            <exclude>com/mindera/telemetron/client/api/Transport.class</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
