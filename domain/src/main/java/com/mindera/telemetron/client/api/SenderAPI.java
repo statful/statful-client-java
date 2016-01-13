@@ -1,13 +1,14 @@
 package com.mindera.telemetron.client.api;
 
 /**
- * This is the metrics sender API, which is exposed to allow building metrics and sending them to Telemetron.
+ * This is the metrics sender API, which is exposed to allow building metrics and sending them to Telemetron with a
+ * builder-like syntax.
  */
 public interface SenderAPI {
     /**
      * Just a syntax sugar method.
      *
-     * @return A reference to this builder
+     * @return A reference to this instance
      */
     SenderAPI with();
 
@@ -15,7 +16,7 @@ public interface SenderAPI {
      * Sets the metric name.
      *
      * @param metricName Metric name as string
-     * @return A reference to this builder
+     * @return A reference to this instance
      */
     SenderAPI metricName(final String metricName);
 
@@ -28,10 +29,10 @@ public interface SenderAPI {
     SenderAPI value(final String value);
 
     /**
-     * Sets the Telemetron client configuration to use.
+     * Sets the Telemetron {@link com.mindera.telemetron.client.config.ClientConfiguration} to use.
      *
-     * @param configuration Client configuration
-     * @return A reference to this builder
+     * @param configuration The {@link com.mindera.telemetron.client.config.ClientConfiguration} to use
+     * @return A reference to this instance
      */
     SenderAPI configuration(final ClientConfiguration configuration);
 
@@ -39,7 +40,7 @@ public interface SenderAPI {
      * Sets the metric sample rate.
      *
      * @param sampleRate Sample rate as integer
-     * @return A reference to this builder
+     * @return A reference to this instance
      */
     SenderAPI sampleRate(final Integer sampleRate);
 
@@ -48,39 +49,39 @@ public interface SenderAPI {
      *
      * @param type The tag type
      * @param value The tag value
-     * @return A reference to this builder
+     * @return A reference to this instance
      */
     SenderAPI tag(final String type, final String value);
 
     /**
-     * Sets a Tags object to the metric. Which can be a collection.
+     * Sets the {@link com.mindera.telemetron.client.api.Tags} of the metric.
      *
-     * @param tags Tags to use
-     * @return A reference to this builder
+     * @param tags The {@link com.mindera.telemetron.client.api.Tags} to use
+     * @return A reference to this instance
      */
     SenderAPI tags(final Tags tags);
 
     /**
-     * Sets aggregations to the metric.
+     * Sets an array of {@link com.mindera.telemetron.client.api.Aggregation} of the metric.
      *
-     * @param aggregations Array of aggregations to use
-     * @return A reference to this builder
+     * @param aggregations An array of {@link com.mindera.telemetron.client.api.Aggregation} to use
+     * @return A reference to this instance
      */
     SenderAPI aggregations(final Aggregation... aggregations);
 
     /**
-     * Sets an Aggregations object to the metric, which can be a collection.
+     * Sets the {@link com.mindera.telemetron.client.api.Aggregations} of the metric.
      *
-     * @param aggregations Aggregations to use
-     * @return A reference to this builder
+     * @param aggregations The {@link com.mindera.telemetron.client.api.Aggregations} to use
+     * @return A reference to this instance
      */
     SenderAPI aggregations(final Aggregations aggregations);
 
     /**
-     * Sets the aggregation frequency of the metric.
+     * Sets the {@link com.mindera.telemetron.client.api.AggregationFreq} of the metric.
      *
-     * @param aggFreq Aggregation frequency (10, 30, 60, 120, 180, 300)
-     * @return A reference to this builder
+     * @param aggFreq The {@link com.mindera.telemetron.client.api.AggregationFreq} of the metric
+     * @return A reference to this instance
      */
     SenderAPI aggFreq(final AggregationFreq aggFreq);
 
@@ -88,7 +89,7 @@ public interface SenderAPI {
      * Sets the namespace of the metric.
      *
      * @param namespace Namespace as string
-     * @return A reference to this builder
+     * @return A reference to this instance
      */
     SenderAPI namespace(final String namespace);
 

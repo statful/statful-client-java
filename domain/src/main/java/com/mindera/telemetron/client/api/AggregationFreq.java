@@ -1,5 +1,8 @@
 package com.mindera.telemetron.client.api;
 
+/**
+ * Supported aggregation frequencies.
+ */
 public enum AggregationFreq {
 
     FREQ_10(10),
@@ -15,6 +18,11 @@ public enum AggregationFreq {
         this.frequency = frequency;
     }
 
+    /**
+     * Returns the value of the aggregation frequency.
+     *
+     * @return The value of the aggregation frequency as an integer
+     */
     public int getValue() {
         return this.frequency;
     }

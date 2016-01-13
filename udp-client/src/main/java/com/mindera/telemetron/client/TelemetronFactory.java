@@ -21,7 +21,7 @@ public final class TelemetronFactory {
     private TelemetronFactory() { }
 
     /**
-     * Instantiates a new Telemetron client builder with UDP protocol.
+     * Instantiates a new {@link com.mindera.telemetron.client.api.TelemetronClientBuilder} to use UDP protocol.
      *
      * @param prefix The metric prefix
      * @return A Telemetron client builder, ready for configure or bootstrap

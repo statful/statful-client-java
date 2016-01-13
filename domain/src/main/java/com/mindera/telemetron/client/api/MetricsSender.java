@@ -10,9 +10,9 @@ public interface MetricsSender {
      *
      * @param name The name of the metric
      * @param value The value of the metric
-     * @param tags A Tags object containing the tags to be associated with the metric
-     * @param aggregations An Aggregations object containing all aggregations that the metric should be subject
-     * @param aggregationFreq The aggregation frequency (10, 30, 60, 120, 180, 300)
+     * @param tags A {@link com.mindera.telemetron.client.api.Tags} the tags to be associated with the metric
+     * @param aggregations {@link com.mindera.telemetron.client.api.Aggregations} with aggregations of the metric
+     * @param aggregationFreq {@link com.mindera.telemetron.client.api.AggregationFreq} of the metric
      * @param sampleRate The metrics sample rate
      * @param namespace The namespace of the metric
      * @param timestamp The timestamp associated with the metric

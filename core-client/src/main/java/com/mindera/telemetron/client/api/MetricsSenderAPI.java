@@ -3,7 +3,8 @@ package com.mindera.telemetron.client.api;
 import java.util.logging.Logger;
 
 /**
- * This class is an implementation of the SenderAPI, which uses MetricsSender to send metrics.
+ * This class is an implementation of the {@link com.mindera.telemetron.client.api.SenderAPI},
+ * which uses {@link com.mindera.telemetron.client.sender.MetricsSender} to send metrics.
  */
 public final class MetricsSenderAPI implements SenderAPI {
 
@@ -21,10 +22,21 @@ public final class MetricsSenderAPI implements SenderAPI {
     private AggregationFreq aggregationFreq;
     private Integer sampleRate;
 
+    /**
+     * Default constructor.
+     *
+     * @param metricsSender The {@link com.mindera.telemetron.client.sender.MetricsSender} to send metrics
+     */
     MetricsSenderAPI(final MetricsSender metricsSender) {
         this.metricsSender = metricsSender;
     }
 
+    /**
+     * Builds a new instance of {@link com.mindera.telemetron.client.api.SenderAPI} with the metrics sender.
+     *
+     * @param metricsSender The {@link com.mindera.telemetron.client.sender.MetricsSender}
+     * @return An instance of {@link com.mindera.telemetron.client.api.SenderAPI}
+     */
     public static SenderAPI newInstance(final MetricsSender metricsSender) {
         return new MetricsSenderAPI(metricsSender);
     }
@@ -168,30 +180,65 @@ public final class MetricsSenderAPI implements SenderAPI {
         return string != null && !string.isEmpty();
     }
 
+    /**
+     * A getter for the metric name.
+     *
+     * @return The metric name
+     */
     String getMetricName() {
         return metricName;
     }
 
+    /**
+     * A getter for the metric value.
+     *
+     * @return The value of the metric
+     */
     String getValue() {
         return value;
     }
 
+    /**
+     * A getter for the namespace.
+     *
+     * @return The namespace of the metric
+     */
     String getNamespace() {
         return namespace;
     }
 
+    /**
+     * A getter for the {@link com.mindera.telemetron.client.api.Tags} of the metric.
+     *
+     * @return The {@link com.mindera.telemetron.client.api.Tags} of the metric
+     */
     Tags getTags() {
         return tags;
     }
 
+    /**
+     * A getter for the {@link com.mindera.telemetron.client.api.Aggregation} of the metric.
+     *
+     * @return The {@link com.mindera.telemetron.client.api.Aggregations} of the metric
+     */
     Aggregations getAggregations() {
         return aggregations;
     }
 
+    /**
+     * A getter for the {@link com.mindera.telemetron.client.api.AggregationFreq} of the metric.
+     *
+     * @return The {@link com.mindera.telemetron.client.api.AggregationFreq} of the metric.
+     */
     AggregationFreq getAggregationFreq() {
         return aggregationFreq;
     }
 
+    /**
+     * A getter for the sample rate.
+     *
+     * @return The sample rate
+     */
     Integer getSampleRate() {
         return sampleRate;
     }
