@@ -1,8 +1,8 @@
 package com.mindera.telemetron.client;
 
 import com.mindera.telemetron.client.api.*;
-import com.mindera.telemetron.client.config.ClientConfiguration;
-import com.mindera.telemetron.client.sender.MetricsSender;
+import com.mindera.telemetron.client.api.ClientConfiguration;
+import com.mindera.telemetron.client.api.MetricsSender;
 
 import java.util.logging.Logger;
 

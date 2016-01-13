@@ -1,9 +1,4 @@
-package com.mindera.telemetron.client.config;
-
-import com.mindera.telemetron.client.api.AggregationFreq;
-import com.mindera.telemetron.client.api.Aggregations;
-import com.mindera.telemetron.client.api.Tags;
-import com.mindera.telemetron.client.api.Transport;
+package com.mindera.telemetron.client.api;
 
 /**
  * The Telemetron client configuration interface.

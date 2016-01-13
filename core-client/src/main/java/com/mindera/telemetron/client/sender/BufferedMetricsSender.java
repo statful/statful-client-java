@@ -2,8 +2,9 @@ package com.mindera.telemetron.client.sender;
 
 import com.mindera.telemetron.client.api.AggregationFreq;
 import com.mindera.telemetron.client.api.Aggregations;
+import com.mindera.telemetron.client.api.MetricsSender;
 import com.mindera.telemetron.client.api.Tags;
-import com.mindera.telemetron.client.config.ClientConfiguration;
+import com.mindera.telemetron.client.api.ClientConfiguration;
 import com.mindera.telemetron.client.transport.TransportSender;
 
 import java.util.ArrayList;

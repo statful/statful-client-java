@@ -95,6 +95,40 @@ To configure Gauge defaults configuration, you should use the _gauge_ method. Pl
     
     telemetron.disable();
     telemetron.counter("transactions").send(); // This metric will NOT be sent to Telemetron
+    
+## Using annotations to instrument the application ## 
+    
+## Using AspectJ ##
+
+Configure your project to weave your application as you like but don't forget to include the following dependencies on your project:
+
+    <dependency>
+        <groupId>com.mindera.telemetron</groupId>
+        <artifactId>telemetron-client-aspects</artifactId>
+        <version>${telemetron-client.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjrt</artifactId>
+        <version>${aspectj.version}</version>
+    </dependency>
+    
+Then, you must set `TelemetronAspect` with your `TelemetronClient` instance:
+  
+    TelemetronAspect telemetronAspect = Aspects.aspectOf(TelemetronAspect.class);
+    telemetronAspect.setTelemetronClient(telemetronClient());
+    
+You must include the aspect on your AspectJ configuration:
+
+    <weaver>
+        <include within="com.mindera.telemetron.aspects.*"/>
+    </weaver>
+
+    <aspects>
+        <!-- weave the following aspects -->
+        <aspect name="com.mindera.telemetron.aspects.TelemetronAspect"/>
+    </aspects>
 
 ## Setup tips ##
 
