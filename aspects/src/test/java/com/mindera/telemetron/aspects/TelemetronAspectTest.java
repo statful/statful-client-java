@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
@@ -90,6 +91,24 @@ public class TelemetronAspectTest {
         ArgumentCaptor<Tags> tagsCaptor = ArgumentCaptor.forClass(Tags.class);
         verify(telemetronSenderAPI).tags(tagsCaptor.capture());
         assertEquals("error", tagsCaptor.getValue().getTagValue("status"));
+
+        verify(telemetronClient).timer(eq("timerName"), anyLong());
+        verify(telemetronSenderAPI).send();
+    }
+
+    @Test
+    public void shouldSendMetricOnTimerAnnotationWithEmptyNamespace() throws Throwable {
+        // Given
+        when(joinPoint.proceed()).thenReturn("something");
+        when(timer.namespace()).thenReturn("");
+
+        // When
+        subject.methodTiming(joinPoint, timer);
+
+        // Then
+        ArgumentCaptor<String> namespaceCaptor = ArgumentCaptor.forClass(String.class);
+        verify(telemetronSenderAPI).namespace(namespaceCaptor.capture());
+        assertNull(namespaceCaptor.getValue());
 
         verify(telemetronClient).timer(eq("timerName"), anyLong());
         verify(telemetronSenderAPI).send();
