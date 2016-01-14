@@ -29,9 +29,9 @@ public interface SenderAPI {
     SenderAPI value(final String value);
 
     /**
-     * Sets the Telemetron {@link com.mindera.telemetron.client.config.ClientConfiguration} to use.
+     * Sets the Telemetron {@link com.mindera.telemetron.client.api.ClientConfiguration} to use.
      *
-     * @param configuration The {@link com.mindera.telemetron.client.config.ClientConfiguration} to use
+     * @param configuration The {@link com.mindera.telemetron.client.api.ClientConfiguration} to use
      * @return A reference to this instance
      */
     SenderAPI configuration(final ClientConfiguration configuration);

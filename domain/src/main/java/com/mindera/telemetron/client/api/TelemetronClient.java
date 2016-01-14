@@ -2,7 +2,7 @@ package com.mindera.telemetron.client.api;
 
 /**
  * This interface allows to send metrics to Telemetron.
- * <p>
+ *
  * @see #timer
  * @see #counter
  * @see #gauge
