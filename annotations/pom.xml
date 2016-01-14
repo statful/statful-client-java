@@ -3,7 +3,7 @@
     <parent>
         <artifactId>telemetron-client-java</artifactId>
         <groupId>com.mindera.telemetron</groupId>
-        <version>1.0.0-alpha-4-SNAPSHOT</version>
+        <version>1.0.0-alpha-3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
