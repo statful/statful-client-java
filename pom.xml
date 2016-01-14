@@ -4,14 +4,14 @@
 
     <groupId>com.mindera.telemetron</groupId>
     <artifactId>telemetron-client-java</artifactId>
-    <version>1.0.0-alpha-3-SNAPSHOT</version>
+    <version>1.0.0-alpha-3</version>
     <packaging>pom</packaging>
 
     <scm>
         <connection>scm:git:ssh://bitbucket.org/mindera/telemetron-client-java.git</connection>
         <developerConnection>scm:git:git@bitbucket.org:mindera/telemetron-client-java.git</developerConnection>
         <url>https://bitbucket.org/mindera/telemetron-client-java.git</url>
-        <tag>HEAD</tag>
+        <tag>telemetron-client-java-1.0.0-alpha-3</tag>
     </scm>
 
     <properties>
@@ -122,19 +122,19 @@
             <dependency>
                 <groupId>com.mindera.telemetron</groupId>
                 <artifactId>telemetron-domain</artifactId>
-                <version>1.0.0-alpha-3-SNAPSHOT</version>
+                <version>1.0.0-alpha-3</version>
             </dependency>
 
             <dependency>
                 <groupId>com.mindera.telemetron</groupId>
                 <artifactId>telemetron-client-annotations</artifactId>
-                <version>1.0.0-alpha-3-SNAPSHOT</version>
+                <version>1.0.0-alpha-3</version>
             </dependency>
 
             <dependency>
                 <groupId>com.mindera.telemetron</groupId>
                 <artifactId>telemetron-coreclient-java</artifactId>
-                <version>1.0.0-alpha-3-SNAPSHOT</version>
+                <version>1.0.0-alpha-3</version>
             </dependency>
 
             <dependency>
@@ -153,7 +153,7 @@
             <dependency>
                 <groupId>com.mindera.telemetron</groupId>
                 <artifactId>telemetron-coreclient-java</artifactId>
-                <version>1.0.0-alpha-3-SNAPSHOT</version>
+                <version>1.0.0-alpha-3</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
