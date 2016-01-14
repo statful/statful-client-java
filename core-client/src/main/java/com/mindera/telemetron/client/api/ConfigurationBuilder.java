@@ -3,7 +3,7 @@ package com.mindera.telemetron.client.api;
 import com.mindera.telemetron.client.config.DefaultClientConfiguration;
 
 /**
- * This is a {@link com.mindera.telemetron.client.config.ClientConfiguration} builder which allows to chain a
+ * This is a {@link com.mindera.telemetron.client.api.ClientConfiguration} builder which allows to chain a
  * <code>T</code> type to return <code>T</code> upon build.
  * <p>
  * This class allows to wrap a {@link com.mindera.telemetron.client.api.ConfigurationBuilderChain}
@@ -367,10 +367,10 @@ public final class ConfigurationBuilder<T> {
     }
 
     /**
-     * Returns the {@link com.mindera.telemetron.client.config.ClientConfiguration} to be passed to the
+     * Returns the {@link com.mindera.telemetron.client.api.ClientConfiguration} to be passed to the
      * {@link com.mindera.telemetron.client.api.ConfigurationBuilderChain}.
      *
-     * @return The {@link com.mindera.telemetron.client.config.ClientConfiguration}
+     * @return The {@link com.mindera.telemetron.client.api.ClientConfiguration}
      */
     ClientConfiguration buildConfiguration() {
         if (!result.isValid()) {

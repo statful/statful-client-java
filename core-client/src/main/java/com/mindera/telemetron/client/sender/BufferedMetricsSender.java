@@ -21,11 +21,11 @@ import static java.util.Arrays.asList;
 /**
  * This class sends the metrics to Telemetron using a {@link com.mindera.telemetron.client.transport.TransportSender}.
  * And buffers the metrics before sending them, according with
- * {@link com.mindera.telemetron.client.config.ClientConfiguration}.
+ * {@link com.mindera.telemetron.client.api.ClientConfiguration}.
  * <p>
  * It sends the metrics using {@link com.mindera.telemetron.client.transport.TransportSender} in both a periodic way and
  * by checking the number of metrics in the buffer according with the
- * {@link com.mindera.telemetron.client.config.ClientConfiguration} passed in the constructor. The periodic flushes are
+ * {@link com.mindera.telemetron.client.api.ClientConfiguration} passed in the constructor. The periodic flushes are
  * handled by a {@link java.util.concurrent.ScheduledExecutorService} passed in the constructor.
  * <p>
  * The flushes are execute asynchronously by the passed {@link java.util.concurrent.ScheduledExecutorService}, which
@@ -54,7 +54,7 @@ public class BufferedMetricsSender implements MetricsSender {
      * Default constructor.
      *
      * @param transportSender The {@link com.mindera.telemetron.client.transport.TransportSender} to send metrics
-     * @param configuration The {@link com.mindera.telemetron.client.config.ClientConfiguration}
+     * @param configuration The {@link com.mindera.telemetron.client.api.ClientConfiguration}
      * @param executorService The {@link java.util.concurrent.ScheduledExecutorService} to handle flushes
      */
     public BufferedMetricsSender(

@@ -5,7 +5,7 @@ package com.mindera.telemetron.client.api;
  * builder with other types ans return <code>T</code> and passing the built
  * {@link com.mindera.telemetron.client.api.ClientConfiguration} to the {@link #build} method.
  *
- * @param <T>
+ * @param <T> The chained type
  */
 public interface ConfigurationBuilderChain<T> {
 

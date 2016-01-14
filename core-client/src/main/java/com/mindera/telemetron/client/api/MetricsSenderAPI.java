@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 /**
  * This class is an implementation of the {@link com.mindera.telemetron.client.api.SenderAPI},
- * which uses {@link com.mindera.telemetron.client.sender.MetricsSender} to send metrics.
+ * which uses {@link com.mindera.telemetron.client.api.MetricsSender} to send metrics.
  */
 public final class MetricsSenderAPI implements SenderAPI {
 
@@ -25,7 +25,7 @@ public final class MetricsSenderAPI implements SenderAPI {
     /**
      * Default constructor.
      *
-     * @param metricsSender The {@link com.mindera.telemetron.client.sender.MetricsSender} to send metrics
+     * @param metricsSender The {@link com.mindera.telemetron.client.api.MetricsSender} to send metrics
      */
     MetricsSenderAPI(final MetricsSender metricsSender) {
         this.metricsSender = metricsSender;
@@ -34,7 +34,7 @@ public final class MetricsSenderAPI implements SenderAPI {
     /**
      * Builds a new instance of {@link com.mindera.telemetron.client.api.SenderAPI} with the metrics sender.
      *
-     * @param metricsSender The {@link com.mindera.telemetron.client.sender.MetricsSender}
+     * @param metricsSender The {@link com.mindera.telemetron.client.api.MetricsSender}
      * @return An instance of {@link com.mindera.telemetron.client.api.SenderAPI}
      */
     public static SenderAPI newInstance(final MetricsSender metricsSender) {
