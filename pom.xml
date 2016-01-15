@@ -140,6 +140,7 @@
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
+                <scope>provided</scope>
                 <version>${aspectj.version}</version>
             </dependency>
 
