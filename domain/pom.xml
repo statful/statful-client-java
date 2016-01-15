@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>telemetron-domain</artifactId>
+    <artifactId>telemetron-client-domain</artifactId>
 
     <dependencies>
         <dependency>

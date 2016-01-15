@@ -121,7 +121,7 @@
 
             <dependency>
                 <groupId>com.mindera.telemetron</groupId>
-                <artifactId>telemetron-domain</artifactId>
+                <artifactId>telemetron-client-domain</artifactId>
                 <version>1.0.0-alpha-4-SNAPSHOT</version>
             </dependency>
 
