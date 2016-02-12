@@ -197,14 +197,14 @@
 
     <distributionManagement>
         <repository>
-            <id>mindera-releases</id>
-            <name>Mindera Nexus Releases Repository</name>
-            <url>http://nexus.mindera/content/repositories/releases</url>
+            <id>tvg-releases</id>
+            <name>Tvg Nexus Releases Repository</name>
+            <url>http://internal-corporate-nexus-elb-1225296452.us-west-2.elb.amazonaws.com/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
-            <id>mindera-snapshots</id>
-            <name>Mindera Nexus Snapshots Repository</name>
-            <url>http://nexus.mindera/content/repositories/snapshots</url>
+            <id>tvg-snapshots</id>
+            <name>Tvg Nexus Snapshots Repository</name>
+            <url>http://internal-corporate-nexus-elb-1225296452.us-west-2.elb.amazonaws.com/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
