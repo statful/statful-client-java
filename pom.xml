@@ -186,12 +186,12 @@
         <repository>
             <id>mindera-releases</id>
             <name>Mindera Nexus Releases Repository</name>
-            <url>http://nexus.mindera:8081/content/repositories/releases</url>
+            <url>http://internal-corporate-nexus-elb-1225296452.us-west-2.elb.amazonaws.com/content/repositories/releases</url>
         </repository>
         <repository>
             <id>mindera-snapshots</id>
             <name>Mindera Nexus Snapshots Repository</name>
-            <url>http://nexus.mindera:8081/content/repositories/snapshots</url>
+            <url>http://internal-corporate-nexus-elb-1225296452.us-west-2.elb.amazonaws.com/content/repositories/snapshots</url>
         </repository>
     </repositories>
 
