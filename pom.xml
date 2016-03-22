@@ -4,7 +4,7 @@
 
     <groupId>com.mindera.telemetron</groupId>
     <artifactId>telemetron-client-java</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0.0-alpha-7-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <scm>
@@ -122,19 +122,19 @@
             <dependency>
                 <groupId>com.mindera.telemetron</groupId>
                 <artifactId>telemetron-client-domain</artifactId>
-                <version>1.0.0-alpha-8-SNAPSHOT</version>
+                <version>1.0.0-alpha-7-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.mindera.telemetron</groupId>
                 <artifactId>telemetron-client-annotations</artifactId>
-                <version>1.0.0-alpha-8-SNAPSHOT</version>
+                <version>1.0.0-alpha-7-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.mindera.telemetron</groupId>
                 <artifactId>telemetron-coreclient-java</artifactId>
-                <version>1.0.0-alpha-8-SNAPSHOT</version>
+                <version>1.0.0-alpha-7-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -154,7 +154,7 @@
             <dependency>
                 <groupId>com.mindera.telemetron</groupId>
                 <artifactId>telemetron-coreclient-java</artifactId>
-                <version>1.0.0-alpha-8-SNAPSHOT</version>
+                <version>1.0.0-alpha-7-SNAPSHOT</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
