@@ -48,7 +48,7 @@ To bootstrap the client, the following options can be used:
 
 ### Configuration example ###
 
-    TelemetronClient telemetron = TelemetronClient.buildUDPClient("prefix").with()
+    TelemetronClient telemetron = TelemetronFactory.buildUDPClient("prefix").with()
         .host("telemetry-relay.youcompany.com")
         .port(2001)
         .token("MyAppToken")
