@@ -18,13 +18,14 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private static final int DEFAULT_SAMPLE_RATE = 100;
     private static final String DEFAULT_NAMESPACE = "application";
     private static final int DEFAULT_FLUSH_SIZE = 10;
+    private static final int DEFAULT_FLUSH_INTERVAL_MS = 5000;
     private static final AggregationFreq DEFAULT_AGGREGATION_FREQ = FREQ_10;
 
     private static final Tags DEFAULT_APP_TAGS = Tags.from("telemetron_client", "java");
     private static final Tags DEFAULT_TIMER_TAGS = Tags.from("unit", "ms");
 
     private static final Aggregation[] DEFAULT_TIMER_AGGREGATIONS = new Aggregation[] {AVG, P90, COUNT};
-    private static final Aggregation[] DEFAULT_COUNTER_AGGREGATIONS = new Aggregation[] {AVG, P90};
+    private static final Aggregation[] DEFAULT_COUNTER_AGGREGATIONS = new Aggregation[] {SUM, COUNT};
     private static final Aggregation[] DEFAULT_GAUGE_AGGREGATIONS = new Aggregation[] {LAST};
 
     private String host = DEFAULT_HOST;
@@ -32,10 +33,10 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private int sampleRate = DEFAULT_SAMPLE_RATE;
     private String namespace = DEFAULT_NAMESPACE;
     private int flushSize = DEFAULT_FLUSH_SIZE;
+    private long flushIntervalMillis = DEFAULT_FLUSH_INTERVAL_MS;
 
     private String prefix;
     private boolean isDryRun;
-    private long flushIntervalMillis;
     private Transport transport;
     private String token;
     private String app;

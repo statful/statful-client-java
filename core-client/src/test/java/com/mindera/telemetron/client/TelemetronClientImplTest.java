@@ -223,7 +223,7 @@ public class TelemetronClientImplTest {
     @Test
     public void shouldSendSimpleGaugeMetric() {
         // When
-        subject.gauge("current_sessions", "2").send();
+        subject.gauge("current_sessions", 2).send();
 
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
@@ -235,9 +235,51 @@ public class TelemetronClientImplTest {
     }
 
     @Test
+    public void shouldSendLongGaugeMetric() {
+        // When
+        subject.gauge("current_sessions", 2L).send();
+
+        // Then
+        ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
+
+        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), isNull(Tags.class), aggrArg.capture(), eq(FREQ_10), eq(10), eq("application"), anyLong());
+
+        // Then it should have aggregations
+        shouldContainDefaultGaugeAggregations(aggrArg.getValue());
+    }
+
+    @Test
+    public void shouldSendDoubleGaugeMetric() {
+        // When
+        subject.gauge("current_sessions", 2.2).send();
+
+        // Then
+        ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
+
+        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2.2"), isNull(Tags.class), aggrArg.capture(), eq(FREQ_10), eq(10), eq("application"), anyLong());
+
+        // Then it should have aggregations
+        shouldContainDefaultGaugeAggregations(aggrArg.getValue());
+    }
+
+    @Test
+    public void shouldSendFloatGaugeMetric() {
+        // When
+        subject.gauge("current_sessions", Float.valueOf("2.3")).send();
+
+        // Then
+        ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
+
+        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2.3"), isNull(Tags.class), aggrArg.capture(), eq(FREQ_10), eq(10), eq("application"), anyLong());
+
+        // Then it should have aggregations
+        shouldContainDefaultGaugeAggregations(aggrArg.getValue());
+    }
+
+    @Test
     public void shouldSendGaugeWithTags() {
         // When
-        subject.gauge("current_sessions", "2").with().tag("host", "localhost").send();
+        subject.gauge("current_sessions", 2).with().tag("host", "localhost").send();
 
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
@@ -254,7 +296,7 @@ public class TelemetronClientImplTest {
     @Test
     public void shouldSendGaugeWithAggregations() {
         // When
-        subject.gauge("current_sessions", "2").with().aggregations(AVG, P90).send();
+        subject.gauge("current_sessions", 2).with().aggregations(AVG, P90).send();
 
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
@@ -274,7 +316,7 @@ public class TelemetronClientImplTest {
     @Test
     public void shouldSendGaugeWithAggregationFrequency() {
         // When
-        subject.gauge("current_sessions", "2").with().aggFreq(FREQ_120).send();
+        subject.gauge("current_sessions", 2).with().aggFreq(FREQ_120).send();
 
         // Then
         ArgumentCaptor<AggregationFreq> aggrFreqArg = ArgumentCaptor.forClass(AggregationFreq.class);
@@ -288,7 +330,7 @@ public class TelemetronClientImplTest {
     @Test
     public void shouldSendGaugeWithNamespace() {
         // When
-        subject.gauge("current_sessions", "2").with().namespace("client").send();
+        subject.gauge("current_sessions", 2).with().namespace("client").send();
 
         // Then
         ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);
@@ -318,7 +360,7 @@ public class TelemetronClientImplTest {
         doThrow(new NullPointerException()).when(metricsSender).put(anyString(), anyString(), any(Tags.class), any(Aggregations.class), any(AggregationFreq.class), anyInt(), anyString(), anyLong());
 
         // When
-        subject.gauge("current_sessions", "2").with()
+        subject.gauge("current_sessions", 2).with()
                 .aggregations((Aggregation) null)
                 .tag(null, null)
                 .aggFreq(null)

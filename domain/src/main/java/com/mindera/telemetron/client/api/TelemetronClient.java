@@ -43,7 +43,34 @@ public interface TelemetronClient extends MetricsSender {
      * @param value The gauge value to send to Telemetron
      * @return A {@link com.mindera.telemetron.client.api.SenderFacade}, ready to send or to configure a metric before sending
      */
-    SenderFacade gauge(final String metricName, final String value);
+    SenderFacade gauge(final String metricName, final Long value);
+
+    /**
+     * Creates a new gauge metrics builder.
+     *
+     * @param metricName The gauge name to create
+     * @param value The gauge value to send to Telemetron
+     * @return A {@link com.mindera.telemetron.client.api.SenderFacade}, ready to send or to configure a metric before sending
+     */
+    SenderFacade gauge(final String metricName, final Double value);
+
+    /**
+     * Creates a new gauge metrics builder.
+     *
+     * @param metricName The gauge name to create
+     * @param value The gauge value to send to Telemetron
+     * @return A {@link com.mindera.telemetron.client.api.SenderFacade}, ready to send or to configure a metric before sending
+     */
+    SenderFacade gauge(final String metricName, final Float value);
+
+    /**
+     * Creates a new gauge metrics builder.
+     *
+     * @param metricName The gauge name to create
+     * @param value The gauge value to send to Telemetron
+     * @return A {@link com.mindera.telemetron.client.api.SenderFacade}, ready to send or to configure a metric before sending
+     */
+    SenderFacade gauge(final String metricName, final Integer value);
 
     /**
      * Enables Telemetron client.
