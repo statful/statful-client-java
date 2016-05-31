@@ -1,32 +1,32 @@
-# Telemetron Client for Java #
+# Statful Client for Java #
 
 ## Description ##
 
-telemetron-client-java is intended to gather application and JVM metrics and send them to the Telemetron server.
+statful-client-java is intended to gather application and JVM metrics and send them to the Statful server.
 
 ## Quick start - UDP client ##
 
-To bootstrap a Telemetron client to use UDP protocol, the quickest way is to do the following:
+To bootstrap a Statful client to use UDP protocol, the quickest way is to do the following:
 
-    TelemetronClient telemetron = TelemetronClient.buildUDPClient("prefix").build();
+    StatfulClient statful = StatfulClient.buildUDPClient("prefix").build();
 
 
-The _prefix_ option is always required and it will be a prefix for all metric names sent to Telemetron. This configuration uses the default _host_ and _port_.
+The _prefix_ option is always required and it will be a prefix for all metric names sent to Statful. This configuration uses the default _host_ and _port_.
 
 ### Timer ###
-The simplest way of sending a _timer_ metric to Telemetron can be done like this:
+The simplest way of sending a _timer_ metric to Statful can be done like this:
 
-    telemetron.timer("response_time", 1000).send();
+    statful.timer("response_time", 1000).send();
 
 ### Counter ###
-Or, if you prefer to send a _counter_ metric to Telemetron:
+Or, if you prefer to send a _counter_ metric to Statful:
 
-    telemetron.counter("transactions").send();
+    statful.counter("transactions").send();
 
 ### Gauge ###
-And finally, a _gauge_ metric to Telemetron can be preformed in the following way:
+And finally, a _gauge_ metric to Statful can be preformed in the following way:
 
-    telemetron.gauge("current_sessions", "2").send();
+    statful.gauge("current_sessions", "2").send();
 
 ## Client configuration ##
 
@@ -37,7 +37,7 @@ To bootstrap the client, the following options can be used:
 * __port__ [optional] [default: 2013]
 * __secure__ [__not supported yet__] [default: true] - enable or disable https
 * __timeout__ [__not supported yet__] [default: 2000ms] - timeout for http/tcp transports
-* __token__ [optional] - An authentication token to send to Telemetron
+* __token__ [optional] - An authentication token to send to Statful
 * __app__ [optional] - if specified set a tag ‘app=foo’
 * __dryrun__ [optional] [default: false] - do not actually send metrics when flushing the buffer
 * __tags__ [optional] - global list of tags to set
@@ -48,7 +48,7 @@ To bootstrap the client, the following options can be used:
 
 ### Configuration example ###
 
-    TelemetronClient telemetron = TelemetronFactory.buildUDPClient("prefix").with()
+    StatfulClient statful = StatfulFactory.buildUDPClient("prefix").with()
         .host("telemetry-relay.youcompany.com")
         .port(2001)
         .token("MyAppToken")
@@ -60,7 +60,7 @@ To bootstrap the client, the following options can be used:
 
 The bellow example uses the _timer_ method to configure default timer tags, timer aggregations and timer aggregation frequency.
 
-    TelemetronClient telemetron = TelemetronClient.buildUDPClient("prefix").with()
+    StatfulClient statful = StatfulClient.buildUDPClient("prefix").with()
         .timer(tag("unit", "s"))
         .timer(agg(LAST))
         .timer(aggrFreq(100))
@@ -78,23 +78,23 @@ To configure Gauge defaults configuration, you should use the _gauge_ method. Pl
 
 ### Building metrics tags ###
 
-    telemetron.counter("transactions").with().tag("host", "localhost").tag("status", "SUCCESS").send();
+    statful.counter("transactions").with().tag("host", "localhost").tag("status", "SUCCESS").send();
         
 ### Adding metrics with aggregations ###
 
-    telemetron.counter("transactions").with().aggregations(AVG, P90)).aggFreq(FREQ_10).send();
+    statful.counter("transactions").with().aggregations(AVG, P90)).aggFreq(FREQ_10).send();
         
 ### Adding metrics with namespace ###
 
-    telemetron.counter("transactions").with().namespace("my-namespace").send();
+    statful.counter("transactions").with().namespace("my-namespace").send();
     
-### Enabling/disabling Telemetron ###
+### Enabling/disabling Statful ###
 
-    telemetron.enable();
-    telemetron.counter("transactions").send(); // This metric will be sent to Telemetron
+    statful.enable();
+    statful.counter("transactions").send(); // This metric will be sent to Statful
     
-    telemetron.disable();
-    telemetron.counter("transactions").send(); // This metric will NOT be sent to Telemetron
+    statful.disable();
+    statful.counter("transactions").send(); // This metric will NOT be sent to Statful
     
 ## Using annotations to instrument the application ## 
     
@@ -103,9 +103,9 @@ To configure Gauge defaults configuration, you should use the _gauge_ method. Pl
 Configure your project to weave your application as you like but don't forget to include the following dependencies on your project:
 
     <dependency>
-        <groupId>com.mindera.telemetron</groupId>
-        <artifactId>telemetron-client-aspects</artifactId>
-        <version>${telemetron-client.version}</version>
+        <groupId>com.mindera.statful</groupId>
+        <artifactId>statful-client-aspects</artifactId>
+        <version>${statful-client.version}</version>
     </dependency>
 
     <dependency>
@@ -114,20 +114,20 @@ Configure your project to weave your application as you like but don't forget to
         <version>${aspectj.version}</version>
     </dependency>
     
-Then, you must set `TelemetronAspect` with your `TelemetronClient` instance:
+Then, you must set `StatfulAspect` with your `StatfulClient` instance:
   
-    TelemetronAspect telemetronAspect = Aspects.aspectOf(TelemetronAspect.class);
-    telemetronAspect.setTelemetronClient(telemetronClient());
+    StatfulAspect statfulAspect = Aspects.aspectOf(StatfulAspect.class);
+    statfulAspect.setStatfulClient(statfulClient());
     
 You must include the aspect on your AspectJ configuration:
 
     <weaver>
-        <include within="com.mindera.telemetron.aspects.*"/>
+        <include within="io.statful.client.aspects.*"/>
     </weaver>
 
     <aspects>
         <!-- weave the following aspects -->
-        <aspect name="com.mindera.telemetron.aspects.TelemetronAspect"/>
+        <aspect name="io.statful.client.aspects.StatfulAspect"/>
     </aspects>
 
 ## Setup tips ##
