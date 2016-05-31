@@ -21,8 +21,8 @@ class TelemetronClientImpl implements TelemetronClient {
     /**
      * Default constructor.
      *
-     * @param metricsSender The {@link com.mindera.telemetron.client.sender.MetricsSender} to send metrics
-     * @param configuration The {@link com.mindera.telemetron.client.config.ClientConfiguration} to configure the client
+     * @param metricsSender The {@link MetricsSender} to send metrics
+     * @param configuration The {@link ClientConfiguration} to configure the client
      */
     TelemetronClientImpl(final MetricsSender metricsSender, final ClientConfiguration configuration) {
         this.metricsSender = metricsSender;
@@ -60,8 +60,7 @@ class TelemetronClientImpl implements TelemetronClient {
         return new TelemetronClientFacade(senderAPI);
     }
 
-    @Override
-    public final SenderFacade gauge(final String metricName, final String value) {
+    private SenderFacade gauge(final String metricName, final String value) {
         SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this).with()
                 .configuration(configuration)
                 .aggregations(configuration.getGaugeAggregations())
@@ -71,6 +70,26 @@ class TelemetronClientImpl implements TelemetronClient {
                 .value(value);
 
         return new TelemetronClientFacade(metricsSenderAPI);
+    }
+
+    @Override
+    public final SenderFacade gauge(final String metricName, final Long value) {
+        return gauge(metricName, value.toString());
+    }
+
+    @Override
+    public final SenderFacade gauge(final String metricName, final Double value) {
+        return gauge(metricName, value.toString());
+    }
+
+    @Override
+    public final SenderFacade gauge(final String metricName, final Float value) {
+        return gauge(metricName, value.toString());
+    }
+
+    @Override
+    public final SenderFacade gauge(final String metricName, final Integer value) {
+        return gauge(metricName, value.toString());
     }
 
     @Override

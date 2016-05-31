@@ -42,7 +42,7 @@ public class ConfigurationBuilderTest {
         assertEquals("Should have default sample rate", 100, config.getSampleRate());
         assertEquals("Should have default namespace", "application", config.getNamespace());
         assertEquals("Should have default flush size", 10, config.getFlushSize());
-        assertEquals("Should have default flush interval", 0, config.getFlushIntervalMillis());
+        assertEquals("Should have default flush interval", 5000, config.getFlushIntervalMillis());
     }
 
     @Test
@@ -70,7 +70,7 @@ public class ConfigurationBuilderTest {
         assertNull("Should not have default counter tags", config.getCounterTags());
 
         Collection<Aggregation> aggregations = config.getCounterAggregations().getAggregations();
-        assertThat("Should have default counter aggregations", aggregations, containsInAnyOrder(AVG, P90));
+        assertThat("Should have default counter aggregations", aggregations, containsInAnyOrder(COUNT, SUM));
         assertEquals("Should have default counter aggregation frequency", FREQ_10, config.getCounterAggregationFreq());
     }
 
@@ -294,7 +294,7 @@ public class ConfigurationBuilderTest {
                 .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getCounterAggregations().getAggregations();
-        assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(AVG, P90, LAST));
+        assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(COUNT, SUM, LAST));
         assertEquals("Should counter aggregation frequency", FREQ_120, config.getCounterAggregationFreq());
     }
 
@@ -360,7 +360,7 @@ public class ConfigurationBuilderTest {
                 .buildConfiguration();
 
         Collection<Aggregation> aggregations = config.getCounterAggregations().getAggregations();
-        assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(AVG, P90, LAST));
+        assertThat("Should configure counter aggregations", aggregations, containsInAnyOrder(COUNT, SUM, LAST));
     }
 
     @Test

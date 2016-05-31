@@ -93,7 +93,7 @@ public class BufferedMetricsSender implements MetricsSender {
             final AggregationFreq aggregationFreq, final Integer sampleRate, final String namespace,
             final long timestamp
     ) {
-        if (!dryRun && shouldPutMetric(sampleRate)) {
+        if (shouldPutMetric(sampleRate)) {
             String rawMessage = newBuilder()
                     .withPrefix(metricPrefix)
                     .withName(name)
@@ -105,7 +105,11 @@ public class BufferedMetricsSender implements MetricsSender {
                     .withTimestamp(timestamp)
                     .build();
 
-            this.putRaw(rawMessage);
+            if (!dryRun) {
+                this.putRaw(rawMessage);
+            } else {
+                LOGGER.info("Dry metric: " + rawMessage);
+            }
         }
     }
 
@@ -136,8 +140,7 @@ public class BufferedMetricsSender implements MetricsSender {
 
         boolean inserted = buffer.offer(metric);
         if (!inserted) {
-            LOGGER.warning("The buffer is full, sending metric to Telemetron now.");
-            sendMetric(metric);
+            LOGGER.warning("The buffer is full, metric ignored!.");
         }
         if (isTimeToFlush()) {
             flush();
