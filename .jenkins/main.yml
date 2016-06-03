@@ -6,9 +6,9 @@
 ###############
 ### PROJECT
 - project:
-    name: 'telemetron-client-java'
+    name: 'statful-client-java'
     project_version: '1.0.0'
-    giturl: git@bitbucket.org:mindera/telemetron-client-java.git
+    giturl: git@bitbucket.org:mindera/statful-client-java.git
     jobs:
       - '{name}-build'
 

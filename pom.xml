@@ -8,9 +8,9 @@
     <packaging>pom</packaging>
 
     <scm>
-        <connection>scm:git:ssh://bitbucket.org/mindera/telemetron-client-java.git</connection>
-        <developerConnection>scm:git:git@bitbucket.org:mindera/telemetron-client-java.git</developerConnection>
-        <url>https://bitbucket.org/mindera/telemetron-client-java.git</url>
+        <connection>scm:git:ssh://bitbucket.org/mindera/statful-client-java.git</connection>
+        <developerConnection>scm:git:git@bitbucket.org:mindera/statful-client-java.git</developerConnection>
+        <url>https://bitbucket.org/mindera/statful-client-java.git</url>
         <tag>HEAD</tag>
     </scm>
 
