@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mindera.telemetron</groupId>
-    <artifactId>telemetron-client-java</artifactId>
-    <version>1.0.0-alpha-6-SNAPSHOT</version>
+    <groupId>io.statful.client</groupId>
+    <artifactId>client-java</artifactId>
+    <version>1.0.0-alpha-1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <scm>
@@ -26,7 +26,7 @@
         <module>domain</module>
         <module>annotations</module>
         <module>aspects</module>
-        <module>core-client</module>
+        <module>core</module>
         <module>udp-client</module>
     </modules>
 
@@ -80,10 +80,10 @@
                     <instrumentation>
                         <excludes>
                             <!-- Enumerations only -->
-                            <exclude>com/mindera/telemetron/client/api/Aggregations.class</exclude>
-                            <exclude>com/mindera/telemetron/client/api/Aggregation.class</exclude>
-                            <exclude>com/mindera/telemetron/client/api/AggregationFreq.class</exclude>
-                            <exclude>com/mindera/telemetron/client/api/Transport.class</exclude>
+                            <exclude>io/statful/client/domain/api/Aggregations.class</exclude>
+                            <exclude>io/statful/client/domain/api/Aggregation.class</exclude>
+                            <exclude>io/statful/client/domain/api/AggregationFreq.class</exclude>
+                            <exclude>io/statful/client/domain/api/Transport.class</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
@@ -120,21 +120,21 @@
         <dependencies>
 
             <dependency>
-                <groupId>com.mindera.telemetron</groupId>
-                <artifactId>telemetron-client-domain</artifactId>
-                <version>1.0.0-alpha-6-SNAPSHOT</version>
+                <groupId>io.statful.client</groupId>
+                <artifactId>domain</artifactId>
+                <version>1.0.0-alpha-1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.mindera.telemetron</groupId>
-                <artifactId>telemetron-client-annotations</artifactId>
-                <version>1.0.0-alpha-6-SNAPSHOT</version>
+                <groupId>io.statful.client</groupId>
+                <artifactId>annotations</artifactId>
+                <version>1.0.0-alpha-1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.mindera.telemetron</groupId>
-                <artifactId>telemetron-coreclient-java</artifactId>
-                <version>1.0.0-alpha-6-SNAPSHOT</version>
+                <groupId>io.statful.client</groupId>
+                <artifactId>core</artifactId>
+                <version>1.0.0-alpha-1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -152,9 +152,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.mindera.telemetron</groupId>
-                <artifactId>telemetron-coreclient-java</artifactId>
-                <version>1.0.0-alpha-6-SNAPSHOT</version>
+                <groupId>io.statful.client</groupId>
+                <artifactId>core</artifactId>
+                <version>1.0.0-alpha-1-SNAPSHOT</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>

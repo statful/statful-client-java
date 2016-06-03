@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>telemetron-client-java</artifactId>
-        <groupId>com.mindera.telemetron</groupId>
-        <version>1.0.0-alpha-6-SNAPSHOT</version>
+        <artifactId>client-java</artifactId>
+        <groupId>io.statful.client</groupId>
+        <version>1.0.0-alpha-1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>telemetron-client-annotations</artifactId>
+    <artifactId>annotations</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.mindera.telemetron</groupId>
-            <artifactId>telemetron-client-domain</artifactId>
+            <groupId>io.statful.client</groupId>
+            <artifactId>domain</artifactId>
         </dependency>
     </dependencies>
 

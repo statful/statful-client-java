@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>telemetron-client-java</artifactId>
-        <groupId>com.mindera.telemetron</groupId>
-        <version>1.0.0-alpha-6-SNAPSHOT</version>
+        <groupId>io.statful.client</groupId>
+        <artifactId>client-java</artifactId>
+        <version>1.0.0-alpha-1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>telemetron-udpclient-java</artifactId>
+    <artifactId>udpclient</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.mindera.telemetron</groupId>
-            <artifactId>telemetron-client-domain</artifactId>
+            <groupId>io.statful.client</groupId>
+            <artifactId>domain</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.mindera.telemetron</groupId>
-            <artifactId>telemetron-coreclient-java</artifactId>
+            <groupId>io.statful.client</groupId>
+            <artifactId>core</artifactId>
         </dependency>
 
         <dependency>
