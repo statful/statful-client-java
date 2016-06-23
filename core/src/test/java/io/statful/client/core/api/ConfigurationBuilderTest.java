@@ -160,6 +160,50 @@ public class ConfigurationBuilderTest {
     }
 
     @Test
+    public void shouldConfigureConnectionPool() {
+        ClientConfiguration config = newBuilder()
+                .prefix("test_prefix")
+                .transport(UDP)
+                .connectionPoolSize(20)
+                .buildConfiguration();
+
+        assertEquals("Should configure connection pool size", 20, config.getConnectionPoolSize());
+    }
+
+    @Test
+    public void shouldConfigureConnectionTimeout() {
+        ClientConfiguration config = newBuilder()
+                .prefix("test_prefix")
+                .transport(UDP)
+                .connectionTimeoutMs(200)
+                .buildConfiguration();
+
+        assertEquals("Should configure connection timeout", 200, config.getConnectTimeoutMillis());
+    }
+
+    @Test
+    public void shouldConfigureSocketTimeout() {
+        ClientConfiguration config = newBuilder()
+                .prefix("test_prefix")
+                .transport(UDP)
+                .timeoutMs(200)
+                .buildConfiguration();
+
+        assertEquals("Should configure socket timeout", 200, config.getSocketTimeoutMillis());
+    }
+
+    @Test
+    public void shouldConfigureSecureTransport() {
+        ClientConfiguration config = newBuilder()
+                .prefix("test_prefix")
+                .transport(UDP)
+                .secure(true)
+                .buildConfiguration();
+
+        assertTrue("Should configure secure transport", config.isSecure());
+    }
+
+    @Test
     public void shouldConfigureDefaultTags() {
         ClientConfiguration config = newBuilder()
                 .prefix("test_prefix")

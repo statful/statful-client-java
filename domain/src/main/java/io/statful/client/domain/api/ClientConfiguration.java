@@ -62,6 +62,13 @@ public interface ClientConfiguration {
     boolean isDryRun();
 
     /**
+     * Returns weather the transport os messages is secure. This is only applied to HTTPS.
+     *
+     * @return True if the transport method is secure
+     */
+    boolean isSecure();
+
+    /**
      * Returns the hostname to use, independently of the transport. Default is '127.0.0.1'.
      *
      * @return Hostname as string
@@ -170,4 +177,26 @@ public interface ClientConfiguration {
      * @return Size as int
      */
     int getWorkersPoolSize();
+
+    /**
+     * Only valid for TCP transports (HTTP and HTTPS).
+     * Default is 10.
+     *
+     * @return Size as int
+     */
+    int getConnectionPoolSize();
+
+    /**
+     * Only valid for TCP transports (HTTP and HTTPS).
+     *
+     * @return Timeout as int
+     */
+    int getConnectTimeoutMillis();
+
+    /**
+     * Only valid for TCP transports (HTTP and HTTPS).
+     *
+     * @return Timeout as int
+     */
+    int getSocketTimeoutMillis();
 }

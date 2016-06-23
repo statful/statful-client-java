@@ -8,8 +8,12 @@ import io.statful.client.domain.api.*;
 public class DefaultClientConfiguration implements ClientConfiguration {
 
     private static final int WORKER_POOL_SIZE = 1;
+    private static final int CONNECTION_POOL_SIZE = 10;
+    private static final int CONNECT_TIMEOUT_MS = 500;
+    private static final int SOCKET_TIMEOUT_MS = 1000;
 
     private static final String DEFAULT_HOST = "127.0.0.1";
+    private static final boolean DEFAULT_SECURE = true;
     private static final int DEFAULT_PORT = 2013;
     private static final int DEFAULT_SAMPLE_RATE = 100;
     private static final String DEFAULT_NAMESPACE = "application";
@@ -33,10 +37,14 @@ public class DefaultClientConfiguration implements ClientConfiguration {
 
     private String prefix;
     private boolean isDryRun;
+    private boolean secure = DEFAULT_SECURE;
     private Transport transport;
     private String token;
     private String app;
     private int workersPoolSize = WORKER_POOL_SIZE;
+    private int connectionPoolSize = CONNECTION_POOL_SIZE;
+    private int connectTimeoutMillis = CONNECT_TIMEOUT_MS;
+    private int socketTimeoutMillis = SOCKET_TIMEOUT_MS;
 
     private Tags applicationTags = Tags.from(DEFAULT_APP_TAGS);
     private Tags timerTags = Tags.from(DEFAULT_TIMER_TAGS);
@@ -92,6 +100,11 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     @Override
+    public final boolean isSecure() {
+        return secure;
+    }
+
+    @Override
     public final String getHost() {
         return host;
     }
@@ -119,6 +132,21 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     @Override
     public final int getWorkersPoolSize() {
         return workersPoolSize;
+    }
+
+    @Override
+    public final int getConnectionPoolSize() {
+        return connectionPoolSize;
+    }
+
+    @Override
+    public final int getConnectTimeoutMillis() {
+        return connectTimeoutMillis;
+    }
+
+    @Override
+    public final int getSocketTimeoutMillis() {
+        return socketTimeoutMillis;
     }
 
     @Override
@@ -221,6 +249,15 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     /**
+     * Setter for secure.
+     *
+     * @param secure The secure flag
+     */
+    public final void setSecure(final boolean secure) {
+        this.secure = secure;
+    }
+
+    /**
      * Setter for dry run
      *
      * @param isDryRun Boolean value for dry run
@@ -275,6 +312,33 @@ public class DefaultClientConfiguration implements ClientConfiguration {
      */
     public final void setWorkersPoolSize(final int workersPoolSize) {
         this.workersPoolSize = workersPoolSize;
+    }
+
+    /**
+     * Setter for the connection pool size.
+     *
+     * @param connectionPoolSize Connection pool size
+     */
+    public final void setConnectionPoolSize(final int connectionPoolSize) {
+        this.connectionPoolSize = connectionPoolSize;
+    }
+
+    /**
+     * Setter for the connection timeout.
+     *
+     * @param connectTimeoutMillis connect timeout in milliseconds
+     */
+    public final void setConnectTimeoutMillis(final int connectTimeoutMillis) {
+        this.connectTimeoutMillis = connectTimeoutMillis;
+    }
+
+    /**
+     * Setter for the socket timeout.
+     *
+     * @param socketTimeoutMillis socket timeout in milliseconds
+     */
+    public final void setSocketTimeoutMillis(final int socketTimeoutMillis) {
+        this.socketTimeoutMillis = socketTimeoutMillis;
     }
 
     /**

@@ -35,8 +35,10 @@ To bootstrap the client, the following options can be used:
 * __prefix__ [required] - global metrics prefix
 * __host__ [optional] [default: '127.0.0.1']
 * __port__ [optional] [default: 2013]
-* __secure__ [__not supported yet__] [default: true] - enable or disable https
-* __timeout__ [__not supported yet__] [default: 2000ms] - timeout for http/tcp transports
+* __secure__ [optional] [default: true] - enable or disable https
+* __timeout__ [optional] [default: 1000ms] - socket timeout for http/tcp transports
+* __connectTimeout__ [optional] [default: 500ms] - connection timeout for http/tcp transports
+* __connectionPoolSize__ [optional] [default: 10] - connection pool size
 * __token__ [optional] - An authentication token to send to Statful
 * __app__ [optional] - if specified set a tag ‘app=foo’
 * __dryrun__ [optional] [default: false] - do not actually send metrics when flushing the buffer
@@ -46,11 +48,20 @@ To bootstrap the client, the following options can be used:
 * __flushSize__ [optional] [default: 10] - defines the periodicity of buffer flushes
 * __flushInterval__ [optional] [default: 0] - Defines an interval to flush the metrics
 
-### Configuration example ###
+### UDB Configuration example ###
 
     StatfulClient statful = StatfulFactory.buildUDPClient("prefix").with()
-        .host("telemetry-relay.youcompany.com")
+        .host("telemetry-relay.yourcompany.com")
         .port(2001)
+        .token("MyAppToken")
+        .app("AccountService")
+        .tag("cluster", "production")
+        .build();
+        
+### HTTP Configuration example ###
+
+    StatfulClient statful = StatfulFactory.buildHTTPClient("prefix").with()
+        .host("api.statful.com")
         .token("MyAppToken")
         .app("AccountService")
         .tag("cluster", "production")

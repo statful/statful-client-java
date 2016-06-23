@@ -155,6 +155,50 @@ public final class ConfigurationBuilder<T> {
     }
 
     /**
+     * Sets the flag to use HTTP or HTTPS
+     *
+     * @param secure The flag to set if the transport should be secure
+     * @return A reference to this configuration builder
+     */
+    public ConfigurationBuilder<T> secure(final boolean secure) {
+        this.result.setSecure(secure);
+        return this;
+    }
+
+    /**
+     * Sets the connection pool size for TCP based transports.
+     *
+     * @param connectPoolSize The connections pool size
+     * @return A reference to this configuration builder
+     */
+    public ConfigurationBuilder<T> connectionPoolSize(final int connectPoolSize) {
+        this.result.setConnectionPoolSize(connectPoolSize);
+        return this;
+    }
+
+    /**
+     * Sets the connection timeout for TCP based transports.
+     *
+     * @param connectTimeoutMs The connection timeout in milliseconds
+     * @return A reference to this configuration builder
+     */
+    public ConfigurationBuilder<T> connectionTimeoutMs(final int connectTimeoutMs) {
+        this.result.setConnectTimeoutMillis(connectTimeoutMs);
+        return this;
+    }
+
+    /**
+     * Sets the socket timeout for TCP based transports.
+     *
+     * @param socketTimeoutMs The socket timeout in milliseconds
+     * @return A reference to this configuration builder
+     */
+    public ConfigurationBuilder<T> timeoutMs(final int socketTimeoutMs) {
+        this.result.setSocketTimeoutMillis(socketTimeoutMs);
+        return this;
+    }
+
+    /**
      * Sets the metrics namespace.
      *
      * @param namespace The namespace
