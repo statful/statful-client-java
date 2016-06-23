@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class StatfulFactoryTest {
 
     @Test
-    public void shouldCreateUdpClient() throws Exception {
+    public void shouldCreateHTTPClient() throws Exception {
         // Given
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         Future<String> response = executorService.submit(new UdpEcho(2013));
@@ -32,7 +32,7 @@ public class StatfulFactoryTest {
     }
 
     @Test
-    public void shouldCreateUdpClientWithoutOptionalConfigurations() throws Exception {
+    public void shouldCreateHTTPClientWithoutOptionalConfigurations() throws Exception {
         StatfulClient client = StatfulFactory.buildUDPClient("test_prefix").build();
 
         assertNotNull(client);
