@@ -7,7 +7,7 @@ public final class HTTPUriFactory {
 
     private static final String HTTP_PROTOCOL = "http://";
     private static final String HTTPS_PROTOCOL = "https://";
-    private static final String METRICS_PATH = "/tel/v1/metrics";
+    private static final String METRICS_PATH = "/tel/v2.0/metrics";
 
     private HTTPUriFactory() {
 
