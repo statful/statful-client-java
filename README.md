@@ -48,7 +48,7 @@ To bootstrap the client, the following options can be used:
 * __flushSize__ [optional] [default: 10] - defines the periodicity of buffer flushes
 * __flushInterval__ [optional] [default: 0] - Defines an interval to flush the metrics
 
-### UDB Configuration example ###
+### UDP Configuration example ###
 
     StatfulClient statful = StatfulFactory.buildUDPClient("prefix").with()
         .host("telemetry-relay.yourcompany.com")
