@@ -152,7 +152,7 @@ public class HTTPSenderTest extends HttpTest {
     private void mockMetricsPutWithStatusCode(int statusCode) {
         mockClientAndServer.when(
                 request()
-                        .withMethod("PUT").withPath("/tel/v1/metrics"),
+                        .withMethod("PUT").withPath("/tel/v2.0/metrics"),
                 exactly(1))
                 .respond(
                         response().withStatusCode(statusCode));
