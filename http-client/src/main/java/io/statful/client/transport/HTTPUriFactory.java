@@ -26,18 +26,10 @@ public final class HTTPUriFactory {
     }
 
     private static String getProtocolForUri(final boolean secure) {
-        if (secure) {
-            return HTTPS_PROTOCOL;
-        } else {
-            return HTTP_PROTOCOL;
-        }
+        return secure ? HTTPS_PROTOCOL : HTTP_PROTOCOL;
     }
 
     private static String getPortForUri(final Integer port) {
-        if (port != null) {
-            return ":" + port;
-        } else {
-            return "";
-        }
+        return port != null ? ":" + port : "";
     }
 }
