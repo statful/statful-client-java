@@ -3,14 +3,12 @@ package io.statful.client.transport;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
 
-import javax.net.ssl.SSLContext;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
@@ -65,18 +63,12 @@ public class HTTPClientFactory {
 
     private static SSLConnectionSocketFactory createSslSocketFactory() throws GeneralSecurityException {
         return new SSLConnectionSocketFactory(
-                createSslContext(),
+                SSLContexts.createSystemDefault(),
                 new String[] {
                         "TLSv1", "TLSv2"
                 },
                 null,
                 SSLConnectionSocketFactory.getDefaultHostnameVerifier());
-    }
-
-    private static SSLContext createSslContext() throws GeneralSecurityException {
-        // Trust all self-signed certs
-        return SSLContexts.custom()
-                .loadTrustMaterial(new TrustSelfSignedStrategy()).build();
     }
 
     /**

@@ -14,7 +14,7 @@ import static org.mockserver.verify.VerificationTimes.once;
 public class StatfulFactoryTest extends HttpTest {
 
     @Test
-    public void shouldCreateUdpClient() throws Exception {
+    public void shouldCreateHTTPClient() throws Exception {
         // Given
         mockClientAndServer.when(
                 request()
@@ -49,7 +49,7 @@ public class StatfulFactoryTest extends HttpTest {
     }
 
     @Test
-    public void shouldCreateUdpClientWithoutOptionalConfigurations() throws Exception {
+    public void shouldCreateHTTPClientWithoutOptionalConfigurations() throws Exception {
         StatfulClient client = StatfulFactory.buildHTTPClient("test_prefix").build();
 
         assertNotNull(client);
