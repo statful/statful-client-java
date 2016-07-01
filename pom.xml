@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.statful.client</groupId>
+    <groupId>com.statful.client</groupId>
     <artifactId>client-java</artifactId>
     <version>1.0.0-alpha-2-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -83,10 +83,10 @@
                     <instrumentation>
                         <excludes>
                             <!-- Enumerations only -->
-                            <exclude>io/statful/client/domain/api/Aggregations.class</exclude>
-                            <exclude>io/statful/client/domain/api/Aggregation.class</exclude>
-                            <exclude>io/statful/client/domain/api/AggregationFreq.class</exclude>
-                            <exclude>io/statful/client/domain/api/Transport.class</exclude>
+                            <exclude>com/statful/client/domain/api/Aggregations.class</exclude>
+                            <exclude>com/statful/client/domain/api/Aggregation.class</exclude>
+                            <exclude>com/statful/client/domain/api/AggregationFreq.class</exclude>
+                            <exclude>com/statful/client/domain/api/Transport.class</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
@@ -123,19 +123,19 @@
         <dependencies>
 
             <dependency>
-                <groupId>io.statful.client</groupId>
+                <groupId>com.statful.client</groupId>
                 <artifactId>domain</artifactId>
                 <version>1.0.0-alpha-2-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>io.statful.client</groupId>
+                <groupId>com.statful.client</groupId>
                 <artifactId>annotations</artifactId>
                 <version>1.0.0-alpha-2-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>io.statful.client</groupId>
+                <groupId>com.statful.client</groupId>
                 <artifactId>core</artifactId>
                 <version>1.0.0-alpha-2-SNAPSHOT</version>
             </dependency>
@@ -161,7 +161,7 @@
             </dependency>
 
             <dependency>
-                <groupId>io.statful.client</groupId>
+                <groupId>com.statful.client</groupId>
                 <artifactId>core</artifactId>
                 <version>1.0.0-alpha-2-SNAPSHOT</version>
                 <type>test-jar</type>
