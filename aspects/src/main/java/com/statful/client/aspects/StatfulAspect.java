@@ -9,6 +9,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
+import java.util.logging.Logger;
+
 /**
  * This aspect intercepts all {@link java.lang.annotation.ElementType} annotated with
  * {@link com.statful.client.annotations.Timer} (more to support ), creates a corresponding metric and sends it to
@@ -20,6 +22,8 @@ import org.aspectj.lang.annotation.Aspect;
 )
 @Aspect
 public class StatfulAspect {
+
+    private static final Logger LOGGER = Logger.getLogger(StatfulAspect.class.getName());
 
     private StatfulClient statful;
 
@@ -59,11 +63,15 @@ public class StatfulAspect {
             tags.putTag("status", "error");
             throw t;
         } finally {
-            statful.timer(timer.name(), stopTimer).with()
-                    .namespace(getNamespace(timer))
-                    .aggregations(getAggregations(timer))
-                    .tags(tags)
-                    .send();
+            if (statful != null) {
+                statful.timer(timer.name(), stopTimer).with()
+                        .namespace(getNamespace(timer))
+                        .aggregations(getAggregations(timer))
+                        .tags(tags)
+                        .send();
+            } else {
+                LOGGER.warning("Statful client is not configured within the StatfulAspect.");
+            }
         }
     }
 
