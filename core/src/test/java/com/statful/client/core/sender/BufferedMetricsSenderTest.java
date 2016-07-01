@@ -44,7 +44,6 @@ public class BufferedMetricsSenderTest {
 
         when(configuration.getFlushSize()).thenReturn(3);
         when(configuration.getFlushIntervalMillis()).thenReturn(0L);
-        when(configuration.getPrefix()).thenReturn("test_prefix");
         when(configuration.getSampleRate()).thenReturn(100);
 
         executorService = Executors.newScheduledThreadPool(1);
@@ -70,8 +69,8 @@ public class BufferedMetricsSenderTest {
         assertEquals("Buffer should not be empty", 1, buffer.size());
 
         assertThat("Should buffer timer metric", buffer.get(0), anyOf(
-                is("test_prefix.application.test_metric,unit=ms,app=test_app 500 123456789"),
-                is("test_prefix.application.test_metric,app=test_app,unit=ms 500 123456789")));
+                is("application.test_metric,unit=ms,app=test_app 500 123456789"),
+                is("application.test_metric,app=test_app,unit=ms 500 123456789")));
     }
 
     @Test
@@ -85,7 +84,7 @@ public class BufferedMetricsSenderTest {
         // Then
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should not be empty", 1, buffer.size());
-        assertEquals("Should buffer timer metric", "test_prefix.application.test_metric 500 123456789 avg,p90,count,10", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric 500 123456789 avg,p90,count,10", buffer.get(0));
     }
 
     @Test
@@ -96,7 +95,7 @@ public class BufferedMetricsSenderTest {
         // Then
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should not be empty", 1, buffer.size());
-        assertEquals("Should buffer timer metric", "test_prefix.application.test_metric 500 123456789", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric 500 123456789", buffer.get(0));
     }
 
     @Test
@@ -116,8 +115,8 @@ public class BufferedMetricsSenderTest {
         assertEquals("Buffer should not be empty", 1, buffer.size());
 
         assertThat("Should buffer timer metric", buffer.get(0), anyOf(
-                is("test_prefix.application.test_metric,app=test_app,unit=ms 500 123456789 avg,p90,count,10"),
-                is("test_prefix.application.test_metric,unit=ms,app=test_app 500 123456789 avg,p90,count,10")));
+                is("application.test_metric,app=test_app,unit=ms 500 123456789 avg,p90,count,10"),
+                is("application.test_metric,unit=ms,app=test_app 500 123456789 avg,p90,count,10")));
     }
 
     @Test
@@ -129,8 +128,8 @@ public class BufferedMetricsSenderTest {
         // Then
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should have 2 metrics", 2, buffer.size());
-        assertEquals("Should buffer timer metric", "test_prefix.application.test_metric0 100 123456789", buffer.get(0));
-        assertEquals("Should buffer timer metric", "test_prefix.application.test_metric1 101 123456790", buffer.get(1));
+        assertEquals("Should buffer timer metric", "application.test_metric0 100 123456789", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric1 101 123456790", buffer.get(1));
     }
 
     @Test
@@ -160,8 +159,8 @@ public class BufferedMetricsSenderTest {
         // Then
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should have 2 metrics", 2, buffer.size());
-        assertEquals("Should buffer timer metric", "test_prefix.application.test_metric0 100 123456789", buffer.get(0));
-        assertEquals("Should buffer timer metric", "test_prefix.application.test_metric1 101 123456790", buffer.get(1));
+        assertEquals("Should buffer timer metric", "application.test_metric0 100 123456789", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric1 101 123456790", buffer.get(1));
 
         // And then
         Thread.sleep(150);

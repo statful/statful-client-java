@@ -17,7 +17,6 @@ import java.util.Map;
  */
 public final class MessageBuilder {
 
-    private String prefix;
     private String namespace;
     private String name;
     private Map<String, String> tags = new HashMap<String, String>();
@@ -38,17 +37,6 @@ public final class MessageBuilder {
      */
     public static MessageBuilder newBuilder() {
         return new MessageBuilder();
-    }
-
-    /**
-     * Sets the prefix.
-     *
-     * @param prefix The prefix
-     * @return A reference to this builder
-     */
-    public MessageBuilder withPrefix(final String prefix) {
-        this.prefix = prefix;
-        return this;
     }
 
     /**
@@ -144,10 +132,8 @@ public final class MessageBuilder {
 
         StringBuilder sb = new StringBuilder();
 
-        //append prefix and namespace
-        sb.append(escapeMeasurement(prefix))
-                .append(".")
-                .append(escapeMeasurement(namespace));
+        //append namespace
+        sb.append(escapeMeasurement(namespace));
 
         //append name
         sb.append(".").append(escapeMeasurement(name));
@@ -202,10 +188,6 @@ public final class MessageBuilder {
     }
 
     private void validate() {
-        if (prefix == null) {
-            throw new IllegalStateException("Prefix should not be null");
-        }
-
         if (name == null) {
             throw new IllegalStateException("Name should not be null");
         }
