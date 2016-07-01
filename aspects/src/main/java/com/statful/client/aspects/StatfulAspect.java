@@ -70,7 +70,7 @@ public class StatfulAspect {
                         .tags(tags)
                         .send();
             } else {
-                LOGGER.warning("Statful client is not configured within the StatfulAspect.");
+                LOGGER.warning("Statful client is not configured");
             }
         }
     }
