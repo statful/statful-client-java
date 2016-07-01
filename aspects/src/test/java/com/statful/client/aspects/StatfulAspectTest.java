@@ -113,4 +113,14 @@ public class StatfulAspectTest {
         verify(statfulClient).timer(eq("timerName"), anyLong());
         verify(statfulSenderAPI).send();
     }
+
+    @Test
+    public void shouldNotFailWhenClientIsNotConfigured() throws Throwable {
+        // Given
+        subject.setStatfulClient(null);
+        when(joinPoint.proceed()).thenReturn("something");
+
+        // When
+        subject.methodTiming(joinPoint, timer);
+    }
 }
