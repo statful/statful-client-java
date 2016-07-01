@@ -201,7 +201,7 @@ public class BufferedMetricsSenderTest {
         List<String> buffer = subject.getBuffer();
         assertEquals("Buffer should have metrics", 1, buffer.size());
 
-        Thread.sleep(100);
+        Thread.sleep(200);
 
         // And then
         buffer = subject.getBuffer();
