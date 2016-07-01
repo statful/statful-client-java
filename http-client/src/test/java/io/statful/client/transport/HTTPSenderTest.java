@@ -27,7 +27,7 @@ public class HTTPSenderTest extends HttpTest {
     public void shouldSendThroughHttp() {
         // Given
         mockMetricsPutWithStatusCode(201);
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, new HTTPClientFactory(10, 1000, 5000, "any-token"));
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, new SSLClientFactory(10, 1000, 5000, "any-token"));
 
         // When
         subject.send(METRIC);
@@ -44,7 +44,7 @@ public class HTTPSenderTest extends HttpTest {
     public void shouldNotThrowWhenMetricIsNotCreated() {
         // Given
         mockMetricsPutWithStatusCode(402);
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, new HTTPClientFactory(10, 1000, 5000, "any-token"));
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, new SSLClientFactory(10, 1000, 5000, "any-token"));
 
         // When
         subject.send(METRIC);

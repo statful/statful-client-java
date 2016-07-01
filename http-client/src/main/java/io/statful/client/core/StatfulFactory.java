@@ -9,7 +9,7 @@ import io.statful.client.domain.api.ClientConfiguration;
 import io.statful.client.domain.api.MetricsSender;
 import io.statful.client.domain.api.StatfulClient;
 import io.statful.client.domain.api.Transport;
-import io.statful.client.transport.HTTPClientFactory;
+import io.statful.client.transport.SSLClientFactory;
 import io.statful.client.transport.HTTPSender;
 
 import java.util.concurrent.Executors;
@@ -46,15 +46,15 @@ public final class StatfulFactory {
                     int poolSize = configuration.getWorkersPoolSize();
                     ScheduledExecutorService executorService = Executors.newScheduledThreadPool(poolSize);
 
-                    HTTPClientFactory clientFactory = buildHTTPClientFactory(configuration);
+                    SSLClientFactory clientFactory = buildHTTPClientFactory(configuration);
                     TransportSender transportSender = buildTransportSender(configuration, clientFactory);
                     MetricsSender bufferedMetricsSender = new BufferedMetricsSender(transportSender, configuration, executorService);
                     return new StatfulClientImpl(bufferedMetricsSender, configuration);
                 }
             };
 
-    private static HTTPClientFactory buildHTTPClientFactory(final ClientConfiguration configuration) {
-        return new HTTPClientFactory(
+    private static SSLClientFactory buildHTTPClientFactory(final ClientConfiguration configuration) {
+        return new SSLClientFactory(
                 configuration.getConnectionPoolSize(),
                 configuration.getConnectTimeoutMillis(),
                 configuration.getSocketTimeoutMillis(),
@@ -62,7 +62,7 @@ public final class StatfulFactory {
         );
     }
 
-    private static TransportSender buildTransportSender(final ClientConfiguration configuration, final HTTPClientFactory clientFactory) {
+    private static TransportSender buildTransportSender(final ClientConfiguration configuration, final SSLClientFactory clientFactory) {
         return new HTTPSender(configuration.isSecure(), configuration.getHost(), configuration.getPort(), clientFactory);
     }
 }
