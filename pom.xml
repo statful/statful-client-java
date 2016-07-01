@@ -4,14 +4,14 @@
 
     <groupId>com.statful.client</groupId>
     <artifactId>client-java</artifactId>
-    <version>1.0.0-alpha-2-SNAPSHOT</version>
+    <version>1.0.0-alpha-2</version>
     <packaging>pom</packaging>
 
     <scm>
         <connection>scm:git:ssh://bitbucket.org/mindera/statful-client-java.git</connection>
         <developerConnection>scm:git:git@bitbucket.org:mindera/statful-client-java.git</developerConnection>
         <url>https://bitbucket.org/mindera/statful-client-java.git</url>
-        <tag>HEAD</tag>
+        <tag>client-java-1.0.0-alpha-2</tag>
     </scm>
 
     <properties>
@@ -125,19 +125,19 @@
             <dependency>
                 <groupId>com.statful.client</groupId>
                 <artifactId>domain</artifactId>
-                <version>1.0.0-alpha-2-SNAPSHOT</version>
+                <version>1.0.0-alpha-2</version>
             </dependency>
 
             <dependency>
                 <groupId>com.statful.client</groupId>
                 <artifactId>annotations</artifactId>
-                <version>1.0.0-alpha-2-SNAPSHOT</version>
+                <version>1.0.0-alpha-2</version>
             </dependency>
 
             <dependency>
                 <groupId>com.statful.client</groupId>
                 <artifactId>core</artifactId>
-                <version>1.0.0-alpha-2-SNAPSHOT</version>
+                <version>1.0.0-alpha-2</version>
             </dependency>
 
             <dependency>
@@ -163,7 +163,7 @@
             <dependency>
                 <groupId>com.statful.client</groupId>
                 <artifactId>core</artifactId>
-                <version>1.0.0-alpha-2-SNAPSHOT</version>
+                <version>1.0.0-alpha-2</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
