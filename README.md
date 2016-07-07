@@ -8,10 +8,10 @@ statful-client-java is intended to gather application and JVM metrics and send t
 
 To bootstrap a Statful client to use UDP protocol, the quickest way is to do the following:
 
-    StatfulClient statful = StatfulClient.buildUDPClient("prefix").build();
+    StatfulClient statful = StatfulClient.buildUDPClient().build();
 
 
-The _prefix_ option is always required and it will be a prefix for all metric names sent to Statful. This configuration uses the default _host_ and _port_.
+This configuration uses the default _host_ and _port_.
 
 ### Timer ###
 The simplest way of sending a _timer_ metric to Statful can be done like this:
@@ -32,7 +32,6 @@ And finally, a _gauge_ metric to Statful can be preformed in the following way:
 
 To bootstrap the client, the following options can be used:
 
-* __prefix__ [required] - global metrics prefix
 * __host__ [optional] [default: '127.0.0.1']
 * __port__ [optional] [default: 2013]
 * __secure__ [optional] [default: true] - enable or disable https
@@ -50,7 +49,7 @@ To bootstrap the client, the following options can be used:
 
 ### UDP Configuration example ###
 
-    StatfulClient statful = StatfulFactory.buildUDPClient("prefix").with()
+    StatfulClient statful = StatfulFactory.buildUDPClient().with()
         .host("telemetry-relay.yourcompany.com")
         .port(2001)
         .token("MyAppToken")
@@ -60,7 +59,7 @@ To bootstrap the client, the following options can be used:
         
 ### HTTP Configuration example ###
 
-    StatfulClient statful = StatfulFactory.buildHTTPClient("prefix").with()
+    StatfulClient statful = StatfulFactory.buildHTTPClient().with()
         .host("api.statful.com")
         .token("MyAppToken")
         .app("AccountService")
@@ -71,7 +70,7 @@ To bootstrap the client, the following options can be used:
 
 The bellow example uses the _timer_ method to configure default timer tags, timer aggregations and timer aggregation frequency.
 
-    StatfulClient statful = StatfulClient.buildUDPClient("prefix").with()
+    StatfulClient statful = StatfulClient.buildUDPClient().with()
         .timer(tag("unit", "s"))
         .timer(agg(LAST))
         .timer(aggrFreq(100))

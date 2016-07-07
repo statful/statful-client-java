@@ -20,20 +20,20 @@ public class StatfulFactoryTest {
         Future<String> response = executorService.submit(new UdpEcho(2013));
 
         // When
-        StatfulClient client = StatfulFactory.buildUDPClient("test_prefix").with()
+        StatfulClient client = StatfulFactory.buildUDPClient().with()
                 .flushSize(1)
                 .build();
         client.counter("test_counter").send();
 
         // Then
         String responseString = response.get();
-        assertTrue("Should receive message", responseString.startsWith("test_prefix.application.counter.test_counter 1"));
+        assertTrue("Should receive message", responseString.startsWith("application.counter.test_counter 1"));
         executorService.shutdown();
     }
 
     @Test
     public void shouldCreateUDPClientWithoutOptionalConfigurations() throws Exception {
-        StatfulClient client = StatfulFactory.buildUDPClient("test_prefix").build();
+        StatfulClient client = StatfulFactory.buildUDPClient().build();
 
         assertNotNull(client);
     }

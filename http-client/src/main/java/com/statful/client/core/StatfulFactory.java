@@ -28,13 +28,12 @@ public final class StatfulFactory {
     /**
      * Instantiates a new {@link com.statful.client.core.api.StatfulClientBuilder} to use HTTP protocol.
      *
-     * @param prefix The metric prefix
      * @return A Statful client builder, ready for configure or bootstrap
      */
-    public static StatfulClientBuilder buildHTTPClient(final String prefix) {
+    public static StatfulClientBuilder buildHTTPClient() {
         LOGGER.info("Starting Statful client.");
         ConfigurationBuilder<StatfulClient> configurationBuilder = ConfigurationBuilder
-                .newBuilder(builderChain).transport(Transport.HTTP).prefix(prefix);
+                .newBuilder(builderChain).transport(Transport.HTTP);
 
         return new StatfulClientBuilder(configurationBuilder);
     }

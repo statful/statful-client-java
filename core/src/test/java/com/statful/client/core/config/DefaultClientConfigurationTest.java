@@ -25,7 +25,6 @@ public class DefaultClientConfigurationTest {
     @Test
     public void shouldValidate() {
         // Given
-        subject.setPrefix("test_prefix");
         subject.setTransport(Transport.UDP);
 
         // When
@@ -36,22 +35,7 @@ public class DefaultClientConfigurationTest {
     }
 
     @Test
-    public void shouldInvalidateWithNoPrefix() {
-        // Given
-        subject.setTransport(Transport.UDP);
-
-        // When
-        boolean result = subject.isValid();
-
-        // Then
-        assertFalse("Should be invalid", result);
-    }
-
-    @Test
     public void shouldInvalidateWithNoTransport() {
-        // Given
-        subject.setPrefix("test_prefix");
-
         // When
         boolean result = subject.isValid();
 
@@ -225,7 +209,6 @@ public class DefaultClientConfigurationTest {
         assertEquals(FREQ_10, subject.getCounterAggregationFreq());
         assertEquals(FREQ_10, subject.getGaugeAggregationFreq());
 
-        assertNull(subject.getPrefix());
         assertNull(subject.getTransport());
         assertNull(subject.getToken());
         assertNull(subject.getApp());

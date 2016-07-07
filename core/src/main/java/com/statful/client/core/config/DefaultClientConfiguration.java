@@ -35,7 +35,6 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private int flushSize = DEFAULT_FLUSH_SIZE;
     private long flushIntervalMillis = DEFAULT_FLUSH_INTERVAL_MS;
 
-    private String prefix;
     private boolean isDryRun;
     private boolean secure = DEFAULT_SECURE;
     private Transport transport;
@@ -61,7 +60,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
 
     @Override
     public final boolean isValid() {
-        return prefix != null && transport != null;
+        return transport != null;
     }
 
     @Override
@@ -77,11 +76,6 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     @Override
     public final String getNamespace() {
         return namespace;
-    }
-
-    @Override
-    public final String getPrefix() {
-        return prefix;
     }
 
     @Override
@@ -237,15 +231,6 @@ public class DefaultClientConfiguration implements ClientConfiguration {
      */
     public final void setFlushSize(final int flushSize) {
         this.flushSize = flushSize;
-    }
-
-    /**
-     * Setter for prefix.
-     *
-     * @param prefix The prefix
-     */
-    public final void setPrefix(final String prefix) {
-        this.prefix = prefix;
     }
 
     /**

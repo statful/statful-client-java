@@ -27,7 +27,7 @@ public class StatfulFactoryTest extends HttpTest {
         Thread.sleep(200);
 
         // When
-        StatfulClient client = StatfulFactory.buildHTTPClient("test_prefix").with()
+        StatfulClient client = StatfulFactory.buildHTTPClient().with()
                 .host("127.0.0.1")
                 .secure(false)
                 .port(mockServerPort)
@@ -43,14 +43,14 @@ public class StatfulFactoryTest extends HttpTest {
         // Then
         mockClientAndServer.verify(
                 request()
-                        .withBody(regex("test_prefix.application.counter.test_counter 1 .+ count,sum,10\\n")),
+                        .withBody(regex("application.counter.test_counter 1 .+ count,sum,10\\n")),
                 once()
         );
     }
 
     @Test
     public void shouldCreateHTTPClientWithoutOptionalConfigurations() throws Exception {
-        StatfulClient client = StatfulFactory.buildHTTPClient("test_prefix").build();
+        StatfulClient client = StatfulFactory.buildHTTPClient().build();
 
         assertNotNull(client);
     }

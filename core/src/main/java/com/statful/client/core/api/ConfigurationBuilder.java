@@ -81,19 +81,6 @@ public final class ConfigurationBuilder<T> {
     }
 
     /**
-     * Sets the metric prefix.
-     *
-     * @param prefix The prefix name
-     * @return A reference to this configuration builder
-     */
-    public ConfigurationBuilder<T> prefix(final String prefix) {
-        if (isStringSafe(prefix)) {
-            this.result.setPrefix(prefix);
-        }
-        return this;
-    }
-
-    /**
      * Sets the transport.
      *
      * @param transport The transport type
@@ -421,7 +408,7 @@ public final class ConfigurationBuilder<T> {
      */
     ClientConfiguration buildConfiguration() {
         if (!result.isValid()) {
-            throw new IllegalStateException("Configuration is not valid. Prefix and transport must be defined");
+            throw new IllegalStateException("Configuration is not valid. Transport must be defined");
         }
         return this.result;
     }

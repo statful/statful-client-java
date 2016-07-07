@@ -46,7 +46,6 @@ public class BufferedMetricsSender implements MetricsSender {
     private final TransportSender transportSender;
     private final ScheduledExecutorService executorService;
     private final boolean dryRun;
-    private final String metricPrefix;
     private final int flushSize;
     private final ArrayBlockingQueue<String> buffer;
 
@@ -65,7 +64,6 @@ public class BufferedMetricsSender implements MetricsSender {
         this.transportSender = transportSender;
         this.executorService = executorService;
         this.dryRun = configuration.isDryRun();
-        this.metricPrefix = configuration.getPrefix();
         this.flushSize = configuration.getFlushSize();
         this.buffer = new ArrayBlockingQueue<String>(MAX_BUFFER_SIZE);
 
@@ -95,7 +93,6 @@ public class BufferedMetricsSender implements MetricsSender {
     ) {
         if (shouldPutMetric(sampleRate)) {
             String rawMessage = MessageBuilder.newBuilder()
-                    .withPrefix(metricPrefix)
                     .withName(name)
                     .withValue(value)
                     .withTags(tags)

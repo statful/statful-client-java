@@ -27,13 +27,12 @@ public final class StatfulFactory {
     /**
      * Instantiates a new {@link com.statful.client.core.api.StatfulClientBuilder} to use UDP protocol.
      *
-     * @param prefix The metric prefix
      * @return A Statful client builder, ready for configure or bootstrap
      */
-    public static StatfulClientBuilder buildUDPClient(final String prefix) {
+    public static StatfulClientBuilder buildUDPClient() {
         LOGGER.info("Starting Statful client.");
         ConfigurationBuilder<StatfulClient> configurationBuilder = ConfigurationBuilder
-                .newBuilder(builderChain).transport(Transport.UDP).prefix(prefix);
+                .newBuilder(builderChain).transport(Transport.UDP);
 
         return new StatfulClientBuilder(configurationBuilder);
     }

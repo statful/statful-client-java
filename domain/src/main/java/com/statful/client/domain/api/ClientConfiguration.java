@@ -6,7 +6,7 @@ package com.statful.client.domain.api;
 public interface ClientConfiguration {
 
     /**
-     * Returns if the configuration is valid. The only required options are the prefix and the transport type.
+     * Returns if the configuration is valid. The only required option is the transport type.
      *
      * @return True if the client configuration is valid
      */
@@ -32,13 +32,6 @@ public interface ClientConfiguration {
      * @return Namespace as string
      */
     String getNamespace();
-
-    /**
-     * Returns the global metrics prefix. Mandatory to configure.
-     *
-     * @return Prefix as string
-     */
-    String getPrefix();
 
     /**
      * Returns the periodicity of buffer flushes in buffer size. Default is 10.
