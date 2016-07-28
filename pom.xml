@@ -208,27 +208,27 @@
 
     <repositories>
         <repository>
-            <id>mindera-releases</id>
-            <name>Mindera Nexus Releases Repository</name>
-            <url>http://nexus.internal.mindera.com/content/repositories/releases</url>
+            <id>statful-releases</id>
+            <name>TBD Releases Repository</name>
+            <url>http://TBD/repositories/releases</url>
         </repository>
         <repository>
-            <id>mindera-snapshots</id>
-            <name>Mindera Nexus Snapshots Repository</name>
-            <url>http://nexus.internal.mindera.com/content/repositories/snapshots</url>
+            <id>statful-snapshots</id>
+            <name>TBD Snapshots Repository</name>
+            <url>http://TBD/repositories/snapshots</url>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
-            <id>mindera-releases</id>
-            <name>Mindera Nexus Releases Repository</name>
-            <url>http://nexus.internal.mindera.com/content/repositories/releases</url>
+            <id>statful-releases</id>
+            <name>TBD Releases Repository</name>
+            <url>http://TBD/repositories/releases</url>
         </repository>
         <snapshotRepository>
-            <id>mindera-snapshots</id>
-            <name>Mindera Nexus Snapshots Repository</name>
-            <url>http://nexus.internal.mindera.com/content/repositories/snapshots</url>
+            <id>statful-snapshots</id>
+            <name>TBD Snapshots Repository</name>
+            <url>http://TBD/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
