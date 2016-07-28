@@ -113,8 +113,8 @@ To configure Gauge defaults configuration, you should use the _gauge_ method. Pl
 Configure your project to weave your application as you like but don't forget to include the following dependencies on your project:
 
     <dependency>
-        <groupId>com.mindera.statful</groupId>
-        <artifactId>statful-client-aspects</artifactId>
+        <groupId>com.statful.client</groupId>
+        <artifactId>aspects</artifactId>
         <version>${statful-client.version}</version>
     </dependency>
 
@@ -132,12 +132,12 @@ Then, you must set `StatfulAspect` with your `StatfulClient` instance:
 You must include the aspect on your AspectJ configuration:
 
     <weaver>
-        <include within="io.statful.client.aspects.*"/>
+        <include within="com.statful.client.aspects.*"/>
     </weaver>
 
     <aspects>
         <!-- weave the following aspects -->
-        <aspect name="io.statful.client.aspects.StatfulAspect"/>
+        <aspect name="com.statful.client.aspects.StatfulAspect"/>
     </aspects>
 
 ## Setup tips ##
