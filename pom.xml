@@ -29,7 +29,7 @@
 
     <scm>
         <connection>scm:git:git://github.com/statful/statful-client-java.git</connection>
-        <developerConnection>scm:git:ssh://github.com:statful/statful-client-java.git</developerConnection>
+        <developerConnection>scm:git:git://github.com/statful/statful-client-java.git</developerConnection>
         <url>https://github.com/statful/statful-client-java.git</url>
     </scm>
 
