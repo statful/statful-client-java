@@ -3,4 +3,5 @@ jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk6
+install: mvn install -DskipTests=true -Dcobertura.skip=true -Dmaven.javadoc.skip=true -B -V
 script: mvn clean verify
