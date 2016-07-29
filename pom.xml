@@ -7,11 +7,30 @@
     <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Client to send metrics over HTTP, HTTPS or UDP to Statful.</description>
+    <url>http://www.statful.com</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Bruno Palos</name>
+            <email>bruno.palos@mindera.com</email>
+            <organization>Statful</organization>
+            <organizationUrl>http://www.statful.com</organizationUrl>
+        </developer>
+    </developers>
+
     <scm>
         <connection>scm:git:ssh://github.com/statful/statful-client-java.git</connection>
         <developerConnection>scm:git:git@github.com/statful/statful-client-java.git</developerConnection>
         <url>https://github.com/statful/statful-client-java.git</url>
-        <tag>HEAD</tag>
     </scm>
 
     <properties>
@@ -48,6 +67,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -206,30 +231,65 @@
         </dependencies>
     </dependencyManagement>
 
-    <repositories>
-        <repository>
-            <id>statful-releases</id>
-            <name>TBD Releases Repository</name>
-            <url>http://TBD/repositories/releases</url>
-        </repository>
-        <repository>
-            <id>statful-snapshots</id>
-            <name>TBD Snapshots Repository</name>
-            <url>http://TBD/repositories/snapshots</url>
-        </repository>
-    </repositories>
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.4</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <distributionManagement>
-        <repository>
-            <id>statful-releases</id>
-            <name>TBD Releases Repository</name>
-            <url>http://TBD/repositories/releases</url>
-        </repository>
         <snapshotRepository>
-            <id>statful-snapshots</id>
-            <name>TBD Snapshots Repository</name>
-            <url>http://TBD/repositories/snapshots</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
 
 </project>
