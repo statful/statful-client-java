@@ -25,4 +25,16 @@ public final class AggregationBuilder {
     Aggregation getAggregation() {
         return aggregation;
     }
+
+    /**
+     * Instantiates a new {@link AggregationBuilder}.
+     * <p>
+     * Example: <code>timer(agg(AVG)).</code>
+     *
+     * @param aggregation The {@link com.statful.client.domain.api.Aggregation} to use
+     * @return An instance of {@link AggregationBuilder}
+     */
+    public static AggregationBuilder agg(final Aggregation aggregation) {
+        return new AggregationBuilder(aggregation);
+    }
 }

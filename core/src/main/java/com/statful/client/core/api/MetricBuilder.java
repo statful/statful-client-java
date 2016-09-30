@@ -7,6 +7,7 @@ import com.statful.client.domain.api.AggregationFreq;
  * This class serves only for syntax sugar for building metrics. The static methods can be statically imported for
  * more compact code.
  */
+@Deprecated
 public final class MetricBuilder {
 
     /**

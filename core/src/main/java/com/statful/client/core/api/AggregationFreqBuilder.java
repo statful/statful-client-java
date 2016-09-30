@@ -26,4 +26,16 @@ public final class AggregationFreqBuilder {
     AggregationFreq getAggFreq() {
         return aggFreq;
     }
+
+    /**
+     * Instantiates a new {@link AggregationFreqBuilder}.
+     * <p>
+     * Example: <code>timer(aggFreq(FREQ_120)).</code>
+     *
+     * @param aggregationFreq The {@link com.statful.client.domain.api.AggregationFreq} to use
+     * @return An instance of {@link AggregationFreqBuilder}
+     */
+    public static AggregationFreqBuilder aggFreq(final AggregationFreq aggregationFreq) {
+        return new AggregationFreqBuilder(aggregationFreq);
+    }
 }

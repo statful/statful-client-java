@@ -35,4 +35,17 @@ public final class TagBuilder {
     String getValue() {
         return value;
     }
+
+    /**
+     * Instantiates a new {@link TagBuilder}.
+     * <p>
+     * Example: <code>timer(tag("cluster", "production"))</code>
+     *
+     * @param type The tag type to use
+     * @param value The tag value to use
+     * @return An instance of {@link TagBuilder}
+     */
+    public static TagBuilder tag(final String type, final String value) {
+        return new TagBuilder(type, value);
+    }
 }
