@@ -93,6 +93,17 @@ class StatfulClientImpl implements StatfulClient {
     }
 
     @Override
+    public final SenderFacade metric(final String metricName, final Integer value) {
+        SenderAPI senderAPI = MetricsSenderAPI.newInstance(this).with()
+                .configuration(configuration)
+                .aggFreq(configuration.getDefaultAggregationFreq())
+                .metricName(metricName)
+                .value(Integer.toString(value));
+
+        return new StatfulClientFacade(senderAPI);
+    }
+
+    @Override
     public final void put(
             final String name, final String value, final Tags tags, final Aggregations aggregations,
             final AggregationFreq aggregationFreq, final Integer sampleRate, final String namespace,

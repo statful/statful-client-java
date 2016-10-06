@@ -73,6 +73,15 @@ public interface StatfulClient extends MetricsSender {
     SenderFacade gauge(final String metricName, final Integer value);
 
     /**
+     * Creates a new simple metrics builder.
+     *
+     * @param metricName The metric name to create
+     * @param value The metric value to send to Statful
+     * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
+     */
+    SenderFacade metric(final String metricName, final Integer value);
+
+    /**
      * Enables Statful client.
      */
     void enable();

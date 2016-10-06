@@ -43,6 +43,7 @@ public class StatfulClientImplTest {
         when(configuration.getTimerAggregationFreq()).thenReturn(AggregationFreq.FREQ_10);
         when(configuration.getCounterAggregationFreq()).thenReturn(AggregationFreq.FREQ_10);
         when(configuration.getGaugeAggregationFreq()).thenReturn(AggregationFreq.FREQ_10);
+        when(configuration.getDefaultAggregationFreq()).thenReturn(AggregationFreq.FREQ_10);
 
         subject = new StatfulClientImpl(metricsSender, configuration);
     }
@@ -338,6 +339,82 @@ public class StatfulClientImplTest {
 
         assertEquals("Namespace should be 'client'", "client", namespaceArg.getValue());
     }
+
+    @Test
+    public void shouldSendSimplerMetric() {
+        // When
+        subject.metric("response_time", 1000).send();
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+        ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
+
+        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendSimpleMetricWithTags() {
+        // When
+        subject.metric("response_time", 1000).with().tag("host", "localhost").tag("cluster", "prod").send();
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+
+        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+
+        // Then it should have tags
+        Tags tags = tagsArg.getValue();
+        assertNotNull("Tags should not be null", tags);
+        assertEquals("Should contain 2 tag", 2, tags.getTags().size());
+        assertEquals("Should contain host tag", "prod", tags.getTagValue("cluster"));
+        assertEquals("Should contain host tag", "localhost", tags.getTagValue("host"));
+    }
+
+    @Test
+    public void shouldSendSimpleMetricWithAggregations() {
+        // When
+        subject.metric("response_time", 1000).with().aggregations(Aggregation.LAST).send();
+
+        // Then
+        ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
+
+        verify(metricsSender).put(eq("response_time"), eq("1000"), any(Tags.class), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+
+        // Then it should have aggregations
+        assertNotNull("Aggregations should not be null", aggrArg.getValue());
+
+        Collection<Aggregation> aggregations = aggrArg.getValue().getAggregations();
+        assertEquals("Should contain 1 aggregations", 1, aggregations.size());
+        assertTrue("Should contain LAST aggregation", aggregations.contains(Aggregation.LAST));
+    }
+
+    @Test
+    public void shouldSendSimpleMetricWithAggregationFrequency() {
+        // When
+        subject.metric("response_time", 1000).with().aggFreq(AggregationFreq.FREQ_120).send();
+
+        // Then
+        ArgumentCaptor<AggregationFreq> aggrFreqArg = ArgumentCaptor.forClass(AggregationFreq.class);
+
+        verify(metricsSender).put(eq("response_time"), eq("1000"), any(Tags.class), any(Aggregations.class), aggrFreqArg.capture(), eq(10), eq("application"), anyLong());
+
+        assertNotNull("Aggregation frequency should not be null", aggrFreqArg.getValue());
+        Assert.assertEquals("Aggregation frequency should be 5", AggregationFreq.FREQ_120, aggrFreqArg.getValue());
+    }
+
+    @Test
+    public void shouldSendSimpleMetricWithNameSpace() {
+        // When
+        subject.metric("response_time", 1000).with().namespace("client").send();
+
+        // Then
+        ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);
+
+        verify(metricsSender).put(eq("response_time"), eq("1000"), any(Tags.class), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), namespaceArg.capture(), anyLong());
+
+        assertEquals("Namespace should be 'client'", "client", namespaceArg.getValue());
+    }
+
 
     @Test
     public void shouldNeverThrowExceptionWhenRegisteringTimer() {
