@@ -144,6 +144,14 @@ public interface ClientConfiguration {
     AggregationFreq getGaugeAggregationFreq();
 
     /**
+     * Returns the default aggregation frequency. Default is
+     * {@link AggregationFreq#FREQ_10}.
+     *
+     * @return {@link AggregationFreq} for counter
+     */
+    AggregationFreq getDefaultAggregationFreq();
+
+    /**
      * Returns the transport to use. Mandatory to configure.
      *
      * @return {@link Transport} to use to send the metrics

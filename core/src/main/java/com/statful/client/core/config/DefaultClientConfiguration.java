@@ -188,6 +188,11 @@ public class DefaultClientConfiguration implements ClientConfiguration {
         return gaugeAggregationFreq;
     }
 
+    @Override
+    public final AggregationFreq getDefaultAggregationFreq() {
+        return DEFAULT_AGGREGATION_FREQ;
+    }
+
     /**
      * Setter for hostname.
      *

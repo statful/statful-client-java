@@ -224,6 +224,7 @@ StatfulClient client = StatfulFactory.buildUDPClient().with()
 client.gauge("testGauge", 10).send();
 client.timer("testTimer", 100).send();
 client.counter("testTimer", 1).send();
+client.metric("testCustomMetric", 1).send();
 
 // Metric to be sent with tags
 client.counter("testCounter", 1).with()
@@ -263,14 +264,14 @@ The custom options that can be set on config param are detailed below.
 client.counter("testCounter", 1).with().aggregations(SUM).send();
 client.gauge("testGauge", 10).with().tag("host", "localhost").send();
 client.timer("testTimer", 200).with().namespace("sandbox").send();
+client.metric("testCustomMetric").with().namespace("my-namespace").send();
 client.counter("transactions").with().tag("host", "localhost").tag("status", "SUCCESS").send();
 client.counter("transactions").with().aggregations(AVG, P90).aggFreq(FREQ_10).send();
-client.counter("transactions").with().namespace("my-namespace").send();
 ```
 The methods for sending metrics receive a metric name and a metric value as arguments and send a counter/gauge/timer/custom metric.
 Read the methods options reference bellow to get more information about the default values.
 
-| Option | Description | Default for Counter | Default for Gauge | Default for Timer | Default for Put |
+| Option | Description | Default for Counter | Default for Gauge | Default for Timer | Default for Custom Metric |
 |:---|:---|:---|:---|:---|:---|:---|
 | _agg_ | Defines the aggregations to be executed. These aggregations are merged with the ones configured globally, including method defaults.<br><br> **Valid Aggregations:** `AVG, COUNT, SUM, FIRST, LAST, P90, P95, MIN, MAX` | `AVG, P90` | `LAST` | `AVG, P90, COUNT` | none |
 | _aggFreq_ | Defines the aggregation frequency in **seconds**. It overrides the global aggregation frequency configuration.<br><br> **Valid Aggregation Frequencies:** `10, 30, 60, 120, 180, 300` | `10` | `10` | `10` | `10`' |
