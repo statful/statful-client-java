@@ -21,6 +21,11 @@ public interface MetricsSender {
              Integer sampleRate, String namespace, long timestamp);
 
     /**
+     * Forces synchronous flush of metrics. This method blocks the caller.
+     */
+    void forceSyncFlush();
+
+    /**
      * Shutdowns the metrics sender. This typically means releasing resources or stopping flush mechanism.
      */
     void shutdown();

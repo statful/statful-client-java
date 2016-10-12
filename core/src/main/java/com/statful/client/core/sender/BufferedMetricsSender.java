@@ -156,6 +156,14 @@ public class BufferedMetricsSender implements MetricsSender {
         }
     }
 
+    @Override
+    public final void forceSyncFlush() {
+        String message = getMessageBuffer();
+        if (!message.isEmpty()) {
+            sendMetricSynchronously(message);
+        }
+    }
+
     private void sendMetric(final String metric) {
         executorService.execute(new Runnable() {
             @Override
@@ -163,6 +171,10 @@ public class BufferedMetricsSender implements MetricsSender {
                 transportSender.send(metric);
             }
         });
+    }
+
+    private void sendMetricSynchronously(final String metric) {
+        transportSender.send(metric);
     }
 
     private String getMessageBuffer() {

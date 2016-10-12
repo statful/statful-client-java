@@ -5,6 +5,8 @@ package com.statful.client.domain.api;
  */
 public interface ClientConfiguration {
 
+    String TOKEN_HEADER = "M-Api-Token";
+
     /**
      * Returns if the configuration is valid. The only required option is the transport type.
      *

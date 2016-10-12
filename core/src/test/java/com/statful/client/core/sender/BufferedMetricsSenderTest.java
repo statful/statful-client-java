@@ -309,6 +309,36 @@ public class BufferedMetricsSenderTest {
 
     }
 
+    @Test
+    public void shouldFlushMetricsSynchronously() throws Exception {
+        // Given
+        when(configuration.getFlushIntervalMillis()).thenReturn(100L);
+
+        subject = new BufferedMetricsSender(transportSender, configuration, executorService);
+
+        // When
+        subject.put("test_metric0", "100", null, null, AggregationFreq.FREQ_10, 100, "application", 123456789);
+        subject.forceSyncFlush();
+
+        // Then
+        List<String> buffer = subject.getBuffer();
+        assertTrue("Buffer should be empty", buffer.isEmpty());
+    }
+
+    @Test
+    public void shouldNotCallSenderWhenFlushingSynchronouslyWithEmptyBuffer() throws Exception {
+        // Given
+        when(configuration.getFlushIntervalMillis()).thenReturn(100L);
+
+        subject = new BufferedMetricsSender(transportSender, configuration, executorService);
+
+        // When
+        subject.forceSyncFlush();
+
+        // Then
+        verify(transportSender, times(0)).send(anyString());
+    }
+
     private Answer<String> mockedTransportResponse = new Answer<String>() {
         @Override
         public String answer(InvocationOnMock invocationOnMock) throws Throwable {

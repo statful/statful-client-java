@@ -1,5 +1,6 @@
 package com.statful.client.transport;
 
+import com.statful.client.domain.api.ClientConfiguration;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -16,8 +17,6 @@ import java.security.GeneralSecurityException;
  * A factory for HTTP clients to communicate with Statful using SSL (it also supports non-secure communications).
  */
 public class SSLClientFactory implements HTTPClientFactory {
-
-    private static final String TOKEN_HEADER = "M-Api-Token";
 
     private final String token;
     private final int connectionPoolSize;
@@ -69,7 +68,7 @@ public class SSLClientFactory implements HTTPClientFactory {
     @Override
     public final HttpPut createHttpPut(final String uri, final String body) throws UnsupportedEncodingException {
         HttpPut httpPut = new HttpPut(uri);
-        httpPut.addHeader(TOKEN_HEADER, token);
+        httpPut.addHeader(ClientConfiguration.TOKEN_HEADER, token);
         httpPut.setEntity(new StringEntity(body));
         httpPut.setConfig(RequestConfig.copy(RequestConfig.DEFAULT)
                 .setConnectTimeout(connectTimeoutMs)
