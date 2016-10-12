@@ -343,7 +343,7 @@ public class StatfulClientImplTest {
     @Test
     public void shouldSendSimplerMetric() {
         // When
-        subject.metric("response_time", 1000).send();
+        subject.put("response_time", 1000).send();
 
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
@@ -355,7 +355,7 @@ public class StatfulClientImplTest {
     @Test
     public void shouldSendSimpleMetricWithTags() {
         // When
-        subject.metric("response_time", 1000).with().tag("host", "localhost").tag("cluster", "prod").send();
+        subject.put("response_time", 1000).with().tag("host", "localhost").tag("cluster", "prod").send();
 
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
@@ -373,7 +373,7 @@ public class StatfulClientImplTest {
     @Test
     public void shouldSendSimpleMetricWithAggregations() {
         // When
-        subject.metric("response_time", 1000).with().aggregations(Aggregation.LAST).send();
+        subject.put("response_time", 1000).with().aggregations(Aggregation.LAST).send();
 
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
@@ -391,7 +391,7 @@ public class StatfulClientImplTest {
     @Test
     public void shouldSendSimpleMetricWithAggregationFrequency() {
         // When
-        subject.metric("response_time", 1000).with().aggFreq(AggregationFreq.FREQ_120).send();
+        subject.put("response_time", 1000).with().aggFreq(AggregationFreq.FREQ_120).send();
 
         // Then
         ArgumentCaptor<AggregationFreq> aggrFreqArg = ArgumentCaptor.forClass(AggregationFreq.class);
@@ -405,7 +405,7 @@ public class StatfulClientImplTest {
     @Test
     public void shouldSendSimpleMetricWithNameSpace() {
         // When
-        subject.metric("response_time", 1000).with().namespace("client").send();
+        subject.put("response_time", 1000).with().namespace("client").send();
 
         // Then
         ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);

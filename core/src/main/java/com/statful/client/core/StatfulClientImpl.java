@@ -93,7 +93,7 @@ class StatfulClientImpl implements StatfulClient {
     }
 
     @Override
-    public final SenderFacade metric(final String metricName, final Integer value) {
+    public final SenderFacade put(final String metricName, final Integer value) {
         SenderAPI senderAPI = MetricsSenderAPI.newInstance(this).with()
                 .configuration(configuration)
                 .aggFreq(configuration.getDefaultAggregationFreq())
@@ -133,5 +133,10 @@ class StatfulClientImpl implements StatfulClient {
     @Override
     public final void shutdown() {
         metricsSender.shutdown();
+    }
+
+    @Override
+    public void forceSyncFlush() {
+        metricsSender.forceSyncFlush();
     }
 }

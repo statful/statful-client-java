@@ -146,6 +146,10 @@ StatfulClient client = StatfulFactory.buildThriftClient().with()
 client.gauge("testGauge", 10).send();
 ```
 
+### HTTP Authentication Token
+
+If you implement HTTP-based transport, you need to send the `M-Api-Token` header with your token. You can access the token name inside your client factory using `ClientConfiguration.TOKEN_HEADER`.
+
 ## Examples
 
 You can find here some useful usage examples of the Statful Client. In the following examples is assumed you have already included Statful Client in your project.
