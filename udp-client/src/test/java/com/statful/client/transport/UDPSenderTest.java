@@ -1,5 +1,7 @@
 package com.statful.client.transport;
 
+import com.statful.client.domain.api.Aggregation;
+import com.statful.client.domain.api.AggregationFreq;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -108,5 +110,18 @@ public class UDPSenderTest {
 
         // When
         subject.send("Hello world");
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void shouldThrowUnsupportedOperationExceptionWhenSendAggregated() throws Exception {
+        // Given
+        DatagramSocket socket = mock(DatagramSocket.class);
+        doThrow(new IOException()).when(socket).send(any(DatagramPacket.class));
+
+        UDPSender subject = new UDPSender("127.0.0.1", 2015);
+        subject.setSocket(socket);
+
+        // When
+        subject.sendAggregated("Hello world", Aggregation.AVG, AggregationFreq.FREQ_10);
     }
 }

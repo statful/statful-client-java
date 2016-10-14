@@ -1,5 +1,7 @@
 package com.statful.client.transport;
 
+import com.statful.client.domain.api.Aggregation;
+import com.statful.client.domain.api.AggregationFreq;
 import com.statful.client.test.HttpTest;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -36,8 +38,23 @@ public class HTTPSenderTest extends HttpTest {
         mockClientAndServer.verify(
                 request()
                         .withBody(METRIC),
-                once()
-        );
+                once());
+    }
+
+    @Test
+    public void shouldSendAggregatedThroughHttp() {
+        // Given
+        mockMetricsPutAggregatedWithStatusCode(201, Aggregation.AVG, AggregationFreq.FREQ_10);
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, new SSLClientFactory(10, 1000, 5000, "any-token"));
+
+        // When
+        subject.sendAggregated(METRIC, Aggregation.AVG, AggregationFreq.FREQ_10);
+
+        // Then
+        mockClientAndServer.verify(
+                request()
+                        .withBody(METRIC),
+                once());
     }
 
     @Test
@@ -50,11 +67,7 @@ public class HTTPSenderTest extends HttpTest {
         subject.send(METRIC);
 
         // Then
-        mockClientAndServer.verify(
-                request()
-                        .withBody(METRIC),
-                once()
-        );
+        mockClientAndServer.verify(request().withBody(METRIC), once());
     }
 
     @Test
@@ -152,9 +165,23 @@ public class HTTPSenderTest extends HttpTest {
     private void mockMetricsPutWithStatusCode(int statusCode) {
         mockClientAndServer.when(
                 request()
-                        .withMethod("PUT").withPath("/tel/v2.0/metrics"),
+                        .withMethod("PUT")
+                        .withPath("/tel/v2.0/metrics"),
                 exactly(1))
-                .respond(
-                        response().withStatusCode(statusCode));
+                .respond(response().withStatusCode(statusCode));
+    }
+
+    private void mockMetricsPutAggregatedWithStatusCode(int statusCode,
+                                                        Aggregation aggregation,
+                                                        AggregationFreq aggregationFreq) {
+        mockClientAndServer.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/tel/v2.0/metrics/aggregation/"
+                                + aggregation.getName()
+                                + "/frequency/"
+                                + String.valueOf(aggregationFreq.getValue())),
+                exactly(1))
+                .respond(response().withStatusCode(statusCode));
     }
 }

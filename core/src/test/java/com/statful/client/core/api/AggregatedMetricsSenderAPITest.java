@@ -13,7 +13,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class MetricsSenderAPITest {
+public class AggregatedMetricsSenderAPITest {
 
     @Mock
     private MetricsSender metricsSender;
@@ -24,14 +24,20 @@ public class MetricsSenderAPITest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void shouldThrowUnsupportedOperationExceptionWhenSettingAnAggregation() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
-        builder.aggregation(Aggregation.AVG);
+    public void shouldThrowUnsupportedOperationExceptionWhenSettingSingleAggregation() {
+        AggregatedMetricsSenderAPI builder = new AggregatedMetricsSenderAPI(metricsSender);
+        builder.aggregations(Aggregation.AVG);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void shouldThrowUnsupportedOperationExceptionWhenSettingAggregations() {
+        AggregatedMetricsSenderAPI builder = new AggregatedMetricsSenderAPI(metricsSender);
+        builder.aggregations(Aggregations.from(Aggregation.AVG));
     }
 
     @Test
     public void shouldNotSendWhenNameIsInvalid() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
+        AggregatedMetricsSenderAPI builder =  new AggregatedMetricsSenderAPI(metricsSender);
         builder.value("something");
 
         builder.send();
@@ -42,7 +48,7 @@ public class MetricsSenderAPITest {
 
     @Test
     public void shouldNotSendWhenValueIsInvalid() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
+        AggregatedMetricsSenderAPI builder =  new AggregatedMetricsSenderAPI(metricsSender);
         builder.metricName("something");
 
         builder.send();
@@ -53,7 +59,7 @@ public class MetricsSenderAPITest {
 
     @Test
     public void shouldIgnoreMetricNameWhenEmpty() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
+        AggregatedMetricsSenderAPI builder =  new AggregatedMetricsSenderAPI(metricsSender);
         builder.metricName("");
 
         assertNull(builder.getMetricName());
@@ -61,7 +67,7 @@ public class MetricsSenderAPITest {
 
     @Test
     public void shouldIgnoreValueWhenEmpty() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
+        AggregatedMetricsSenderAPI builder =  new AggregatedMetricsSenderAPI(metricsSender);
         builder.value("");
 
         assertNull(builder.getValue());
@@ -69,14 +75,14 @@ public class MetricsSenderAPITest {
 
     @Test
     public void shouldIgnoreConfigurationWhenNull() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
+        AggregatedMetricsSenderAPI builder =  new AggregatedMetricsSenderAPI(metricsSender);
         builder.configuration(null);
         // Doesn't throw anything
     }
 
     @Test
     public void shouldIgnoreSampleRateWhenNull() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
+        AggregatedMetricsSenderAPI builder =  new AggregatedMetricsSenderAPI(metricsSender);
 
         DefaultClientConfiguration config = new DefaultClientConfiguration();
         config.setNamespace("namespace");
@@ -88,7 +94,7 @@ public class MetricsSenderAPITest {
 
     @Test
     public void shouldIgnoreNamespaceWhenNull() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
+        AggregatedMetricsSenderAPI builder =  new AggregatedMetricsSenderAPI(metricsSender);
         DefaultClientConfiguration config = new DefaultClientConfiguration();
         config.setSampleRate(20);
 
@@ -99,29 +105,15 @@ public class MetricsSenderAPITest {
 
     @Test
     public void shouldIgnoreAggregationFreqWhenNull() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
+        AggregatedMetricsSenderAPI builder =  new AggregatedMetricsSenderAPI(metricsSender);
         builder.aggFreq(null);
 
         assertNull(builder.getAggregationFreq());
     }
 
     @Test
-    public void shouldIgnoreAggregationsArrayWhenNull() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
-        builder.aggregations((Aggregation[]) null);
-        // Doesn't throw anything
-    }
-
-    @Test
-    public void shouldIgnoreAggregationsWhenNull() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
-        builder.aggregations((Aggregations)null);
-        // Doesn't throw anything
-    }
-
-    @Test
     public void shouldNotThrowWhenSendingHasException() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(null);
+        AggregatedMetricsSenderAPI builder =  new AggregatedMetricsSenderAPI(null);
         builder.metricName("namespace").value("value");
 
         builder.send();
@@ -134,11 +126,11 @@ public class MetricsSenderAPITest {
         config.setNamespace("namespace");
         config.setSampleRate(50);
 
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
+        AggregatedMetricsSenderAPI builder = new AggregatedMetricsSenderAPI(metricsSender);
         builder.configuration(config);
 
         builder.metricName("test")
-                .aggregations(Aggregation.AVG)
+                .aggregation(Aggregation.AVG)
                 .aggFreq(AggregationFreq.FREQ_10)
                 .sampleRate(75)
                 .tag("tagKey", "tagValue")
@@ -146,10 +138,10 @@ public class MetricsSenderAPITest {
 
         builder.send();
 
-        verify(metricsSender, times(1)).put(eq("test"),
+        verify(metricsSender, times(1)).putAggregated(eq("test"),
                 eq(String.valueOf(1000)),
                 any(Tags.class),
-                any(Aggregations.class),
+                eq(Aggregation.AVG),
                 eq(AggregationFreq.FREQ_10),
                 eq(75),
                 eq("namespace"),

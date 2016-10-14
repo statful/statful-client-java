@@ -2,8 +2,8 @@ package com.statful.client.aspects;
 
 import com.statful.client.annotations.Timer;
 import com.statful.client.domain.api.Aggregations;
-import com.statful.client.domain.api.Tags;
 import com.statful.client.domain.api.StatfulClient;
+import com.statful.client.domain.api.Tags;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

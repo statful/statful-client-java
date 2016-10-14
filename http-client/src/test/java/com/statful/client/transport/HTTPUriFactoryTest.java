@@ -15,6 +15,14 @@ public class HTTPUriFactoryTest {
     }
 
     @Test
+    public void shouldBuildHttpAggregatedUri() {
+        // When
+        String uri = HTTPUriFactory.buildAggregatedUri(false, "127.0.0.1", 80);
+
+        assertEquals("http://127.0.0.1:80/tel/v2.0/metrics/aggregation/{aggregation}/frequency/{frequency}", uri);
+    }
+
+    @Test
     public void shouldBuildHttpUriWithoutPort() {
         // When
         String uri = HTTPUriFactory.buildUri(false, "127.0.0.1", null);
@@ -28,5 +36,13 @@ public class HTTPUriFactoryTest {
         String uri = HTTPUriFactory.buildUri(true, "127.0.0.1", null);
 
         assertEquals("https://127.0.0.1/tel/v2.0/metrics", uri);
+    }
+
+    @Test
+    public void shouldBuildHttpsAggregatedUri() {
+        // When
+        String uri = HTTPUriFactory.buildAggregatedUri(true, "127.0.0.1", null);
+
+        assertEquals("https://127.0.0.1/tel/v2.0/metrics/aggregation/{aggregation}/frequency/{frequency}", uri);
     }
 }

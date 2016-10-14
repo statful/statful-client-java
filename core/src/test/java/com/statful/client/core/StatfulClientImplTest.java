@@ -1,22 +1,22 @@
 package com.statful.client.core;
 
-import com.statful.client.domain.api.Aggregations;
-import com.statful.client.domain.api.Aggregation;
-import com.statful.client.domain.api.AggregationFreq;
-import com.statful.client.domain.api.Tags;
-import com.statful.client.domain.api.ClientConfiguration;
-import com.statful.client.domain.api.MetricsSender;
+import com.statful.client.domain.api.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import java.util.Collection;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -49,7 +49,7 @@ public class StatfulClientImplTest {
     }
 
     @Test
-    public void shouldSendSimpleTimerMetric() {
+    public void shouldSendTimerMetric() {
         // When
         subject.timer("response_time", 1000).send();
 
@@ -57,13 +57,27 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have tags
         shouldContainDefaultTimerTags(tagsArg.getValue());
 
         // Then it should have aggregations
         shouldContainDefaultTimerAggregations(aggrArg.getValue());
+    }
+
+    @Test
+    public void shouldSendAggregatedTimerMetric() {
+        // When
+        subject.aggregatedTimer("response_time", 1000, Aggregation.AVG, AggregationFreq.FREQ_300).send();
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+
+        verify(metricsSender).putAggregated(eq("timer.response_time"), eq("1000"), tagsArg.capture(), eq(Aggregation.AVG), eq(AggregationFreq.FREQ_300), eq(10), eq("application"), anyLong());
+
+        // Then it should have tags
+        shouldContainDefaultTimerTags(tagsArg.getValue());
     }
 
     @Test
@@ -74,7 +88,7 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
 
-        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), tagsArg.capture(), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), tagsArg.capture(), any(Aggregations.class), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have tags
         Tags tags = tagsArg.getValue();
@@ -93,7 +107,7 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), any(Tags.class), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), any(Tags.class), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         assertNotNull("Aggregations should not be null", aggrArg.getValue());
@@ -128,20 +142,20 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);
 
-        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), any(Tags.class), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), namespaceArg.capture(), anyLong());
+        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), any(Tags.class), any(Aggregations.class), eq(AggregationFreq.FREQ_10), eq(10), namespaceArg.capture(), anyLong());
 
         assertEquals("Namespace should be 'client'", "client", namespaceArg.getValue());
     }
 
     @Test
-    public void shouldSendSimpleCounterMetric() {
+    public void shouldSendCounterMetricWithDefaultValue() {
         // When
         subject.counter("transactions").send();
 
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("counter.transactions"), eq("1"), isNull(Tags.class), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("counter.transactions"), eq("1"), isNull(Tags.class), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         shouldContainDefaultCounterAggregations(aggrArg.getValue());
@@ -155,7 +169,7 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
 
-        verify(metricsSender).put(eq("counter.transactions"), eq("1"), tagsArg.capture(), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("counter.transactions"), eq("1"), tagsArg.capture(), any(Aggregations.class), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have tags
         Tags tags = tagsArg.getValue();
@@ -172,7 +186,7 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("counter.transactions"), eq("1"), any(Tags.class), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("counter.transactions"), eq("1"), any(Tags.class), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         assertNotNull("Aggregations should not be null", aggrArg.getValue());
@@ -206,32 +220,50 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);
 
-        verify(metricsSender).put(eq("counter.transactions"), eq("1"), isNull(Tags.class), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), namespaceArg.capture(), anyLong());
+        verify(metricsSender).put(eq("counter.transactions"), eq("1"), isNull(Tags.class), any(Aggregations.class), eq(AggregationFreq.FREQ_10), eq(10), namespaceArg.capture(), anyLong());
 
         assertEquals("Namespace should be 'client'", "client", namespaceArg.getValue());
     }
 
     @Test
-    public void shouldSendCounterWithIncrement() {
+    public void shouldSendCounter() {
         // When
         subject.counter("transactions", 2).send();
 
         // Then
-        verify(metricsSender).put(eq("counter.transactions"), eq("2"), any(Tags.class), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("counter.transactions"), eq("2"), any(Tags.class), any(Aggregations.class), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
-    public void shouldSendSimpleGaugeMetric() {
+    public void shouldSendAggregatedCounter() {
+        // When
+        subject.aggregatedCounter("transactions", 2, Aggregation.SUM, AggregationFreq.FREQ_120).send();
+
+        // Then
+        verify(metricsSender).putAggregated(eq("counter.transactions"), eq("2"), any(Tags.class), eq(Aggregation.SUM), eq(AggregationFreq.FREQ_120), eq(10), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendIntegerGaugeMetric() {
         // When
         subject.gauge("current_sessions", 2).send();
 
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), isNull(Tags.class), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), isNull(Tags.class), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         shouldContainDefaultGaugeAggregations(aggrArg.getValue());
+    }
+
+    @Test
+    public void shouldSendIntegerAggregatedGaugeMetric() {
+        // When
+        subject.aggregatedGauge("current_sessions", 2, Aggregation.FIRST, AggregationFreq.FREQ_10).send();
+
+        // Then
+        verify(metricsSender).putAggregated(eq("gauge.current_sessions"), eq("2"), isNull(Tags.class), eq(Aggregation.FIRST), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
@@ -242,10 +274,19 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), isNull(Tags.class), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), isNull(Tags.class), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         shouldContainDefaultGaugeAggregations(aggrArg.getValue());
+    }
+
+    @Test
+    public void shouldSendLongAggregatedGaugeMetric() {
+        // When
+        subject.aggregatedGauge("current_sessions", 2L, Aggregation.FIRST, AggregationFreq.FREQ_10).send();
+
+        // Then
+        verify(metricsSender).putAggregated(eq("gauge.current_sessions"), eq("2"), isNull(Tags.class), eq(Aggregation.FIRST), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
@@ -256,10 +297,19 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2.2"), isNull(Tags.class), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2.2"), isNull(Tags.class), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         shouldContainDefaultGaugeAggregations(aggrArg.getValue());
+    }
+
+    @Test
+    public void shouldSendDoubleAggregatedGaugeMetric() {
+        // When
+        subject.aggregatedGauge("current_sessions", 2.2, Aggregation.FIRST, AggregationFreq.FREQ_10).send();
+
+        // Then
+        verify(metricsSender).putAggregated(eq("gauge.current_sessions"), eq("2.2"), isNull(Tags.class), eq(Aggregation.FIRST), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
@@ -270,10 +320,19 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2.3"), isNull(Tags.class), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2.3"), isNull(Tags.class), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         shouldContainDefaultGaugeAggregations(aggrArg.getValue());
+    }
+
+    @Test
+    public void shouldSendFloatAggregatedGaugeMetric() {
+        // When
+        subject.aggregatedGauge("current_sessions", Float.valueOf("2.3"), Aggregation.FIRST, AggregationFreq.FREQ_10).send();
+
+        // Then
+        verify(metricsSender).putAggregated(eq("gauge.current_sessions"), eq("2.3"), isNull(Tags.class), eq(Aggregation.FIRST), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
@@ -284,7 +343,7 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
 
-        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), tagsArg.capture(), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), tagsArg.capture(), any(Aggregations.class), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have tags
         Tags tags = tagsArg.getValue();
@@ -301,7 +360,7 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), any(Tags.class), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), any(Tags.class), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         assertNotNull("Aggregations should not be null", aggrArg.getValue());
@@ -335,13 +394,13 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);
 
-        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), isNull(Tags.class), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), namespaceArg.capture(), anyLong());
+        verify(metricsSender).put(eq("gauge.current_sessions"), eq("2"), isNull(Tags.class), any(Aggregations.class), eq(AggregationFreq.FREQ_10), eq(10), namespaceArg.capture(), anyLong());
 
         assertEquals("Namespace should be 'client'", "client", namespaceArg.getValue());
     }
 
     @Test
-    public void shouldSendSimplerMetric() {
+    public void shouldSendSimpleMetric() {
         // When
         subject.put("response_time", 1000).send();
 
@@ -349,7 +408,7 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
@@ -360,7 +419,7 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
 
-        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), any(Aggregations.class), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have tags
         Tags tags = tagsArg.getValue();
@@ -378,7 +437,7 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("response_time"), eq("1000"), any(Tags.class), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("response_time"), eq("1000"), any(Tags.class), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have aggregations
         assertNotNull("Aggregations should not be null", aggrArg.getValue());
@@ -410,7 +469,7 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<String> namespaceArg = ArgumentCaptor.forClass(String.class);
 
-        verify(metricsSender).put(eq("response_time"), eq("1000"), any(Tags.class), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), namespaceArg.capture(), anyLong());
+        verify(metricsSender).put(eq("response_time"), eq("1000"), any(Tags.class), any(Aggregations.class), eq(AggregationFreq.FREQ_10), eq(10), namespaceArg.capture(), anyLong());
 
         assertEquals("Namespace should be 'client'", "client", namespaceArg.getValue());
     }
@@ -459,6 +518,20 @@ public class StatfulClientImplTest {
                 .send();
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void shouldThrowUnsupportedOperationExceptionWhenSettingPreviousAggregationForANonAggregatedMethod() {
+        subject.timer("test", 1).with()
+                .aggregation(Aggregation.AVG)
+                .send();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void shouldThrowUnsupportedOperationExceptionWhenSettingAggregationsForAnAggregatedMethod() {
+        subject.aggregatedTimer("test", 1, Aggregation.AVG, AggregationFreq.FREQ_10).with()
+                .aggregations(Aggregations.from(Aggregation.AVG))
+                .send();
+    }
+
     @Test
     public void shouldMergeApplicationTags() {
         Tags defaultTimerTags = new Tags();
@@ -475,7 +548,7 @@ public class StatfulClientImplTest {
         // Then
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
 
-        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), tagsArg.capture(), any(Aggregations.class), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), tagsArg.capture(), any(Aggregations.class), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
 
         // Then it should have tags
         Tags tags = tagsArg.getValue();
@@ -501,13 +574,30 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_120), eq(10), eq("application"), eq(100000L));
+        verify(metricsSender).put(eq("timer.response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), eq(AggregationFreq.FREQ_120), eq(10), eq("application"), eq(100000L));
 
         // Then it should have tags
         shouldContainDefaultTimerTags(tagsArg.getValue());
 
         // Then it should have aggregations
         shouldContainDefaultTimerAggregations(aggrArg.getValue());
+    }
+
+    @Test
+    public void shouldPutRawAggregatedMetrics() {
+        // When
+        Tags tags = new Tags();
+        tags.putTag("unit", "ms");
+
+        subject.putAggregated("timer.response_time", "1000", tags, Aggregation.AVG, AggregationFreq.FREQ_10, 10, "application", 100000);
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+
+        verify(metricsSender).putAggregated(eq("timer.response_time"), eq("1000"), tagsArg.capture(), eq(Aggregation.AVG), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), eq(100000L));
+
+        // Then it should have tags
+        shouldContainDefaultTimerTags(tagsArg.getValue());
     }
 
     @Test

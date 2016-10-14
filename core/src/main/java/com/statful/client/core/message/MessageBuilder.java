@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Statful message builder. This is an internal class to build messages from the metric data.
  * <p>
- * Message format follows the specification of Telemetron/MegaBob/Statful/Telemetrão API.
+ * Message format follows the specification of Statful API.
  */
 public final class MessageBuilder {
 

@@ -62,6 +62,14 @@ public interface SenderAPI {
     SenderAPI tags(final Tags tags);
 
     /**
+     * Sets the {@link Aggregation} applied to the metric.
+     *
+     * @param aggregation {@link Aggregation} applied to the metric
+     * @return A reference to this instance
+     */
+    SenderAPI aggregation(final Aggregation aggregation);
+
+    /**
      * Sets an array of {@link Aggregation} of the metric.
      *
      * @param aggregations An array of {@link Aggregation} to use
