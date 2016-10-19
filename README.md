@@ -3,11 +3,11 @@ Statful Client for Java
 
 [![Build Status](https://travis-ci.org/statful/statful-client-java.svg?branch=master)](https://travis-ci.org/statful/statful-client-java)
 
-Staful client for Java. This client is intended to gather metrics and send them to Statful.
+Statful client for Java. This client is intended to gather metrics and send them to Statful.
 
 ## Table of Contents
 
-* [Supported Versions of NodeJS](#supported-versions-of-java)
+* [Supported Versions of Java](#supported-versions-of-java)
 * [Configuration](#configuration)
 * [Quick Start](#quick-start)
 * [Custom Transport](#custom-transport)
