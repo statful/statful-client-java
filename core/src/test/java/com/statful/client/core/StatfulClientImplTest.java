@@ -341,7 +341,7 @@ public class StatfulClientImplTest {
     }
 
     @Test
-    public void shouldSendSimplerMetric() {
+    public void shouldSendSimpleIntegerMetric() {
         // When
         subject.put("response_time", 1000).send();
 
@@ -350,6 +350,42 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
         verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendSimpleLongMetric() {
+        // When
+        subject.put("response_time", 1000L).send();
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+        ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
+
+        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendSimpleFloatMetric() {
+        // When
+        subject.put("response_time", 1000F).send();
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+        ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
+
+        verify(metricsSender).put(eq("response_time"), eq("1000.0"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendSimpleDoubleMetric() {
+        // When
+        subject.put("response_time", 1000D).send();
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+        ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
+
+        verify(metricsSender).put(eq("response_time"), eq("1000.0"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
