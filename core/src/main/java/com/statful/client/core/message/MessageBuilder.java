@@ -132,11 +132,13 @@ public final class MessageBuilder {
 
         StringBuilder sb = new StringBuilder();
 
-        //append namespace
-        sb.append(escapeMeasurement(namespace));
+        if (namespace != null) {
+            //append namespace
+            sb.append(escapeMeasurement(namespace)).append(".");
+        }
 
         //append name
-        sb.append(".").append(escapeMeasurement(name));
+        sb.append(escapeMeasurement(name));
 
         //append tags
         for (Map.Entry<String, String> entry : tags.entrySet()) {

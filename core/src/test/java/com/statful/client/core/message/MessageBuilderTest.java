@@ -82,6 +82,7 @@ public class MessageBuilderTest {
         assertEquals(message, ("TEST_NS.response_time 3 121232323 avg,count,10"));
     }
 
+
     @Test
     public void shouldBuildMessageWithEmptyTags() throws Exception {
         String message = MessageBuilder.newBuilder()
@@ -142,6 +143,19 @@ public class MessageBuilderTest {
         assertThat(message, anyOf(
                 is("TEST_NS.response_time,unit=s,app=statful 3 121232323"),
                 is("TEST_NS.response_time,app=statful,unit=s 3 121232323")));
+    }
+
+    @Test
+    public void shouldBuildMessageWithoutNamespace() throws Exception {
+        String message = MessageBuilder.newBuilder()
+                .withName(NAME)
+                .withValue("3")
+                .withAggregations(AGGREGATIONS)
+                .withAggregationFreq(AggregationFreq.FREQ_10)
+                .withTimestamp(TIMESTAMP)
+                .build();
+
+        assertEquals(message, ("response_time 3 121232323 avg,count,10"));
     }
 
     @Test
