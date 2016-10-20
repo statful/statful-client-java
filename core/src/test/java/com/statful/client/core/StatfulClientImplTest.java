@@ -408,7 +408,7 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
@@ -420,7 +420,7 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("response_time"), eq("1000"), tagsArg.capture(), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
@@ -432,7 +432,7 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("response_time"), eq("1000.0"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("response_time"), eq("1000.0"), tagsArg.capture(), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
@@ -444,7 +444,7 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
         ArgumentCaptor<Aggregations> aggrArg = ArgumentCaptor.forClass(Aggregations.class);
 
-        verify(metricsSender).put(eq("response_time"), eq("1000.0"), tagsArg.capture(), aggrArg.capture(), Matchers.eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
+        verify(metricsSender).put(eq("response_time"), eq("1000.0"), tagsArg.capture(), aggrArg.capture(), eq(AggregationFreq.FREQ_10), eq(10), eq("application"), anyLong());
     }
 
     @Test
