@@ -44,6 +44,8 @@ Add one of the following snippets to your POM.xml file.
 
 ### Using AspectJ
 
+### Configuration
+
 Configure your project to weave your application as you like but don't forget to include the following dependencies on your project:
 
     <dependency>
@@ -71,6 +73,19 @@ You must include the aspect on your AspectJ configuration:
     <aspects>
         <aspect name="com.statful.client.aspects.StatfulAspect"/>
     </aspects>
+    
+### Annotation
+
+After configuring `StatfulAspect`, you can use `@Timer` to annotate your methods and measure the time of execution.
+
+```java
+@Timer(name = "execution", tags = {"controller", "Entities", "method", "postEntity"})
+public Response<Status> postEntity(Entity entity) {
+    // ...
+}
+```
+
+The above example would send a metric named `application.timer.execution` with the configured tags and the default timer aggregations.
 
 ## Quick start
 
