@@ -79,6 +79,33 @@ public interface StatfulClient extends MetricsSender {
      * @param value The metric value to send to Statful
      * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
      */
+    SenderFacade put(final String metricName, final Long value);
+
+    /**
+     * Creates a new simple put builder.
+     *
+     * @param metricName The metric name to create
+     * @param value The metric value to send to Statful
+     * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
+     */
+    SenderFacade put(final String metricName, final Double value);
+
+    /**
+     * Creates a new simple put builder.
+     *
+     * @param metricName The metric name to create
+     * @param value The metric value to send to Statful
+     * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
+     */
+    SenderFacade put(final String metricName, final Float value);
+
+    /**
+     * Creates a new simple put builder.
+     *
+     * @param metricName The metric name to create
+     * @param value The metric value to send to Statful
+     * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
+     */
     SenderFacade put(final String metricName, final Integer value);
 
     /**
