@@ -1,6 +1,5 @@
 package com.statful.client.core;
 
-import com.statful.client.core.api.AggregatedMetricsSenderAPI;
 import com.statful.client.core.api.MetricsSenderAPI;
 import com.statful.client.core.api.StatfulClientFacade;
 import com.statful.client.domain.api.*;
@@ -35,9 +34,9 @@ class StatfulClientImpl implements StatfulClient {
         SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this).with()
                 .configuration(configuration)
                 .aggregations(configuration.getTimerAggregations())
-                .aggFreq(configuration.getTimerAggregationFreq())
+                .aggregationFrequency(configuration.getTimerAggregationFrequency())
                 .tags(configuration.getTimerTags())
-                .metricName("timer." + metricName)
+                .name("timer." + metricName)
                 .value(Long.toString(value));
 
         return new StatfulClientFacade(metricsSenderAPI);
@@ -53,25 +52,14 @@ class StatfulClientImpl implements StatfulClient {
         SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this).with()
                 .configuration(configuration)
                 .aggregations(configuration.getCounterAggregations())
-                .aggFreq(configuration.getCounterAggregationFreq())
+                .aggregationFrequency(configuration.getCounterAggregationFrequency())
                 .tags(configuration.getCounterTags())
-                .metricName("counter." + metricName)
+                .name("counter." + metricName)
                 .value(Integer.toString(value));
 
         return new StatfulClientFacade(metricsSenderAPI);
     }
 
-    private SenderFacade gauge(final String metricName, final String value) {
-        SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this).with()
-                .configuration(configuration)
-                .aggregations(configuration.getGaugeAggregations())
-                .aggFreq(configuration.getGaugeAggregationFreq())
-                .tags(configuration.getGaugeTags())
-                .metricName("gauge." + metricName)
-                .value(value);
-
-        return new StatfulClientFacade(metricsSenderAPI);
-    }
 
     @Override
     public final SenderFacade gauge(final String metricName, final Long value) {
@@ -113,104 +101,92 @@ class StatfulClientImpl implements StatfulClient {
         return put(metricName, Integer.toString(value));
     }
 
-    private SenderFacade put(final String metricName, final String value) {
-        SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this).with()
+    @Override
+    public final SenderFacade aggregatedTimer(final String metricName, final long value, final Aggregation aggregation,
+                                              final AggregationFrequency aggregationFrequency) {
+        SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this, true).with()
                 .configuration(configuration)
-                .aggFreq(configuration.getDefaultAggregationFreq())
-                .metricName(metricName)
-                .value(value);
+                .aggregation(aggregation)
+                .aggregationFrequency(aggregationFrequency)
+                .tags(configuration.getTimerTags())
+                .name("timer." + metricName)
+                .value(Long.toString(value));
 
         return new StatfulClientFacade(metricsSenderAPI);
     }
 
     @Override
-    public final SenderFacade aggregatedTimer(final String metricName, final long value, final Aggregation aggregation,
-                                              final AggregationFreq aggregationFreq) {
-        SenderAPI aggregatedMetricsSenderAPI = AggregatedMetricsSenderAPI.newInstance(this).with()
-                .configuration(configuration)
-                .aggregation(aggregation)
-                .aggFreq(aggregationFreq)
-                .tags(configuration.getTimerTags())
-                .metricName("timer." + metricName)
-                .value(Long.toString(value));
-
-        return new StatfulClientFacade(aggregatedMetricsSenderAPI);
-    }
-
-    @Override
     public final SenderFacade aggregatedCounter(final String metricName, final int value, final Aggregation aggregation,
-                                                final AggregationFreq aggregationFreq) {
-        SenderAPI aggregatedMetricsSenderAPI = AggregatedMetricsSenderAPI.newInstance(this).with()
+                                                final AggregationFrequency aggregationFrequency) {
+        SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this, true).with()
                 .configuration(configuration)
                 .aggregation(aggregation)
-                .aggFreq(aggregationFreq)
+                .aggregationFrequency(aggregationFrequency)
                 .tags(configuration.getCounterTags())
-                .metricName("counter." + metricName)
+                .name("counter." + metricName)
                 .value(Long.toString(value));
 
-        return new StatfulClientFacade(aggregatedMetricsSenderAPI);
-    }
-
-    private SenderFacade aggregatedGauge(final String metricName, final String value, final Aggregation aggregation,
-                                         final AggregationFreq aggregationFreq) {
-        SenderAPI aggregatedMetricsSenderAPI = AggregatedMetricsSenderAPI.newInstance(this).with()
-                .configuration(configuration)
-                .aggregation(aggregation)
-                .aggFreq(aggregationFreq)
-                .tags(configuration.getGaugeTags())
-                .metricName("gauge." + metricName)
-                .value(value);
-
-        return new StatfulClientFacade(aggregatedMetricsSenderAPI);
+        return new StatfulClientFacade(metricsSenderAPI);
     }
 
     @Override
     public final SenderFacade aggregatedGauge(final String metricName, final Long value, final Aggregation aggregation,
-                                              final AggregationFreq aggregationFreq) {
-        return aggregatedGauge(metricName, value.toString(), aggregation, aggregationFreq);
+                                              final AggregationFrequency aggregationFrequency) {
+        return aggregatedGauge(metricName, value.toString(), aggregation, aggregationFrequency);
     }
 
     @Override
     public final SenderFacade aggregatedGauge(final String metricName, final Double value, final Aggregation aggregation,
-                                              final AggregationFreq aggregationFreq) {
-        return aggregatedGauge(metricName, value.toString(), aggregation, aggregationFreq);
+                                              final AggregationFrequency aggregationFrequency) {
+        return aggregatedGauge(metricName, value.toString(), aggregation, aggregationFrequency);
     }
 
     @Override
     public final SenderFacade aggregatedGauge(final String metricName, final Float value, final Aggregation aggregation,
-                                        final AggregationFreq aggregationFreq) {
-        return aggregatedGauge(metricName, value.toString(), aggregation, aggregationFreq);
+                                              final AggregationFrequency aggregationFrequency) {
+        return aggregatedGauge(metricName, value.toString(), aggregation, aggregationFrequency);
     }
 
     @Override
     public final SenderFacade aggregatedGauge(final String metricName, final Integer value,
                                               final Aggregation aggregation,
-                                              final AggregationFreq aggregationFreq) {
-        return aggregatedGauge(metricName, value.toString(), aggregation, aggregationFreq);
+                                              final AggregationFrequency aggregationFrequency) {
+        return aggregatedGauge(metricName, value.toString(), aggregation, aggregationFrequency);
+    }
+
+    @Override
+    public SenderFacade aggregatedPut(final String metricName, final Long value, final Aggregation aggregation,
+                                      final AggregationFrequency aggregationFrequency) {
+        return aggregatedPut(metricName, Long.toString(value), aggregation, aggregationFrequency);
+    }
+
+    @Override
+    public SenderFacade aggregatedPut(final String metricName, final Double value, final Aggregation aggregation,
+                                      final AggregationFrequency aggregationFrequency) {
+        return aggregatedPut(metricName, Double.toString(value), aggregation, aggregationFrequency);
+    }
+
+    @Override
+    public SenderFacade aggregatedPut(final String metricName, final Float value, final Aggregation aggregation,
+                                      final AggregationFrequency aggregationFrequency) {
+        return aggregatedPut(metricName, Float.toString(value), aggregation, aggregationFrequency);
     }
 
     @Override
     public final SenderFacade aggregatedPut(final String metricName, final Integer value, final Aggregation aggregation,
-                                            final AggregationFreq aggregationFreq) {
-        SenderAPI aggregatedMetricsSenderAPI = AggregatedMetricsSenderAPI.newInstance(this).with()
-                .configuration(configuration)
-                .aggregation(aggregation)
-                .aggFreq(aggregationFreq)
-                .metricName(metricName)
-                .value(Integer.toString(value));
-
-        return new StatfulClientFacade(aggregatedMetricsSenderAPI);
+                                            final AggregationFrequency aggregationFrequency) {
+        return aggregatedPut(metricName, Integer.toString(value), aggregation, aggregationFrequency);
     }
 
     @Override
     public final void put(
             final String name, final String value, final Tags tags, final Aggregations aggregations,
-            final AggregationFreq aggregationFreq, final Integer sampleRate, final String namespace,
+            final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace,
             final long timestamp
     ) {
         if (enabled) {
             try {
-                metricsSender.put(name, value, tags, aggregations, aggregationFreq, sampleRate, namespace, timestamp);
+                metricsSender.put(name, value, tags, aggregations, aggregationFrequency, sampleRate, namespace, timestamp);
             } catch (Exception e) {
                 LOGGER.warning("Unable to send metric: " + e.toString());
             }
@@ -220,12 +196,12 @@ class StatfulClientImpl implements StatfulClient {
     }
 
     @Override
-    public final void putAggregated(final String name, final String value, final Tags tags,
-                                    final Aggregation aggregation, final AggregationFreq aggregationFreq,
+    public final void aggregatedPut(final String name, final String value, final Tags tags,
+                                    final Aggregation aggregation, final AggregationFrequency aggregationFrequency,
                                     final Integer sampleRate, final String namespace, final long timestamp) {
         if (enabled) {
             try {
-                metricsSender.putAggregated(name, value, tags, aggregation, aggregationFreq, sampleRate, namespace,
+                metricsSender.aggregatedPut(name, value, tags, aggregation, aggregationFrequency, sampleRate, namespace,
                         timestamp);
             } catch (Exception e) {
                 LOGGER.warning("Unable to send metric: " + e.toString());
@@ -253,5 +229,52 @@ class StatfulClientImpl implements StatfulClient {
     @Override
     public void forceSyncFlush() {
         metricsSender.forceSyncFlush();
+    }
+
+    private SenderFacade put(final String metricName, final String value) {
+        SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this).with()
+                .configuration(configuration)
+                .aggregationFrequency(configuration.getDefaultAggregationFreq())
+                .name(metricName)
+                .value(value);
+
+        return new StatfulClientFacade(metricsSenderAPI);
+    }
+
+    private SenderFacade aggregatedPut(final String metricName, final String value, final Aggregation aggregation,
+                                       final AggregationFrequency aggregationFrequency) {
+        SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this, true).with()
+                .configuration(configuration)
+                .aggregation(aggregation)
+                .aggregationFrequency(aggregationFrequency)
+                .name(metricName)
+                .value(value);
+
+        return new StatfulClientFacade(metricsSenderAPI);
+    }
+
+    private SenderFacade gauge(final String metricName, final String value) {
+        SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this).with()
+                .configuration(configuration)
+                .aggregations(configuration.getGaugeAggregations())
+                .aggregationFrequency(configuration.getGaugeAggregationFrequency())
+                .tags(configuration.getGaugeTags())
+                .name("gauge." + metricName)
+                .value(value);
+
+        return new StatfulClientFacade(metricsSenderAPI);
+    }
+
+    private SenderFacade aggregatedGauge(final String metricName, final String value, final Aggregation aggregation,
+                                         final AggregationFrequency aggregationFrequency) {
+        SenderAPI metricsSenderAPI = MetricsSenderAPI.newInstance(this, true).with()
+                .configuration(configuration)
+                .aggregation(aggregation)
+                .aggregationFrequency(aggregationFrequency)
+                .tags(configuration.getGaugeTags())
+                .name("gauge." + metricName)
+                .value(value);
+
+        return new StatfulClientFacade(metricsSenderAPI);
     }
 }

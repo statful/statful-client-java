@@ -111,7 +111,7 @@
                             <!-- Enumerations only -->
                             <exclude>com/statful/client/domain/api/Aggregations.class</exclude>
                             <exclude>com/statful/client/domain/api/Aggregation.class</exclude>
-                            <exclude>com/statful/client/domain/api/AggregationFreq.class</exclude>
+                            <exclude>com/statful/client/domain/api/AggregationFrequency.class</exclude>
                             <exclude>com/statful/client/domain/api/Transport.class</exclude>
                         </excludes>
                     </instrumentation>

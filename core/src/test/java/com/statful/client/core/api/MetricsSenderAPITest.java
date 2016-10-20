@@ -1,7 +1,10 @@
 package com.statful.client.core.api;
 
 import com.statful.client.core.config.DefaultClientConfiguration;
-import com.statful.client.domain.api.*;
+import com.statful.client.domain.api.Aggregation;
+import com.statful.client.domain.api.AggregationFrequency;
+import com.statful.client.domain.api.Aggregations;
+import com.statful.client.domain.api.Tags;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,17 +19,11 @@ import static org.mockito.Mockito.verify;
 public class MetricsSenderAPITest {
 
     @Mock
-    private MetricsSender metricsSender;
+    private com.statful.client.domain.api.MetricsSender metricsSender;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void shouldThrowUnsupportedOperationExceptionWhenSettingAnAggregation() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
-        builder.aggregation(Aggregation.AVG);
     }
 
     @Test
@@ -37,26 +34,37 @@ public class MetricsSenderAPITest {
         builder.send();
 
         verify(metricsSender, times(0)).put(anyString(), anyString(), any(Tags.class), any(Aggregations.class),
-                any(AggregationFreq.class), anyInt(), anyString(), anyLong());
+                any(AggregationFrequency.class), anyInt(), anyString(), anyLong());
     }
 
     @Test
     public void shouldNotSendWhenValueIsInvalid() {
         MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
-        builder.metricName("something");
+        builder.name("something");
 
         builder.send();
 
         verify(metricsSender, times(0)).put(anyString(), anyString(), any(Tags.class), any(Aggregations.class),
-                any(AggregationFreq.class), anyInt(), anyString(), anyLong());
+                any(AggregationFrequency.class), anyInt(), anyString(), anyLong());
+    }
+
+    @Test
+    public void shouldNotSendWhenAggregatedMetricIsInvalid() {
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender, true);
+        builder.name("something").value("something").aggregations(Aggregations.from(Aggregation.AVG, Aggregation.COUNT));
+
+        builder.send();
+
+        verify(metricsSender, times(0)).aggregatedPut(anyString(), anyString(), any(Tags.class), any(Aggregation.class),
+                any(AggregationFrequency.class), anyInt(), anyString(), anyLong());
     }
 
     @Test
     public void shouldIgnoreMetricNameWhenEmpty() {
         MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
-        builder.metricName("");
+        builder.name("");
 
-        assertNull(builder.getMetricName());
+        assertNull(builder.getName());
     }
 
     @Test
@@ -100,9 +108,9 @@ public class MetricsSenderAPITest {
     @Test
     public void shouldIgnoreAggregationFreqWhenNull() {
         MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
-        builder.aggFreq(null);
+        builder.aggregationFrequency(null);
 
-        assertNull(builder.getAggregationFreq());
+        assertNull(builder.getAggregationFrequency());
     }
 
     @Test
@@ -122,7 +130,7 @@ public class MetricsSenderAPITest {
     @Test
     public void shouldNotThrowWhenSendingHasException() {
         MetricsSenderAPI builder = new MetricsSenderAPI(null);
-        builder.metricName("namespace").value("value");
+        builder.name("namespace").value("value");
 
         builder.send();
         // Doesn't throw anything
@@ -137,9 +145,9 @@ public class MetricsSenderAPITest {
         MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
         builder.configuration(config);
 
-        builder.metricName("test")
+        builder.name("test")
                 .aggregations(Aggregation.AVG)
-                .aggFreq(AggregationFreq.FREQ_10)
+                .aggregationFrequency(AggregationFrequency.FREQ_10)
                 .sampleRate(75)
                 .tag("tagKey", "tagValue")
                 .value(String.valueOf(1000));
@@ -150,7 +158,7 @@ public class MetricsSenderAPITest {
                 eq(String.valueOf(1000)),
                 any(Tags.class),
                 any(Aggregations.class),
-                eq(AggregationFreq.FREQ_10),
+                eq(AggregationFrequency.FREQ_10),
                 eq(75),
                 eq("namespace"),
                 anyLong());

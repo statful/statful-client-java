@@ -1,8 +1,7 @@
 package com.statful.client.transport;
 
+import com.statful.client.core.transport.ApiUriFactory;
 import com.statful.client.core.transport.TransportSender;
-import com.statful.client.domain.api.Aggregation;
-import com.statful.client.domain.api.AggregationFreq;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -20,7 +19,6 @@ public class HTTPSender implements TransportSender {
     private static final Integer HTTP_CREATED = 201;
 
     private final String uri;
-    private final String aggregatedUri;
     private final HTTPClientFactory clientFactory;
 
     private CloseableHttpClient httpClient;
@@ -34,8 +32,7 @@ public class HTTPSender implements TransportSender {
      * @param clientFactory The HTTP client factory to use in this sender
      */
     public HTTPSender(final boolean secure, final String host, final Integer port, final HTTPClientFactory clientFactory) {
-        this.uri = HTTPUriFactory.buildUri(secure, host, port);
-        this.aggregatedUri = HTTPUriFactory.buildAggregatedUri(secure, host, port);
+        this.uri = ApiUriFactory.buildUri(secure, host, port);
         this.clientFactory = clientFactory;
 
         try {
@@ -51,12 +48,8 @@ public class HTTPSender implements TransportSender {
     }
 
     @Override
-    public final void sendAggregated(final String message, final Aggregation aggregation,
-                                     final AggregationFreq aggregationFreq) {
-        String finalUri = aggregatedUri.replace("{aggregation}", aggregation.getName())
-                .replace("{frequency}", aggregationFreq.toString());
-
-        doHttpRequest(finalUri, message);
+    public final void send(final String message, final String uri) {
+        doHttpRequest(uri, message);
     }
 
     private void doHttpRequest(final String uri, final String message) {

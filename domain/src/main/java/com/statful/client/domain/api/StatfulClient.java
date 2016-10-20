@@ -114,11 +114,11 @@ public interface StatfulClient extends MetricsSender {
      * @param metricName The timer name to create
      * @param timestamp The timer timestamp value to send to Statful
      * @param aggregation The aggregation applied
-     * @param aggregationFreq The aggregation frequency applied
+     * @param aggregationFrequency The aggregation frequency applied
      * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
      */
     SenderFacade aggregatedTimer(final String metricName, final long timestamp, final Aggregation aggregation,
-                                 final AggregationFreq aggregationFreq);
+                                 final AggregationFrequency aggregationFrequency);
 
     /**
      * Creates a new aggregated counter metrics builder.
@@ -126,11 +126,11 @@ public interface StatfulClient extends MetricsSender {
      * @param metricName The counter name to create
      * @param value The counter increment value to send to Statful
      * @param aggregation The aggregation applied
-     * @param aggregationFreq The aggregation frequency applied
+     * @param aggregationFrequency The aggregation frequency applied
      * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
      */
     SenderFacade aggregatedCounter(final String metricName, final int value, final Aggregation aggregation,
-                                   final AggregationFreq aggregationFreq);
+                                   final AggregationFrequency aggregationFrequency);
 
     /**
      * Creates a new aggregated gauge metrics builder.
@@ -138,11 +138,11 @@ public interface StatfulClient extends MetricsSender {
      * @param metricName The gauge name to create
      * @param value The gauge value to send to Statful
      * @param aggregation The aggregation applied
-     * @param aggregationFreq The aggregation frequency applied
+     * @param aggregationFrequency The aggregation frequency applied
      * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
      */
     SenderFacade aggregatedGauge(final String metricName, final Long value, final Aggregation aggregation,
-                                 final AggregationFreq aggregationFreq);
+                                 final AggregationFrequency aggregationFrequency);
 
     /**
      * Creates a new aggregated gauge metrics builder.
@@ -150,11 +150,11 @@ public interface StatfulClient extends MetricsSender {
      * @param metricName The gauge name to create
      * @param value The gauge value to send to Statful
      * @param aggregation The aggregation applied
-     * @param aggregationFreq The aggregation frequency applied
+     * @param aggregationFrequency The aggregation frequency applied
      * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
      */
     SenderFacade aggregatedGauge(final String metricName, final Double value, final Aggregation aggregation,
-                                 final AggregationFreq aggregationFreq);
+                                 final AggregationFrequency aggregationFrequency);
 
     /**
      * Creates a new aggregated gauge metrics builder.
@@ -162,11 +162,11 @@ public interface StatfulClient extends MetricsSender {
      * @param metricName The gauge name to create
      * @param value The gauge value to send to Statful
      * @param aggregation The aggregation applied
-     * @param aggregationFreq The aggregation frequency applied
+     * @param aggregationFrequency The aggregation frequency applied
      * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
      */
     SenderFacade aggregatedGauge(final String metricName, final Float value, final Aggregation aggregation,
-                                 final AggregationFreq aggregationFreq);
+                                 final AggregationFrequency aggregationFrequency);
 
     /**
      * Creates a new aggregated gauge metrics builder.
@@ -174,11 +174,11 @@ public interface StatfulClient extends MetricsSender {
      * @param metricName The gauge name to create
      * @param value The gauge value to send to Statful
      * @param aggregation The aggregation applied
-     * @param aggregationFreq The aggregation frequency applied
+     * @param aggregationFrequency The aggregation frequency applied
      * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
      */
     SenderFacade aggregatedGauge(final String metricName, final Integer value, final Aggregation aggregation,
-                                 final AggregationFreq aggregationFreq);
+                                 final AggregationFrequency aggregationFrequency);
 
     /**
      * Creates a new simple aggregated put builder.
@@ -186,11 +186,47 @@ public interface StatfulClient extends MetricsSender {
      * @param metricName The metric name to create
      * @param value The metric value to send to Statful
      * @param aggregation The aggregation applied
-     * @param aggregationFreq The aggregation frequency applied
+     * @param aggregationFrequency The aggregation frequency applied
+     * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
+     */
+    SenderFacade aggregatedPut(final String metricName, final Long value, final Aggregation aggregation,
+                               final AggregationFrequency aggregationFrequency);
+
+    /**
+     * Creates a new simple aggregated put builder.
+     *
+     * @param metricName The metric name to create
+     * @param value The metric value to send to Statful
+     * @param aggregation The aggregation applied
+     * @param aggregationFrequency The aggregation frequency applied
+     * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
+     */
+    SenderFacade aggregatedPut(final String metricName, final Double value, final Aggregation aggregation,
+                               final AggregationFrequency aggregationFrequency);
+
+    /**
+     * Creates a new simple aggregated put builder.
+     *
+     * @param metricName The metric name to create
+     * @param value The metric value to send to Statful
+     * @param aggregation The aggregation applied
+     * @param aggregationFrequency The aggregation frequency applied
+     * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
+     */
+    SenderFacade aggregatedPut(final String metricName, final Float value, final Aggregation aggregation,
+                               final AggregationFrequency aggregationFrequency);
+
+    /**
+     * Creates a new simple aggregated put builder.
+     *
+     * @param metricName The metric name to create
+     * @param value The metric value to send to Statful
+     * @param aggregation The aggregation applied
+     * @param aggregationFrequency The aggregation frequency applied
      * @return A {@link SenderFacade}, ready to send or to configure a metric before sending
      */
     SenderFacade aggregatedPut(final String metricName, final Integer value, final Aggregation aggregation,
-                               final AggregationFreq aggregationFreq);
+                               final AggregationFrequency aggregationFrequency);
 
     /**
      * Enables Statful client.

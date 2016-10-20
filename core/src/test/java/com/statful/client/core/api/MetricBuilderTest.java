@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static com.statful.client.core.api.MetricBuilder.*;
 import static com.statful.client.domain.api.Aggregation.P90;
-import static com.statful.client.domain.api.AggregationFreq.FREQ_10;
+import static com.statful.client.domain.api.AggregationFrequency.FREQ_10;
 import static org.junit.Assert.assertEquals;
 
 public class MetricBuilderTest {

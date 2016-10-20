@@ -15,6 +15,13 @@ public class StandardBufferTest {
     }
 
     @Test
+    public void shouldDiscardIfBufferIsFull() {
+        for (int i=0; i<5; i++) {
+            subject.addToBuffer("foo");
+        }
+    }
+
+    @Test
     public void shouldAddToBuffer() {
         // When
         assertTrue("Should add to buffer", subject.addToBuffer("foo"));

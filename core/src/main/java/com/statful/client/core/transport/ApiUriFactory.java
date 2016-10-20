@@ -1,24 +1,20 @@
-package com.statful.client.transport;
+package com.statful.client.core.transport;
 
 /**
- * A factory for producing URIs for Statful.
+ * A factory for producing URIs for the Statful API.
  */
-public final class HTTPUriFactory {
+public abstract class ApiUriFactory {
 
     private static final String HTTP_PROTOCOL = "http://";
     private static final String HTTPS_PROTOCOL = "https://";
     private static final String METRICS_PATH = "/tel/v2.0/metrics";
     private static final String AGGREGATED_METRICS_PATH = "/tel/v2.0/metrics/aggregation/{aggregation}/frequency/{frequency}";
 
-    private HTTPUriFactory() {
-
-    }
-
     /**
      * Builds an URI to send metrics to Statful.
      *
      * @param secure Whether it should be sent using HTTP or HTTPS
-     * @param host The Staful API host
+     * @param host The Statful API host
      * @param port The Statful API port
      * @return A fully built URI for sending metrics to Statful
      */
@@ -30,7 +26,7 @@ public final class HTTPUriFactory {
      * Builds an URI to send aggregated metrics to Statful.
      *
      * @param secure Whether it should be sent using HTTP or HTTPS
-     * @param host The Staful API host
+     * @param host The Statful API host
      * @param port The Statful API port
      * @return A fully built URI for sending metrics to Statful
      */

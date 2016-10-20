@@ -15,10 +15,10 @@ public interface SenderAPI {
     /**
      * Sets the metric name.
      *
-     * @param metricName Metric name as string
+     * @param name Metric name as string
      * @return A reference to this instance
      */
-    SenderAPI metricName(final String metricName);
+    SenderAPI name(final String name);
 
     /**
      * Sets the metric value.
@@ -86,12 +86,12 @@ public interface SenderAPI {
     SenderAPI aggregations(final Aggregations aggregations);
 
     /**
-     * Sets the {@link AggregationFreq} of the metric.
+     * Sets the {@link AggregationFrequency} of the metric.
      *
-     * @param aggFreq The {@link AggregationFreq} of the metric
+     * @param aggregationFrequency The {@link AggregationFrequency} of the metric
      * @return A reference to this instance
      */
-    SenderAPI aggFreq(final AggregationFreq aggFreq);
+    SenderAPI aggregationFrequency(final AggregationFrequency aggregationFrequency);
 
     /**
      * Sets the namespace of the metric.

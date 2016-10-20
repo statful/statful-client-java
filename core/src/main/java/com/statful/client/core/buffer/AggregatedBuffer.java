@@ -1,7 +1,7 @@
 package com.statful.client.core.buffer;
 
 import com.statful.client.domain.api.Aggregation;
-import com.statful.client.domain.api.AggregationFreq;
+import com.statful.client.domain.api.AggregationFrequency;
 import com.statful.client.domain.api.MetricsBuffer;
 
 import java.util.*;
@@ -40,10 +40,10 @@ public class AggregatedBuffer implements MetricsBuffer {
      * Adds an aggregated metric to the buffer.
      * @param metric The {@link String} metric name
      * @param aggregation The {@link com.statful.client.domain.api.Aggregation} aggregation of the metric
-     * @param aggregationFreq The {@link com.statful.client.domain.api.AggregationFreq} aggregation freq of the metric
+     * @param aggregationFrequency The {@link AggregationFrequency} aggregation freq of the metric
      * @return A {@link Boolean} with the success of the operation
      */
-    public final boolean addToBuffer(final String metric, final Aggregation aggregation, final AggregationFreq aggregationFreq) {
+    public final boolean addToBuffer(final String metric, final Aggregation aggregation, final AggregationFrequency aggregationFrequency) {
         Map<String, ArrayBlockingQueue<String>> aggregatedBuffer = buffer.get(aggregation.toString());
 
         ArrayBlockingQueue<String> aggregatedFreqBuffer;
@@ -53,14 +53,14 @@ public class AggregatedBuffer implements MetricsBuffer {
 
             aggregatedFreqBuffer = new ArrayBlockingQueue<String>(this.maxBufferSize);
         } else {
-            aggregatedFreqBuffer = aggregatedBuffer.get(aggregationFreq.toString());
+            aggregatedFreqBuffer = aggregatedBuffer.get(aggregationFrequency.toString());
 
             if (aggregatedFreqBuffer == null) {
                 aggregatedFreqBuffer = new ArrayBlockingQueue<String>(this.maxBufferSize);
             }
         }
 
-        aggregatedBuffer.put(aggregationFreq.toString(), aggregatedFreqBuffer);
+        aggregatedBuffer.put(aggregationFrequency.toString(), aggregatedFreqBuffer);
         buffer.put(aggregation.toString(), aggregatedBuffer);
 
         return aggregatedFreqBuffer.offer(metric);
@@ -69,15 +69,15 @@ public class AggregatedBuffer implements MetricsBuffer {
     /**
      * Reads the buffer contents for a particular aggregation.
      * @param aggregation The {@link Aggregation} aggregation to inspect the buffer
-     * @param aggregationFreq The {@link AggregationFreq} aggregation frequency to inspect the buffer
+     * @param aggregationFrequency The {@link AggregationFrequency} aggregation frequency to inspect the buffer
      * @return A {@link String} with all the metrics for a particular aggregation
      */
-    public final String readBuffer(final Aggregation aggregation, final AggregationFreq aggregationFreq) {
+    public final String readBuffer(final Aggregation aggregation, final AggregationFrequency aggregationFrequency) {
         Map<String, ArrayBlockingQueue<String>> aggregatedBuffer = buffer.get(aggregation.toString());
         ArrayBlockingQueue<String> aggregatedFreqBuffer;
 
         if (aggregatedBuffer != null) {
-            aggregatedFreqBuffer = aggregatedBuffer.get(aggregationFreq.toString());
+            aggregatedFreqBuffer = aggregatedBuffer.get(aggregationFrequency.toString());
 
             if (aggregatedFreqBuffer != null) {
                 Collection<String> messages = new ArrayList<String>();
@@ -115,18 +115,18 @@ public class AggregatedBuffer implements MetricsBuffer {
      * @param aggregation The {@link Aggregation} aggregation to inspect the buffer
      * @return A {@link Set} set with the current aggregations frequencies buffers
      */
-    public final Set<AggregationFreq> getAggregationFrequencies(final Aggregation aggregation) {
+    public final Set<AggregationFrequency> getAggregationFrequencies(final Aggregation aggregation) {
         Map<String, ArrayBlockingQueue<String>> aggregationFreqBuffer = buffer.get(aggregation.toString());
 
-        Set<AggregationFreq> aggregationFreqs = new HashSet<AggregationFreq>();
+        Set<AggregationFrequency> aggregationFrequencies = new HashSet<AggregationFrequency>();
 
         if (aggregationFreqBuffer != null) {
             for (String aggregationFreq : aggregationFreqBuffer.keySet()) {
-                aggregationFreqs.add(AggregationFreq.valueOf(aggregationFreq));
+                aggregationFrequencies.add(AggregationFrequency.valueOf(aggregationFreq));
             }
         }
 
-        return aggregationFreqs;
+        return aggregationFrequencies;
     }
 
     @Override
@@ -134,10 +134,10 @@ public class AggregatedBuffer implements MetricsBuffer {
         Set<Aggregation> aggregations = getAggregations();
 
         for (Aggregation aggregation : aggregations) {
-            Set<AggregationFreq> aggregationFreqs = getAggregationFrequencies(aggregation);
+            Set<AggregationFrequency> aggregationFrequencies = getAggregationFrequencies(aggregation);
 
-            for (AggregationFreq aggregationFreq : aggregationFreqs) {
-                if (isTimeToFlushAggregation(aggregation.toString(), aggregationFreq.toString())) {
+            for (AggregationFrequency aggregationFrequency : aggregationFrequencies) {
+                if (isTimeToFlushAggregation(aggregation.toString(), aggregationFrequency.toString())) {
                     return true;
                 }
             }
@@ -149,7 +149,7 @@ public class AggregatedBuffer implements MetricsBuffer {
     /**
      * Validates if the buffer for a particular aggregation is considered ready to be flushed.
      * @param aggregation An {@link Aggregation} aggregation
-     * @param aggregationFreq An {@link AggregationFreq} aggregation frequency
+     * @param aggregationFreq An {@link AggregationFrequency} aggregation frequency
      * @return A {@link Boolean} stating if a particular aggregation buffer should be flushed
      */
     private boolean isTimeToFlushAggregation(final String aggregation, final String aggregationFreq) {

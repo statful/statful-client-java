@@ -1,8 +1,5 @@
 package com.statful.client.core.transport;
 
-import com.statful.client.domain.api.Aggregation;
-import com.statful.client.domain.api.AggregationFreq;
-
 /**
  * Transport sender interface. A sender is responsible for handle protocol-level communications
  */
@@ -16,16 +13,13 @@ public interface TransportSender {
     void send(String message);
 
     /**
-     * Send aggregated messages using the underlying transport protocol.
+     * Send messages to a particular uri using the underlying transport protocol.
+     * Might not be implemented in case the underlying transport doesn't support it.
      *
      * @param message The message to send
-     * @param aggregation The aggregation applied
-     * @param aggregationFreq The aggregation frequency
-     * @throws UnsupportedOperationException when not supported by the transport (ex. UDP)
+     * @param uri The uri to send messages to
      */
-    void sendAggregated(String message,
-                        Aggregation aggregation,
-                        AggregationFreq aggregationFreq) throws UnsupportedOperationException;
+    void send(String message, String uri);
 
     /**
      * Shutdowns the transport sender, which means typically to release resources, like sockets.

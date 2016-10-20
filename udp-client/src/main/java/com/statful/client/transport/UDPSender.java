@@ -1,8 +1,6 @@
 package com.statful.client.transport;
 
 import com.statful.client.core.transport.TransportSender;
-import com.statful.client.domain.api.Aggregation;
-import com.statful.client.domain.api.AggregationFreq;
 
 import java.io.IOException;
 import java.net.*;
@@ -50,10 +48,7 @@ public class UDPSender implements TransportSender {
     }
 
     @Override
-    public final void sendAggregated(final String message, final Aggregation aggregation,
-                                     final AggregationFreq aggregationFreq) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+    public final void send(final String message, final String uri) { }
 
     private void sendMessage(final String message) throws IOException {
         try {
