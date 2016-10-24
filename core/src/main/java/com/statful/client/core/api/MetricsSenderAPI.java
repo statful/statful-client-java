@@ -188,13 +188,13 @@ public final class MetricsSenderAPI implements SenderAPI {
     }
 
     @Override
-    public MetricsSenderAPI aggregation(final Aggregation aggregation) {
+    public SenderAPI aggregation(final Aggregation aggregation) {
         withAggregation(aggregation);
         return this;
     }
 
     @Override
-    public MetricsSenderAPI aggregations(final Aggregation... aggregations) {
+    public SenderAPI aggregations(final Aggregation... aggregations) {
         if (aggregations != null) {
             for (Aggregation aggregation : aggregations) {
                 withAggregation(aggregation);
@@ -204,7 +204,7 @@ public final class MetricsSenderAPI implements SenderAPI {
     }
 
     @Override
-    public MetricsSenderAPI aggregations(final Aggregations aggregations) {
+    public SenderAPI aggregations(final Aggregations aggregations) {
         if (aggregations != null) {
             getSafeAggregations().merge(aggregations);
         }
@@ -212,7 +212,7 @@ public final class MetricsSenderAPI implements SenderAPI {
     }
 
     @Override
-    public MetricsSenderAPI aggregationFrequency(final AggregationFrequency aggregationFrequency) {
+    public SenderAPI aggregationFrequency(final AggregationFrequency aggregationFrequency) {
         if (aggregationFrequency != null) {
             this.aggregationFrequency = aggregationFrequency;
         }
@@ -220,7 +220,7 @@ public final class MetricsSenderAPI implements SenderAPI {
     }
 
     @Override
-    public MetricsSenderAPI with() {
+    public SenderAPI with() {
         return this;
     }
 
@@ -274,7 +274,7 @@ public final class MetricsSenderAPI implements SenderAPI {
         return string != null && !string.isEmpty();
     }
 
-    private MetricsSenderAPI withAggregation(final Aggregation aggregation) {
+    private SenderAPI withAggregation(final Aggregation aggregation) {
         if (aggregation != null) {
             getSafeAggregations().put(aggregation);
         }
