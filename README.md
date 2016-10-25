@@ -275,8 +275,6 @@ client.aggregatedCounter("testCounter", 1, Aggregation.SUM, AggregationFreq.FREQ
         .send();
 ```
 
-> Note that aggregated metrics are only available with the `HTTP` client and will throw `UnsupportedOperationException` at the moment of flushing when used with the `UDP` transport.
-
 ## Reference
 
 Detailed reference if you want to take full advantage from Statful.
