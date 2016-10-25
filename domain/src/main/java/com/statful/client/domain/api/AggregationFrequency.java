@@ -3,7 +3,7 @@ package com.statful.client.domain.api;
 /**
  * Supported aggregation frequencies.
  */
-public enum AggregationFreq {
+public enum AggregationFrequency {
 
     FREQ_10(10),
     FREQ_30(30),
@@ -14,7 +14,7 @@ public enum AggregationFreq {
 
     private int frequency;
 
-    AggregationFreq(final int frequency) {
+    AggregationFrequency(final int frequency) {
         this.frequency = frequency;
     }
 

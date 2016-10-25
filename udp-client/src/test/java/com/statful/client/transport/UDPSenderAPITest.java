@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
-public class UDPSenderTest {
+public class UDPSenderAPITest {
 
     private static ExecutorService executorService;
 

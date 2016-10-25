@@ -1,7 +1,7 @@
 package com.statful.client.core.api;
 
 import com.statful.client.domain.api.Aggregation;
-import com.statful.client.domain.api.AggregationFreq;
+import com.statful.client.domain.api.AggregationFrequency;
 
 /**
  * This class serves only for syntax sugar for building metrics. The static methods can be statically imported for
@@ -30,13 +30,13 @@ public final class MetricBuilder {
     /**
      * Instantiates a new {@link AggregationFreqBuilder}.
      * <p>
-     * Example: <code>timer(aggFreq(FREQ_120)).</code>
+     * Example: <code>timer(aggregationFrequency(FREQ_120)).</code>
      *
-     * @param aggregationFreq The {@link com.statful.client.domain.api.AggregationFreq} to use
+     * @param aggregationFrequency The {@link AggregationFrequency} to use
      * @return An instance of {@link AggregationFreqBuilder}
      */
-    public static AggregationFreqBuilder aggFreq(final AggregationFreq aggregationFreq) {
-        return new AggregationFreqBuilder(aggregationFreq);
+    public static AggregationFreqBuilder aggFreq(final AggregationFrequency aggregationFrequency) {
+        return new AggregationFreqBuilder(aggregationFrequency);
     }
 
     /**

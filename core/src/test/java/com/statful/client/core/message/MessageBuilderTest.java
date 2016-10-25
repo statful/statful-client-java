@@ -1,9 +1,9 @@
 package com.statful.client.core.message;
 
-import com.statful.client.domain.api.AggregationFreq;
+import com.statful.client.domain.api.Aggregation;
+import com.statful.client.domain.api.AggregationFrequency;
 import com.statful.client.domain.api.Aggregations;
 import com.statful.client.domain.api.Tags;
-import com.statful.client.domain.api.Aggregation;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.anyOf;
@@ -35,7 +35,7 @@ public class MessageBuilderTest {
                 .withValue("3")
                 .withTags(TAGS)
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(AggregationFreq.FREQ_10)
+                .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
 
@@ -51,7 +51,7 @@ public class MessageBuilderTest {
                 .withValue("3")
                 .withTags(TAGS)
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(AggregationFreq.FREQ_10)
+                .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
     }
@@ -63,7 +63,7 @@ public class MessageBuilderTest {
                 .withName(NAME)
                 .withTags(TAGS)
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(AggregationFreq.FREQ_10)
+                .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
     }
@@ -75,12 +75,13 @@ public class MessageBuilderTest {
                 .withName(NAME)
                 .withValue("3")
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(AggregationFreq.FREQ_10)
+                .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
 
         assertEquals(message, ("TEST_NS.response_time 3 121232323 avg,count,10"));
     }
+
 
     @Test
     public void shouldBuildMessageWithEmptyTags() throws Exception {
@@ -90,7 +91,7 @@ public class MessageBuilderTest {
                 .withTags(new Tags())
                 .withValue("3")
                 .withAggregations(AGGREGATIONS)
-                .withAggregationFreq(AggregationFreq.FREQ_10)
+                .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
 
@@ -104,7 +105,7 @@ public class MessageBuilderTest {
                 .withName(NAME)
                 .withValue("3")
                 .withTags(TAGS)
-                .withAggregationFreq(AggregationFreq.FREQ_10)
+                .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
 
@@ -135,13 +136,26 @@ public class MessageBuilderTest {
                 .withValue("3")
                 .withTags(TAGS)
                 .withAggregations(new Aggregations())
-                .withAggregationFreq(AggregationFreq.FREQ_10)
+                .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
                 .build();
 
         assertThat(message, anyOf(
                 is("TEST_NS.response_time,unit=s,app=statful 3 121232323"),
                 is("TEST_NS.response_time,app=statful,unit=s 3 121232323")));
+    }
+
+    @Test
+    public void shouldBuildMessageWithoutNamespace() throws Exception {
+        String message = MessageBuilder.newBuilder()
+                .withName(NAME)
+                .withValue("3")
+                .withAggregations(AGGREGATIONS)
+                .withAggregationFreq(AggregationFrequency.FREQ_10)
+                .withTimestamp(TIMESTAMP)
+                .build();
+
+        assertEquals(message, ("response_time 3 121232323 avg,count,10"));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.statful.client.transport;
 
+import com.statful.client.core.transport.ApiUriFactory;
 import com.statful.client.core.transport.TransportSender;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -31,7 +32,7 @@ public class HTTPSender implements TransportSender {
      * @param clientFactory The HTTP client factory to use in this sender
      */
     public HTTPSender(final boolean secure, final String host, final Integer port, final HTTPClientFactory clientFactory) {
-        this.uri = HTTPUriFactory.buildUri(secure, host, port);
+        this.uri = ApiUriFactory.buildUri(secure, host, port);
         this.clientFactory = clientFactory;
 
         try {
@@ -43,6 +44,15 @@ public class HTTPSender implements TransportSender {
 
     @Override
     public final void send(final String message) {
+        doHttpRequest(uri, message);
+    }
+
+    @Override
+    public final void send(final String message, final String uri) {
+        doHttpRequest(uri, message);
+    }
+
+    private void doHttpRequest(final String uri, final String message) {
         CloseableHttpResponse response = null;
 
         try {

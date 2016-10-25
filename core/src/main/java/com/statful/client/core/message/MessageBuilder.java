@@ -1,7 +1,7 @@
 package com.statful.client.core.message;
 
 import com.statful.client.domain.api.Aggregation;
-import com.statful.client.domain.api.AggregationFreq;
+import com.statful.client.domain.api.AggregationFrequency;
 import com.statful.client.domain.api.Aggregations;
 import com.statful.client.domain.api.Tags;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Statful message builder. This is an internal class to build messages from the metric data.
  * <p>
- * Message format follows the specification of Telemetron/MegaBob/Statful/Telemetrão API.
+ * Message format follows the specification of Statful API.
  */
 public final class MessageBuilder {
 
@@ -23,7 +23,7 @@ public final class MessageBuilder {
     private List<Aggregation> aggregations = new ArrayList<Aggregation>();
     private String value;
     private long timestamp;
-    private AggregationFreq aggregationFreq = AggregationFreq.FREQ_10;
+    private AggregationFrequency aggregationFrequency = AggregationFrequency.FREQ_10;
 
     /**
      * Default constructor.
@@ -101,12 +101,12 @@ public final class MessageBuilder {
     /**
      * Sets the aggregation frequency.
      *
-     * @param aggregationFreq The {@link com.statful.client.domain.api.AggregationFreq}
+     * @param aggregationFrequency The {@link AggregationFrequency}
      * @return A reference to this builder
      */
-    public MessageBuilder withAggregationFreq(final AggregationFreq aggregationFreq) {
-        if (aggregationFreq != null) {
-            this.aggregationFreq = aggregationFreq;
+    public MessageBuilder withAggregationFreq(final AggregationFrequency aggregationFrequency) {
+        if (aggregationFrequency != null) {
+            this.aggregationFrequency = aggregationFrequency;
         }
         return this;
     }
@@ -132,11 +132,13 @@ public final class MessageBuilder {
 
         StringBuilder sb = new StringBuilder();
 
-        //append namespace
-        sb.append(escapeMeasurement(namespace));
+        if (namespace != null) {
+            //append namespace
+            sb.append(escapeMeasurement(namespace)).append(".");
+        }
 
         //append name
-        sb.append(".").append(escapeMeasurement(name));
+        sb.append(escapeMeasurement(name));
 
         //append tags
         for (Map.Entry<String, String> entry : tags.entrySet()) {
@@ -159,7 +161,7 @@ public final class MessageBuilder {
                 sb.append(aggr.getName()).append(",");
             }
 
-            sb.append(aggregationFreq.getValue());
+            sb.append(aggregationFrequency.getValue());
         }
 
         return sb.toString();

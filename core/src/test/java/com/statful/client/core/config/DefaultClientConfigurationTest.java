@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static com.statful.client.domain.api.Aggregation.*;
-import static com.statful.client.domain.api.AggregationFreq.FREQ_10;
-import static com.statful.client.domain.api.AggregationFreq.FREQ_120;
+import static com.statful.client.domain.api.AggregationFrequency.FREQ_10;
+import static com.statful.client.domain.api.AggregationFrequency.FREQ_120;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
 
@@ -142,8 +142,8 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldGetTimerAggregationFreq() {
-        subject.setTimerAggregationFreq(FREQ_120);
-        assertEquals("Should get timer aggregation frequency", FREQ_120, subject.getTimerAggregationFreq());
+        subject.setTimerAggregationFrequency(FREQ_120);
+        assertEquals("Should get timer aggregation frequency", FREQ_120, subject.getTimerAggregationFrequency());
     }
 
     @Test
@@ -166,8 +166,8 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldGetCounterAggregationFreq() {
-        subject.setCounterAggregationFreq(FREQ_120);
-        assertEquals("Should get counter aggregation frequency", FREQ_120, subject.getCounterAggregationFreq());
+        subject.setCounterAggregationFrequency(FREQ_120);
+        assertEquals("Should get counter aggregation frequency", FREQ_120, subject.getCounterAggregationFrequency());
     }
 
     @Test
@@ -190,8 +190,8 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldGetGaugeAggregationFreq() {
-        subject.setGaugeAggregationFreq(FREQ_120);
-        assertEquals("Should get gauge aggregation frequency", FREQ_120, subject.getGaugeAggregationFreq());
+        subject.setGaugeAggregationFrequency(FREQ_120);
+        assertEquals("Should get gauge aggregation frequency", FREQ_120, subject.getGaugeAggregationFrequency());
     }
 
     @Test
@@ -205,9 +205,9 @@ public class DefaultClientConfigurationTest {
         assertEquals(5000, subject.getFlushIntervalMillis());
         assertFalse(subject.isDryRun());
 
-        assertEquals(FREQ_10, subject.getTimerAggregationFreq());
-        assertEquals(FREQ_10, subject.getCounterAggregationFreq());
-        assertEquals(FREQ_10, subject.getGaugeAggregationFreq());
+        assertEquals(FREQ_10, subject.getTimerAggregationFrequency());
+        assertEquals(FREQ_10, subject.getCounterAggregationFrequency());
+        assertEquals(FREQ_10, subject.getGaugeAggregationFrequency());
 
         assertNull(subject.getTransport());
         assertNull(subject.getToken());

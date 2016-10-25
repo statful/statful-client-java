@@ -1,16 +1,16 @@
 package com.statful.client.core.sender;
 
+import com.statful.client.core.buffer.AggregatedBuffer;
+import com.statful.client.core.buffer.StandardBuffer;
 import com.statful.client.core.message.MessageBuilder;
+import com.statful.client.core.transport.ApiUriFactory;
 import com.statful.client.core.transport.TransportSender;
-import com.statful.client.domain.api.AggregationFreq;
-import com.statful.client.domain.api.Aggregations;
-import com.statful.client.domain.api.MetricsSender;
-import com.statful.client.domain.api.Tags;
-import com.statful.client.domain.api.ClientConfiguration;
+import com.statful.client.domain.api.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -43,11 +43,12 @@ public class BufferedMetricsSender implements MetricsSender {
     private static final int SAMPLE_RATE_DIVIDER = 100;
     private static final int MIN_FLUSH_INTERVAL = 50;
 
+    private final ClientConfiguration clientConfiguration;
     private final TransportSender transportSender;
     private final ScheduledExecutorService executorService;
     private final boolean dryRun;
-    private final int flushSize;
-    private final ArrayBlockingQueue<String> buffer;
+    private final StandardBuffer standardBuffer;
+    private final AggregatedBuffer aggregatedBuffer;
 
     /**
      * Default constructor.
@@ -61,13 +62,89 @@ public class BufferedMetricsSender implements MetricsSender {
             final ClientConfiguration configuration,
             final ScheduledExecutorService executorService
     ) {
+        this.clientConfiguration = configuration;
         this.transportSender = transportSender;
         this.executorService = executorService;
         this.dryRun = configuration.isDryRun();
-        this.flushSize = configuration.getFlushSize();
-        this.buffer = new ArrayBlockingQueue<String>(MAX_BUFFER_SIZE);
+
+
+        this.standardBuffer = new StandardBuffer(MAX_BUFFER_SIZE, configuration.getFlushSize());
+        this.aggregatedBuffer = new AggregatedBuffer(MAX_BUFFER_SIZE, configuration.getFlushSize());
 
         startFlushInterval(configuration.getFlushIntervalMillis());
+    }
+
+    @Override
+    public final void put(
+            final String name, final String value, final Tags tags, final Aggregations aggregations,
+            final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace,
+            final long timestamp
+    ) {
+        if (shouldPutMetric(sampleRate)) {
+            String rawMessage = MessageBuilder.newBuilder()
+                    .withName(name)
+                    .withValue(value)
+                    .withTags(tags)
+                    .withAggregations(aggregations)
+                    .withAggregationFreq(aggregationFrequency)
+                    .withNamespace(namespace)
+                    .withTimestamp(timestamp)
+                    .build();
+
+            if (!dryRun) {
+                this.putRaw(rawMessage);
+            } else {
+                LOGGER.info("Dry metric: " + rawMessage);
+            }
+        }
+    }
+
+    @Override
+    public final void aggregatedPut(final String name, final String value, final Tags tags, final Aggregation aggregation,
+                                    final AggregationFrequency aggregationFrequency, final Integer sampleRate,
+                                    final String namespace, final long timestamp) {
+        if (shouldPutMetric(sampleRate)) {
+            String rawMessage = MessageBuilder.newBuilder()
+                    .withName(name)
+                    .withValue(value)
+                    .withTags(tags)
+                    .withNamespace(namespace)
+                    .withTimestamp(timestamp)
+                    .build();
+
+            if (!dryRun) {
+                this.putAggregatedRaw(rawMessage, aggregation, aggregationFrequency);
+            } else {
+                LOGGER.info("Dry metric: " + rawMessage
+                        + " Aggregation: " + aggregation
+                        + " Frequency: " + aggregationFrequency);
+            }
+        }
+    }
+
+    @Override
+    public final void shutdown() {
+        transportSender.shutdown();
+    }
+
+    @Override
+    public final void forceSyncFlush() {
+        String message = standardBuffer.readBuffer();
+        if (!message.isEmpty()) {
+            sendMetricSynchronously(message);
+        }
+
+        Set<Aggregation> aggregations = aggregatedBuffer.getAggregations();
+        for (Aggregation aggregation : aggregations) {
+            Set<AggregationFrequency> aggregationFrequencies = aggregatedBuffer.getAggregationFrequencies(aggregation);
+            for (AggregationFrequency aggregationFrequency : aggregationFrequencies) {
+                String aggregatedMessages = aggregatedBuffer.readBuffer(aggregation, aggregationFrequency);
+
+                if (!aggregatedMessages.isEmpty()) {
+                    sendAggregatedMetricSynchronously(aggregatedMessages, aggregation, aggregationFrequency);
+                }
+            }
+        }
     }
 
     private void startFlushInterval(final long flushInterval) {
@@ -83,36 +160,6 @@ public class BufferedMetricsSender implements MetricsSender {
                 flush();
             }
         };
-    }
-
-    @Override
-     public final void put(
-            final String name, final String value, final Tags tags, final Aggregations aggregations,
-            final AggregationFreq aggregationFreq, final Integer sampleRate, final String namespace,
-            final long timestamp
-    ) {
-        if (shouldPutMetric(sampleRate)) {
-            String rawMessage = MessageBuilder.newBuilder()
-                    .withName(name)
-                    .withValue(value)
-                    .withTags(tags)
-                    .withAggregations(aggregations)
-                    .withAggregationFreq(aggregationFreq)
-                    .withNamespace(namespace)
-                    .withTimestamp(timestamp)
-                    .build();
-
-            if (!dryRun) {
-                this.putRaw(rawMessage);
-            } else {
-                LOGGER.info("Dry metric: " + rawMessage);
-            }
-        }
-    }
-
-    @Override
-    public final void shutdown() {
-        transportSender.shutdown();
     }
 
     private boolean shouldPutMetric(final int sampleRate) {
@@ -134,33 +181,46 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     private void putRaw(final String metric) {
-
-        boolean inserted = buffer.offer(metric);
+        boolean inserted = standardBuffer.addToBuffer(metric);
         if (!inserted) {
+            // We should discard older metrics instead
             LOGGER.warning("The buffer is full, metric ignored!.");
         }
-        if (isTimeToFlush()) {
+
+        if (standardBuffer.isTimeToFlush()) {
             flush();
         }
     }
 
-    private boolean isTimeToFlush() {
-        int bufferSize = buffer.size();
-        return bufferSize > 0 && flushSize <= bufferSize;
-    }
+    private void putAggregatedRaw(final String metric, final Aggregation aggregation, final AggregationFrequency aggregationFrequency) {
+        boolean inserted = aggregatedBuffer.addToBuffer(metric, aggregation, aggregationFrequency);
+        if (!inserted) {
+            // We should discard older metrics instead
+            LOGGER.warning("The buffer is full, metric ignored!.");
+        }
 
-    private void flush() {
-        String message = getMessageBuffer();
-        if (!message.isEmpty()) {
-            sendMetric(message);
+        if (aggregatedBuffer.isTimeToFlush()) {
+            flush();
         }
     }
 
-    @Override
-    public final void forceSyncFlush() {
-        String message = getMessageBuffer();
-        if (!message.isEmpty()) {
-            sendMetricSynchronously(message);
+    private void flush() {
+        String standardMessages = standardBuffer.readBuffer();
+        if (!standardMessages.isEmpty()) {
+            sendMetric(standardMessages);
+        }
+
+        Set<Aggregation> aggregations = aggregatedBuffer.getAggregations();
+
+        for (Aggregation aggregation : aggregations) {
+            Set<AggregationFrequency> aggregationFrequencies = aggregatedBuffer.getAggregationFrequencies(aggregation);
+            for (AggregationFrequency aggregationFrequency : aggregationFrequencies) {
+                String aggregatedMessages = aggregatedBuffer.readBuffer(aggregation, aggregationFrequency);
+
+                if (!aggregatedMessages.isEmpty()) {
+                    sendAggregatedMetric(aggregatedMessages, aggregation, aggregationFrequency);
+                }
+            }
         }
     }
 
@@ -173,30 +233,87 @@ public class BufferedMetricsSender implements MetricsSender {
         });
     }
 
+    private void sendAggregatedMetric(final String metric,
+                                      final Aggregation aggregation,
+                                      final AggregationFrequency aggregationFrequency) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                transportSender.send(metric, buildAggregatedUri(aggregation, aggregationFrequency));
+            }
+        });
+    }
+
     private void sendMetricSynchronously(final String metric) {
         transportSender.send(metric);
     }
 
-    private String getMessageBuffer() {
-        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-        Collection<String> messages = new ArrayList<String>();
-        buffer.drainTo(messages, flushSize);
+    private void sendAggregatedMetricSynchronously(final String metric,
+                                                   final Aggregation aggregation,
+                                                   final AggregationFrequency aggregationFrequency) {
+        transportSender.send(metric, buildAggregatedUri(aggregation, aggregationFrequency));
+    }
 
-        StringBuilder sb = new StringBuilder();
-        for (String metric : messages) {
-            sb.append(metric).append("\n");
-        }
-        return sb.toString();
+    private String buildAggregatedUri(final Aggregation aggregation, final AggregationFrequency aggregationFrequency) {
+        String baseAggregatedUri = ApiUriFactory.buildAggregatedUri(clientConfiguration.isSecure(),
+                clientConfiguration.getHost(), clientConfiguration.getPort());
+
+        return baseAggregatedUri
+                .replace("{aggregation}", aggregation.getName())
+                .replace("{frequency}", Integer.toString(aggregationFrequency.getValue()));
     }
 
     /**
-     * Returns a copy of the representation of the buffer as a {@link java.util.List}.
+     * Returns a copy of the representation of the standard buffer as a {@link java.util.List}.
      * <p>
      * This method returns a new copy of the buffer every time it's called. Caution is advised.
      *
      * @return A {@link java.util.List} containing the messages of the buffer
      */
-    final List<String> getBuffer() {
+    final List<String> getStandardBuffer() {
+        ArrayBlockingQueue<String> buffer = standardBuffer.getBuffer();
         return asList(buffer.toArray(new String[buffer.size()]));
+    }
+
+    /**
+     * Returns a copy of the representation of all the aggregated buffers as a {@link java.util.List}.
+     * <p>
+     * This method returns a copies of the buffers every time it's called. Caution is advised.
+     *
+     * @return A {@link java.util.List} containing the messages of the buffer
+     */
+    final Map<Aggregation, Map<AggregationFrequency, List<String>>> getAggregatedBuffer() {
+        Map<Aggregation, Map<AggregationFrequency, List<String>>> buffersAsList =
+                new HashMap<Aggregation, Map<AggregationFrequency, List<String>>>();
+
+        Set<Aggregation> aggregations = aggregatedBuffer.getAggregations();
+        for (Aggregation aggregation : aggregations) {
+            Set<AggregationFrequency> aggregationFrequencies = aggregatedBuffer.getAggregationFrequencies(aggregation);
+            for (AggregationFrequency aggregationFrequency : aggregationFrequencies) {
+
+                // Current buffer content
+                ArrayBlockingQueue<String> currentAggregationFreqQueue =
+                        aggregatedBuffer.getBuffer().get(aggregation.toString()).get(aggregationFrequency.toString());
+                List<String> currentAggregationFreqList =
+                        asList(currentAggregationFreqQueue.toArray(new String[currentAggregationFreqQueue.size()]));
+
+                Map<AggregationFrequency, List<String>> aggregationFreqMap = buffersAsList.get(aggregation);
+                if (aggregationFreqMap != null) {
+                    List<String> aggregationFreqList = aggregationFreqMap.get(aggregationFrequency);
+
+                    if (aggregationFreqList != null) {
+                        currentAggregationFreqList.addAll(aggregationFreqList);
+                    }
+                } else {
+                    aggregationFreqMap = new HashMap<AggregationFrequency, List<String>>();
+                }
+
+                aggregationFreqMap.put(aggregationFrequency, currentAggregationFreqList);
+
+                buffersAsList.put(aggregation, aggregationFreqMap);
+            }
+        }
+
+        return buffersAsList;
     }
 }

@@ -95,11 +95,11 @@ public interface ClientConfiguration {
 
     /**
      * Returns the timer default aggregation frequency. Default is
-     * {@link AggregationFreq#FREQ_10}.
+     * {@link AggregationFrequency#FREQ_10}.
      *
-     * @return {@link AggregationFreq} for timer
+     * @return {@link AggregationFrequency} for timer
      */
-    AggregationFreq getTimerAggregationFreq();
+    AggregationFrequency getTimerAggregationFrequency();
 
     /**
      * Returns the counter default tags.
@@ -118,11 +118,11 @@ public interface ClientConfiguration {
 
     /**
      * Returns the counter default aggregation frequency. Default is
-     * {@link AggregationFreq#FREQ_10}.
+     * {@link AggregationFrequency#FREQ_10}.
      *
-     * @return {@link AggregationFreq} for counter
+     * @return {@link AggregationFrequency} for counter
      */
-    AggregationFreq getCounterAggregationFreq();
+    AggregationFrequency getCounterAggregationFrequency();
 
     /**
      * Returns the gauge default tags.
@@ -141,17 +141,17 @@ public interface ClientConfiguration {
     /**
      * Returns the gauge default aggregation frequency. Default is 10.
      *
-     * @return {@link AggregationFreq} for gauge
+     * @return {@link AggregationFrequency} for gauge
      */
-    AggregationFreq getGaugeAggregationFreq();
+    AggregationFrequency getGaugeAggregationFrequency();
 
     /**
      * Returns the default aggregation frequency. Default is
-     * {@link AggregationFreq#FREQ_10}.
+     * {@link AggregationFrequency#FREQ_10}.
      *
-     * @return {@link AggregationFreq} for counter
+     * @return {@link AggregationFrequency} for counter
      */
-    AggregationFreq getDefaultAggregationFreq();
+    AggregationFrequency getDefaultAggregationFreq();
 
     /**
      * Returns the transport to use. Mandatory to configure.

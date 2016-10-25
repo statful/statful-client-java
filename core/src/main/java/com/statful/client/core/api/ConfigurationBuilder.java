@@ -282,14 +282,14 @@ public final class ConfigurationBuilder<T> {
     /**
      * Sets the timer method default aggregation frequency.
      * <p>
-     * Example: <code>timer(aggFreq(FREQ_120)).</code>
+     * Example: <code>timer(aggregationFrequency(FREQ_120)).</code>
      *
      * @param aggregationFreqBuilder An {@link AggregationFreqBuilder}
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> timer(final AggregationFreqBuilder aggregationFreqBuilder) {
         if (aggregationFreqBuilder != null) {
-            this.result.setTimerAggregationFreq(aggregationFreqBuilder.getAggFreq());
+            this.result.setTimerAggregationFrequency(aggregationFreqBuilder.getAggFreq());
         }
         return this;
     }
@@ -331,14 +331,14 @@ public final class ConfigurationBuilder<T> {
     /**
      * Sets the counter method default aggregation frequency.
      * <p>
-     * Example: <code>counter(aggFreq(FREQ_120)).</code>
+     * Example: <code>counter(aggregationFrequency(FREQ_120)).</code>
      *
      * @param aggregationFreqBuilder An {@link AggregationFreqBuilder}
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> counter(final AggregationFreqBuilder aggregationFreqBuilder) {
         if (aggregationFreqBuilder != null) {
-            this.result.setCounterAggregationFreq(aggregationFreqBuilder.getAggFreq());
+            this.result.setCounterAggregationFrequency(aggregationFreqBuilder.getAggFreq());
         }
         return this;
     }
@@ -378,14 +378,14 @@ public final class ConfigurationBuilder<T> {
     }
 
     /**
-     * Sets the gauge method default aggregation frequency. Example: gauge(aggFreq(FREQ_120)).
+     * Sets the gauge method default aggregation frequency. Example: gauge(aggregationFrequency(FREQ_120)).
      *
      * @param aggregationFreqBuilder An {@link AggregationFreqBuilder}
      * @return A reference to this configuration builder
      */
     public ConfigurationBuilder<T> gauge(final AggregationFreqBuilder aggregationFreqBuilder) {
         if (aggregationFreqBuilder != null) {
-            this.result.setGaugeAggregationFreq(aggregationFreqBuilder.getAggFreq());
+            this.result.setGaugeAggregationFrequency(aggregationFreqBuilder.getAggFreq());
         }
         return this;
     }

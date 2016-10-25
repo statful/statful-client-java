@@ -106,7 +106,7 @@
         </module>
         <module name="MethodLength"/>
         <module name="ParameterNumber">
-            <property name="max" value="8"/>
+            <property name="max" value="9"/>
         </module>
 
         <!-- Checks for whitespace                               -->
@@ -162,7 +162,6 @@
         <module name="FinalParameters"/>
         <module name="TodoComment"/>
         <module name="UpperEll"/>
-
     </module>
 
 </module>

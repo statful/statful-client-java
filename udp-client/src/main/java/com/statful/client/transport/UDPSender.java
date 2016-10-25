@@ -47,6 +47,9 @@ public class UDPSender implements TransportSender {
         }
     }
 
+    @Override
+    public final void send(final String message, final String uri) { }
+
     private void sendMessage(final String message) throws IOException {
         try {
             createSocketIfClosed();

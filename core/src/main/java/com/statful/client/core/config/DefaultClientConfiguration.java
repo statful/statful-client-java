@@ -19,7 +19,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private static final String DEFAULT_NAMESPACE = "application";
     private static final int DEFAULT_FLUSH_SIZE = 10;
     private static final int DEFAULT_FLUSH_INTERVAL_MS = 5000;
-    private static final AggregationFreq DEFAULT_AGGREGATION_FREQ = AggregationFreq.FREQ_10;
+    private static final AggregationFrequency DEFAULT_AGGREGATION_FREQ = AggregationFrequency.FREQ_10;
 
     private static final Tags DEFAULT_APP_TAGS = Tags.from("statful_client", "java");
     private static final Tags DEFAULT_TIMER_TAGS = Tags.from("unit", "ms");
@@ -54,9 +54,9 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private Aggregations counterAggregations = Aggregations.from(DEFAULT_COUNTER_AGGREGATIONS);
     private Aggregations gaugeAggregations = Aggregations.from(DEFAULT_GAUGE_AGGREGATIONS);
 
-    private AggregationFreq timerAggregationFreq = DEFAULT_AGGREGATION_FREQ;
-    private AggregationFreq counterAggregationFreq = DEFAULT_AGGREGATION_FREQ;
-    private AggregationFreq gaugeAggregationFreq = DEFAULT_AGGREGATION_FREQ;
+    private AggregationFrequency timerAggregationFrequency = DEFAULT_AGGREGATION_FREQ;
+    private AggregationFrequency counterAggregationFrequency = DEFAULT_AGGREGATION_FREQ;
+    private AggregationFrequency gaugeAggregationFrequency = DEFAULT_AGGREGATION_FREQ;
 
     @Override
     public final boolean isValid() {
@@ -154,8 +154,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     @Override
-    public final AggregationFreq getTimerAggregationFreq() {
-        return timerAggregationFreq;
+    public final AggregationFrequency getTimerAggregationFrequency() {
+        return timerAggregationFrequency;
     }
 
     @Override
@@ -169,8 +169,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     @Override
-    public final AggregationFreq getCounterAggregationFreq() {
-        return counterAggregationFreq;
+    public final AggregationFrequency getCounterAggregationFrequency() {
+        return counterAggregationFrequency;
     }
 
     @Override
@@ -184,12 +184,12 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     }
 
     @Override
-    public final AggregationFreq getGaugeAggregationFreq() {
-        return gaugeAggregationFreq;
+    public final AggregationFrequency getGaugeAggregationFrequency() {
+        return gaugeAggregationFrequency;
     }
 
     @Override
-    public final AggregationFreq getDefaultAggregationFreq() {
+    public final AggregationFrequency getDefaultAggregationFreq() {
         return DEFAULT_AGGREGATION_FREQ;
     }
 
@@ -334,10 +334,10 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     /**
      * Setter for aggregation frequency for timer.
      *
-     * @param timerAggregationFreq The {@link com.statful.client.domain.api.AggregationFreq} to use
+     * @param timerAggregationFrequency The {@link AggregationFrequency} to use
      */
-    public final void setTimerAggregationFreq(final AggregationFreq timerAggregationFreq) {
-        this.timerAggregationFreq = timerAggregationFreq;
+    public final void setTimerAggregationFrequency(final AggregationFrequency timerAggregationFrequency) {
+        this.timerAggregationFrequency = timerAggregationFrequency;
     }
 
     /**
@@ -362,10 +362,10 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     /**
      * Setter for aggregation frequency for counter.
      *
-     * @param counterAggregationFreq The {@link com.statful.client.domain.api.AggregationFreq} to use
+     * @param counterAggregationFrequency The {@link AggregationFrequency} to use
      */
-    public final void setCounterAggregationFreq(final AggregationFreq counterAggregationFreq) {
-        this.counterAggregationFreq = counterAggregationFreq;
+    public final void setCounterAggregationFrequency(final AggregationFrequency counterAggregationFrequency) {
+        this.counterAggregationFrequency = counterAggregationFrequency;
     }
 
     /**
@@ -390,10 +390,10 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     /**
      * Setter for aggregation frequency for gauge.
      *
-     * @param gaugeAggregationFreq The {@link com.statful.client.domain.api.AggregationFreq} to use
+     * @param gaugeAggregationFrequency The {@link AggregationFrequency} to use
      */
-    public final void setGaugeAggregationFreq(final AggregationFreq gaugeAggregationFreq) {
-        this.gaugeAggregationFreq = gaugeAggregationFreq;
+    public final void setGaugeAggregationFrequency(final AggregationFrequency gaugeAggregationFrequency) {
+        this.gaugeAggregationFrequency = gaugeAggregationFrequency;
     }
 
     /**

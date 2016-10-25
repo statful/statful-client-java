@@ -1,5 +1,8 @@
 package com.statful.client.transport;
 
+import com.statful.client.core.transport.ApiUriFactory;
+import com.statful.client.domain.api.Aggregation;
+import com.statful.client.domain.api.AggregationFrequency;
 import com.statful.client.test.HttpTest;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -17,7 +20,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.mockserver.verify.VerificationTimes.once;
 
-public class HTTPSenderTest extends HttpTest {
+public class HTTPSenderAPITest extends HttpTest {
 
     private static final String METRIC = "telemetron.application.timer.execution,app=uwt,delegate=InterceptorDelegate,unit=ms,environment=production,method=preHandle,status=success 26 1465394947 avg,p90,count,10";
 
@@ -36,8 +39,27 @@ public class HTTPSenderTest extends HttpTest {
         mockClientAndServer.verify(
                 request()
                         .withBody(METRIC),
-                once()
-        );
+                once());
+    }
+
+    @Test
+    public void shouldSendThroughHttpWithUri() {
+        // Given
+        String uri = ApiUriFactory.buildAggregatedUri(false, "127.0.0.1", mockServerPort)
+                .replace("{aggregation}", Aggregation.AVG.getName())
+                .replace("{frequency}", Integer.toString(AggregationFrequency.FREQ_10.getValue()));
+
+        mockMetricsPutWithStatusCodeAndUri(201, uri);
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, new SSLClientFactory(10, 1000, 5000, "any-token"));
+
+        // When
+        subject.send(METRIC, uri);
+
+        // Then
+        mockClientAndServer.verify(
+                request()
+                        .withBody(METRIC),
+                once());
     }
 
     @Test
@@ -50,11 +72,7 @@ public class HTTPSenderTest extends HttpTest {
         subject.send(METRIC);
 
         // Then
-        mockClientAndServer.verify(
-                request()
-                        .withBody(METRIC),
-                once()
-        );
+        mockClientAndServer.verify(request().withBody(METRIC), once());
     }
 
     @Test
@@ -152,9 +170,18 @@ public class HTTPSenderTest extends HttpTest {
     private void mockMetricsPutWithStatusCode(int statusCode) {
         mockClientAndServer.when(
                 request()
-                        .withMethod("PUT").withPath("/tel/v2.0/metrics"),
+                        .withMethod("PUT")
+                        .withPath("/tel/v2.0/metrics"),
                 exactly(1))
-                .respond(
-                        response().withStatusCode(statusCode));
+                .respond(response().withStatusCode(statusCode));
+    }
+
+    private void mockMetricsPutWithStatusCodeAndUri(int statusCode, String uri) {
+        mockClientAndServer.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath(uri),
+                exactly(1))
+                .respond(response().withStatusCode(statusCode));
     }
 }

@@ -104,14 +104,14 @@
                     <check>
                         <haltOnFailure>true</haltOnFailure>
                         <totalBranchRate>95</totalBranchRate>
-                        <totalLineRate>94</totalLineRate>
+                        <totalLineRate>95</totalLineRate>
                     </check>
                     <instrumentation>
                         <excludes>
                             <!-- Enumerations only -->
                             <exclude>com/statful/client/domain/api/Aggregations.class</exclude>
                             <exclude>com/statful/client/domain/api/Aggregation.class</exclude>
-                            <exclude>com/statful/client/domain/api/AggregationFreq.class</exclude>
+                            <exclude>com/statful/client/domain/api/AggregationFrequency.class</exclude>
                             <exclude>com/statful/client/domain/api/Transport.class</exclude>
                         </excludes>
                     </instrumentation>
