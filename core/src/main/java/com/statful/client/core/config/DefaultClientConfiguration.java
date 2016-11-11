@@ -12,6 +12,9 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private static final int CONNECT_TIMEOUT_MS = 500;
     private static final int SOCKET_TIMEOUT_MS = 1000;
 
+    private static final int MAX_TASKS_QUEUE_SIZE = 100;
+    private static final long TASK_KILLER_INTERVAL = 30000;
+
     private static final String DEFAULT_HOST = "127.0.0.1";
     private static final boolean DEFAULT_SECURE = true;
     private static final int DEFAULT_PORT = 2013;
@@ -141,6 +144,16 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     @Override
     public final int getSocketTimeoutMillis() {
         return socketTimeoutMillis;
+    }
+
+    @Override
+    public final int getMaxWorkerTasksQueueSize() {
+        return MAX_TASKS_QUEUE_SIZE;
+    }
+
+    @Override
+    public final long getWorkerTaskKillerInterval() {
+        return TASK_KILLER_INTERVAL;
     }
 
     @Override

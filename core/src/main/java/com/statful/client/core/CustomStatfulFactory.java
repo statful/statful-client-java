@@ -10,8 +10,7 @@ import com.statful.client.domain.api.MetricsSender;
 import com.statful.client.domain.api.StatfulClient;
 import com.statful.client.domain.api.Transport;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.logging.Logger;
 
 /**
@@ -30,7 +29,7 @@ public abstract class CustomStatfulFactory {
             @Override
             public StatfulClient build(final ClientConfiguration configuration) {
                 TransportSender transportSender = buildTransportSender(configuration);
-                ScheduledExecutorService executorService = Executors.newScheduledThreadPool(configuration.getWorkersPoolSize());
+                ScheduledThreadPoolExecutor executorService = new ScheduledThreadPoolExecutor(configuration.getWorkersPoolSize());
                 MetricsSender bufferedMetricsSender = new BufferedMetricsSender(transportSender, configuration, executorService);
                 return new StatfulClientImpl(bufferedMetricsSender, configuration);
             }
