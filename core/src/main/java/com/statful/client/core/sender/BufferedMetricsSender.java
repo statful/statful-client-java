@@ -96,7 +96,7 @@ public class BufferedMetricsSender implements MetricsSender {
             if (!dryRun) {
                 this.putRaw(rawMessage);
             } else {
-                LOGGER.info("Dry metric: " + rawMessage);
+                LOGGER.fine("Dry metric: " + rawMessage);
             }
         }
     }
@@ -117,7 +117,7 @@ public class BufferedMetricsSender implements MetricsSender {
             if (!dryRun) {
                 this.putAggregatedRaw(rawMessage, aggregation, aggregationFrequency);
             } else {
-                LOGGER.info("Dry metric: " + rawMessage
+                LOGGER.fine("Dry metric: " + rawMessage
                         + " Aggregation: " + aggregation
                         + " Frequency: " + aggregationFrequency);
             }
