@@ -346,7 +346,7 @@ public class BufferedMetricsSender implements MetricsSender {
         return new Runnable() {
             @Override
             public void run() {
-                Collection<Future<?>> tasks = new ArrayList<Future<?>>();
+                Collection<Future<?>> tasks = new LinkedList<Future<?>>();
                 futuresQueue.drainTo(tasks);
 
                 for (Future<?> task : tasks) {
