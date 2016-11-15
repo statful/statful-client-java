@@ -7,13 +7,8 @@ import com.statful.client.core.transport.ApiUriFactory;
 import com.statful.client.core.transport.TransportSender;
 import com.statful.client.domain.api.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 import static java.util.Arrays.asList;
@@ -43,12 +38,17 @@ public class BufferedMetricsSender implements MetricsSender {
     private static final int SAMPLE_RATE_DIVIDER = 100;
     private static final int MIN_FLUSH_INTERVAL = 50;
 
-    private final ClientConfiguration clientConfiguration;
+    private static final int FUTURE_QUEUE_MAX_SIZE = 5000;
+
+    private final ClientConfiguration configuration;
     private final TransportSender transportSender;
-    private final ScheduledExecutorService executorService;
+    private final ScheduledThreadPoolExecutor executorService;
     private final boolean dryRun;
     private final StandardBuffer standardBuffer;
     private final AggregatedBuffer aggregatedBuffer;
+    private final ArrayBlockingQueue<Future<?>> futuresQueue;
+
+    private final ScheduledExecutorService helperExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     /**
      * Default constructor.
@@ -60,18 +60,20 @@ public class BufferedMetricsSender implements MetricsSender {
     public BufferedMetricsSender(
             final TransportSender transportSender,
             final ClientConfiguration configuration,
-            final ScheduledExecutorService executorService
+            final ScheduledThreadPoolExecutor executorService
     ) {
-        this.clientConfiguration = configuration;
+        this.configuration = configuration;
         this.transportSender = transportSender;
         this.executorService = executorService;
         this.dryRun = configuration.isDryRun();
-
-
         this.standardBuffer = new StandardBuffer(MAX_BUFFER_SIZE, configuration.getFlushSize());
         this.aggregatedBuffer = new AggregatedBuffer(MAX_BUFFER_SIZE, configuration.getFlushSize());
 
+        this.futuresQueue = new ArrayBlockingQueue<Future<?>>(FUTURE_QUEUE_MAX_SIZE);
+
+        executorService.setRemoveOnCancelPolicy(true);
         startFlushInterval(configuration.getFlushIntervalMillis());
+        startKillerInterval();
     }
 
     @Override
@@ -149,8 +151,13 @@ public class BufferedMetricsSender implements MetricsSender {
 
     private void startFlushInterval(final long flushInterval) {
         if (flushInterval >= MIN_FLUSH_INTERVAL) {
-            executorService.scheduleAtFixedRate(flusher(), flushInterval, flushInterval, TimeUnit.MILLISECONDS);
+            helperExecutorService.scheduleAtFixedRate(flusher(), flushInterval, flushInterval, TimeUnit.MILLISECONDS);
         }
+    }
+
+    private void startKillerInterval() {
+        long killerInterval = configuration.getWorkerTaskKillerInterval();
+        helperExecutorService.scheduleAtFixedRate(tasksKiller(), killerInterval, killerInterval, TimeUnit.MILLISECONDS);
     }
 
     private Runnable flusher() {
@@ -225,7 +232,7 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     private void sendMetric(final String metric) {
-        executorService.execute(new Runnable() {
+        scheduleTask(new Runnable() {
             @Override
             public void run() {
                 transportSender.send(metric);
@@ -236,7 +243,7 @@ public class BufferedMetricsSender implements MetricsSender {
     private void sendAggregatedMetric(final String metric,
                                       final Aggregation aggregation,
                                       final AggregationFrequency aggregationFrequency) {
-        executorService.execute(new Runnable() {
+        scheduleTask(new Runnable() {
             @Override
             public void run() {
                 transportSender.send(metric, buildAggregatedUri(aggregation, aggregationFrequency));
@@ -255,8 +262,8 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     private String buildAggregatedUri(final Aggregation aggregation, final AggregationFrequency aggregationFrequency) {
-        String baseAggregatedUri = ApiUriFactory.buildAggregatedUri(clientConfiguration.isSecure(),
-                clientConfiguration.getHost(), clientConfiguration.getPort());
+        String baseAggregatedUri = ApiUriFactory.buildAggregatedUri(configuration.isSecure(),
+                configuration.getHost(), configuration.getPort());
 
         return baseAggregatedUri
                 .replace("{aggregation}", aggregation.getName())
@@ -315,5 +322,39 @@ public class BufferedMetricsSender implements MetricsSender {
         }
 
         return buffersAsList;
+    }
+
+    private void scheduleTask(final Runnable runnable) {
+        boolean wasScheduled = false;
+        if (executorService.getQueue().size() < configuration.getMaxWorkerTasksQueueSize()) {
+            Future<?> futureTask = executorService.schedule(runnable, 0, TimeUnit.MILLISECONDS);
+
+            wasScheduled = futuresQueue.offer(futureTask);
+        }
+
+        if (!wasScheduled) {
+            LOGGER.warning("Unable to send metric! The tasks queue is full. Please lower your timeouts or increase the worker thread pool.");
+            cancelAllWaitingTasks();
+        }
+    }
+
+    private void cancelAllWaitingTasks() {
+        helperExecutorService.schedule(tasksKiller(), 0, TimeUnit.MILLISECONDS);
+    }
+
+    private Runnable tasksKiller() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                Collection<Future<?>> tasks = new LinkedList<Future<?>>();
+                futuresQueue.drainTo(tasks);
+
+                for (Future<?> task : tasks) {
+                    task.cancel(false);
+                }
+
+                executorService.purge();
+            }
+        };
     }
 }

@@ -202,4 +202,18 @@ public interface ClientConfiguration {
      * @return Timeout as int
      */
     int getSocketTimeoutMillis();
+
+    /**
+     * Returns the maximum size of the queue with the worker tasks.
+     *
+     * @return Size as int
+     */
+    int getMaxWorkerTasksQueueSize();
+
+    /**
+     * Returns the interval for killing hanging worker tasks.
+     *
+     * @return Interval in milliseconds
+     */
+    long getWorkerTaskKillerInterval();
 }

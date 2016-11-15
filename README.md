@@ -165,6 +165,15 @@ client.gauge("testGauge", 10).send();
 
 If you implement HTTP-based transport, you need to send the `M-Api-Token` header with your token. You can access the token name inside your client factory using `ClientConfiguration.TOKEN_HEADER`.
 
+
+### Avoiding metrics back-pressure
+
+When the rate of metrics sent to the Statful client is too high, metrics start to be lost and warn log messages are printed. To help reduce this problem there are multiple configuration parameters that can be useful:
+
+- **timeout**: Reducing communication timeout, for when the network latency is too high, helps free busy workers sooner to handle other metrics in the buffer.
+- **workerPoolSize**: Increase the workers pool (default is 1). Note that each worker spawns a thread and, if too many workers are spawn, thread contention could start to be a problem.
+- **flushSize** and **flushInterval**: Increasing metrics flush size and interval helps reducing back-pressure but it'll have memory impact and and the payload size sent to Statful will be bigger.
+
 ## Examples
 
 You can find here some useful usage examples of the Statful Client. In the following examples is assumed you have already included Statful Client in your project.
