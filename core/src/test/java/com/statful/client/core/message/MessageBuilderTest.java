@@ -18,6 +18,7 @@ public class MessageBuilderTest {
     private final static Tags TAGS = new Tags();
     private final static Aggregations AGGREGATIONS = new Aggregations();
     private final static long TIMESTAMP = 121232323;
+    private static final int SAMPLE_RATE = 100;
 
     static {
         TAGS.putTag("unit", "s");
@@ -37,11 +38,12 @@ public class MessageBuilderTest {
                 .withAggregations(AGGREGATIONS)
                 .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
+                .withSampleRate(SAMPLE_RATE)
                 .build();
 
         assertThat(message, anyOf(
-                is("TEST_NS.response_time,unit=s,app=statful 3 121232323 avg,count,10"),
-                is("TEST_NS.response_time,app=statful,unit=s 3 121232323 avg,count,10")));
+                is("TEST_NS.response_time,unit=s,app=statful 3 121232323 avg,count,10 100"),
+                is("TEST_NS.response_time,app=statful,unit=s 3 121232323 avg,count,10 100")));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -53,6 +55,7 @@ public class MessageBuilderTest {
                 .withAggregations(AGGREGATIONS)
                 .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
+                .withSampleRate(SAMPLE_RATE)
                 .build();
     }
 
@@ -65,6 +68,7 @@ public class MessageBuilderTest {
                 .withAggregations(AGGREGATIONS)
                 .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
+                .withSampleRate(SAMPLE_RATE)
                 .build();
     }
 
@@ -77,9 +81,10 @@ public class MessageBuilderTest {
                 .withAggregations(AGGREGATIONS)
                 .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
+                .withSampleRate(SAMPLE_RATE)
                 .build();
 
-        assertEquals(message, ("TEST_NS.response_time 3 121232323 avg,count,10"));
+        assertEquals(message, ("TEST_NS.response_time 3 121232323 avg,count,10 100"));
     }
 
 
@@ -93,9 +98,10 @@ public class MessageBuilderTest {
                 .withAggregations(AGGREGATIONS)
                 .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
+                .withSampleRate(SAMPLE_RATE)
                 .build();
 
-        assertEquals(message, ("TEST_NS.response_time 3 121232323 avg,count,10"));
+        assertEquals(message, ("TEST_NS.response_time 3 121232323 avg,count,10 100"));
     }
 
     @Test
@@ -107,11 +113,12 @@ public class MessageBuilderTest {
                 .withTags(TAGS)
                 .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
+                .withSampleRate(SAMPLE_RATE)
                 .build();
 
         assertThat(message, anyOf(
-                is("TEST_NS.response_time,unit=s,app=statful 3 121232323"),
-                is("TEST_NS.response_time,app=statful,unit=s 3 121232323")));
+                is("TEST_NS.response_time,unit=s,app=statful 3 121232323 100"),
+                is("TEST_NS.response_time,app=statful,unit=s 3 121232323 100")));
     }
 
     @Test
@@ -123,9 +130,10 @@ public class MessageBuilderTest {
                 .withAggregations(AGGREGATIONS)
                 .withAggregationFreq(null)
                 .withTimestamp(TIMESTAMP)
+                .withSampleRate(SAMPLE_RATE)
                 .build();
 
-        assertEquals("TEST_NS.response_time 3 121232323 avg,count,10", message);
+        assertEquals("TEST_NS.response_time 3 121232323 avg,count,10 100", message);
     }
 
     @Test
@@ -138,11 +146,12 @@ public class MessageBuilderTest {
                 .withAggregations(new Aggregations())
                 .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
+                .withSampleRate(SAMPLE_RATE)
                 .build();
 
         assertThat(message, anyOf(
-                is("TEST_NS.response_time,unit=s,app=statful 3 121232323"),
-                is("TEST_NS.response_time,app=statful,unit=s 3 121232323")));
+                is("TEST_NS.response_time,unit=s,app=statful 3 121232323 100"),
+                is("TEST_NS.response_time,app=statful,unit=s 3 121232323 100")));
     }
 
     @Test
@@ -153,9 +162,24 @@ public class MessageBuilderTest {
                 .withAggregations(AGGREGATIONS)
                 .withAggregationFreq(AggregationFrequency.FREQ_10)
                 .withTimestamp(TIMESTAMP)
+                .withSampleRate(SAMPLE_RATE)
                 .build();
 
-        assertEquals(message, ("response_time 3 121232323 avg,count,10"));
+        assertEquals(message, ("response_time 3 121232323 avg,count,10 100"));
+    }
+
+    @Test
+    public void shouldBuildMessageWithSampleRate() throws Exception {
+        String message = MessageBuilder.newBuilder()
+                .withName(NAME)
+                .withValue("3")
+                .withAggregations(AGGREGATIONS)
+                .withAggregationFreq(AggregationFrequency.FREQ_10)
+                .withTimestamp(TIMESTAMP)
+                .withSampleRate(25)
+                .build();
+
+        assertEquals(message, ("response_time 3 121232323 avg,count,10 25"));
     }
 
     @Test
@@ -166,8 +190,9 @@ public class MessageBuilderTest {
                 .withValue("a value, with comma and =equal")
                 .withTags(Tags.from(new String[]{"tag, key=", "tag, value="}))
                 .withTimestamp(TIMESTAMP)
+                .withSampleRate(SAMPLE_RATE)
                 .build();
 
-        assertEquals("a\\ namespace\\,\\ with\\ comma.a\\ name\\,\\ with\\ =equal,tag\\,\\ key\\==tag\\,\\ value\\= a value, with comma and =equal 121232323", message);
+        assertEquals("a\\ namespace\\,\\ with\\ comma.a\\ name\\,\\ with\\ =equal,tag\\,\\ key\\==tag\\,\\ value\\= a value, with comma and =equal 121232323 100", message);
     }
 }

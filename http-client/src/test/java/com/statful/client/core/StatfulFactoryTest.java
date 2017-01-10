@@ -1,7 +1,7 @@
 package com.statful.client.core;
 
-import com.statful.client.test.HttpTest;
 import com.statful.client.domain.api.StatfulClient;
+import com.statful.client.test.HttpTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -43,7 +43,7 @@ public class StatfulFactoryTest extends HttpTest {
         // Then
         mockClientAndServer.verify(
                 request()
-                        .withBody(regex("application.counter.test_counter 1 .+ count,sum,10\\n")),
+                        .withBody(regex("application.counter.test_counter 1 .+ count,sum,10 100\\n")),
                 once()
         );
     }

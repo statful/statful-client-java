@@ -24,6 +24,7 @@ public final class MessageBuilder {
     private String value;
     private long timestamp;
     private AggregationFrequency aggregationFrequency = AggregationFrequency.FREQ_10;
+    private int sampleRate;
 
     /**
      * Default constructor.
@@ -123,6 +124,17 @@ public final class MessageBuilder {
     }
 
     /**
+     * Sets the sample rate of the metric.
+     *
+     * @param sampleRate The sample rate
+     * @return A reference to this builder
+     */
+    public MessageBuilder withSampleRate(final int sampleRate) {
+        this.sampleRate = sampleRate;
+        return this;
+    }
+
+    /**
      * Build the message as a metric line.
      *
      * @return A string representing the metric
@@ -163,6 +175,8 @@ public final class MessageBuilder {
 
             sb.append(aggregationFrequency.getValue());
         }
+
+        sb.append(" ").append(sampleRate);
 
         return sb.toString();
     }

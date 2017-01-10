@@ -111,8 +111,8 @@ public class BufferedMetricsSenderAPITest {
         assertEquals("MetricsBuffer should not be empty", 1, buffer.size());
 
         assertThat("Should buffer timer metric", buffer.get(0), anyOf(
-                is("application.test_metric,unit=ms,app=test_app 500 123456789"),
-                is("application.test_metric,app=test_app,unit=ms 500 123456789")));
+                is("application.test_metric,unit=ms,app=test_app 500 123456789 100"),
+                is("application.test_metric,app=test_app,unit=ms 500 123456789 100")));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class BufferedMetricsSenderAPITest {
         // Then
         List<String> buffer = subject.getStandardBuffer();
         assertEquals("MetricsBuffer should not be empty", 1, buffer.size());
-        assertEquals("Should buffer timer metric", "application.test_metric 500 123456789 avg,p90,count,10", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric 500 123456789 avg,p90,count,10 100", buffer.get(0));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class BufferedMetricsSenderAPITest {
         // Then
         List<String> buffer = subject.getStandardBuffer();
         assertEquals("MetricsBuffer should not be empty", 1, buffer.size());
-        assertEquals("Should buffer timer metric", "application.test_metric 500 123456789", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric 500 123456789 100", buffer.get(0));
     }
 
     @Test
@@ -148,7 +148,7 @@ public class BufferedMetricsSenderAPITest {
         // Then
         List<String> buffer = subject.getAggregatedBuffer().get(Aggregation.AVG).get(AggregationFrequency.FREQ_10);
         assertEquals("MetricsBuffer should not be empty", 1, buffer.size());
-        assertEquals("Should buffer timer metric", "application.test_metric 500 123456789", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric 500 123456789 100", buffer.get(0));
     }
 
     @Test
@@ -168,8 +168,8 @@ public class BufferedMetricsSenderAPITest {
         assertEquals("MetricsBuffer should not be empty", 1, buffer.size());
 
         assertThat("Should buffer timer metric", buffer.get(0), anyOf(
-                is("application.test_metric,app=test_app,unit=ms 500 123456789 avg,p90,count,10"),
-                is("application.test_metric,unit=ms,app=test_app 500 123456789 avg,p90,count,10")));
+                is("application.test_metric,app=test_app,unit=ms 500 123456789 avg,p90,count,10 100"),
+                is("application.test_metric,unit=ms,app=test_app 500 123456789 avg,p90,count,10 100")));
     }
 
     @Test
@@ -181,8 +181,8 @@ public class BufferedMetricsSenderAPITest {
         // Then
         List<String> buffer = subject.getStandardBuffer();
         assertEquals("MetricsBuffer should have 2 metrics", 2, buffer.size());
-        assertEquals("Should buffer timer metric", "application.test_metric0 100 123456789", buffer.get(0));
-        assertEquals("Should buffer timer metric", "application.test_metric1 101 123456790", buffer.get(1));
+        assertEquals("Should buffer timer metric", "application.test_metric0 100 123456789 100", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric1 101 123456790 100", buffer.get(1));
     }
 
     @Test
@@ -194,8 +194,8 @@ public class BufferedMetricsSenderAPITest {
         // Then
         List<String> buffer = subject.getAggregatedBuffer().get(Aggregation.AVG).get(AggregationFrequency.FREQ_10);
         assertEquals("MetricsBuffer should have 2 metrics", 2, buffer.size());
-        assertEquals("Should buffer timer metric", "application.test_metric0 100 123456789", buffer.get(0));
-        assertEquals("Should buffer timer metric", "application.test_metric1 101 123456790", buffer.get(1));
+        assertEquals("Should buffer timer metric", "application.test_metric0 100 123456789 100", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric1 101 123456790 100", buffer.get(1));
     }
 
     @Test
@@ -225,8 +225,8 @@ public class BufferedMetricsSenderAPITest {
         // Then
         List<String> buffer = subject.getStandardBuffer();
         assertEquals("MetricsBuffer should have 2 metrics", 2, buffer.size());
-        assertEquals("Should buffer timer metric", "application.test_metric0 100 123456789", buffer.get(0));
-        assertEquals("Should buffer timer metric", "application.test_metric1 101 123456790", buffer.get(1));
+        assertEquals("Should buffer timer metric", "application.test_metric0 100 123456789 100", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric1 101 123456790 100", buffer.get(1));
 
         // And then
         Thread.sleep(150);
