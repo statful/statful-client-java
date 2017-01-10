@@ -20,7 +20,7 @@ Statful client for Java. This client is intended to gather metrics and send them
 
 | Statful client Version | Tested Java versions  |
 |:---|:---|
-| 1.x.x | `Java 6` |
+| 1.x.x | `Java 7` |
 
 ## Configuration
 
