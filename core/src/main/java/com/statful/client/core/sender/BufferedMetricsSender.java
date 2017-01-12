@@ -91,6 +91,7 @@ public class BufferedMetricsSender implements MetricsSender {
                     .withAggregationFreq(aggregationFrequency)
                     .withNamespace(namespace)
                     .withTimestamp(timestamp)
+                    .withSampleRate(sampleRate)
                     .build();
 
             if (!dryRun) {
@@ -112,6 +113,7 @@ public class BufferedMetricsSender implements MetricsSender {
                     .withTags(tags)
                     .withNamespace(namespace)
                     .withTimestamp(timestamp)
+                    .withSampleRate(sampleRate)
                     .build();
 
             if (!dryRun) {
