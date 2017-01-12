@@ -24,7 +24,7 @@ public final class MessageBuilder {
     private String value;
     private long timestamp;
     private AggregationFrequency aggregationFrequency = AggregationFrequency.FREQ_10;
-    private int sampleRate;
+    private Integer sampleRate;
 
     /**
      * Default constructor.
@@ -176,7 +176,9 @@ public final class MessageBuilder {
             sb.append(aggregationFrequency.getValue());
         }
 
-        sb.append(" ").append(sampleRate);
+        if (sampleRate != null) {
+            sb.append(" ").append(sampleRate);
+        }
 
         return sb.toString();
     }

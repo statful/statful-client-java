@@ -183,6 +183,19 @@ public class MessageBuilderTest {
     }
 
     @Test
+    public void shouldBuildMessageWithoutSampleRate() {
+        String message = MessageBuilder.newBuilder()
+                .withName(NAME)
+                .withValue("3")
+                .withAggregations(AGGREGATIONS)
+                .withAggregationFreq(AggregationFrequency.FREQ_10)
+                .withTimestamp(TIMESTAMP)
+                .build();
+
+        assertEquals(message, ("response_time 3 121232323 avg,count,10"));
+    }
+
+    @Test
     public void shouldEscapeMessage() {
         String message = MessageBuilder.newBuilder()
                 .withNamespace("a namespace, with comma")
