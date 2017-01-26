@@ -67,6 +67,7 @@ public class StatfulAspect {
                 statful.timer(timer.name(), stopTimer).with()
                         .namespace(getNamespace(timer))
                         .aggregations(getAggregations(timer))
+                        .sampleRate(getSampleRate(timer))
                         .tags(tags)
                         .send();
             } else {
@@ -83,6 +84,10 @@ public class StatfulAspect {
         }
 
         return namespace;
+    }
+
+    private int getSampleRate(final Timer timer) {
+        return timer.sampleRate();
     }
 
     private Aggregations getAggregations(final Timer timer) {

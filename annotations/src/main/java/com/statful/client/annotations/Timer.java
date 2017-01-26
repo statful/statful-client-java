@@ -38,4 +38,9 @@ public @interface Timer {
      * @return An array of aggregations to send to Statful
      */
     Aggregation[] aggregations() default {};
+
+    /**
+     * @return An int of the sampleRate to send to Statful
+     */
+    int sampleRate();
 }

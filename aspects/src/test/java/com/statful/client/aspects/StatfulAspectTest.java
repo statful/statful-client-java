@@ -49,9 +49,11 @@ public class StatfulAspectTest {
         when(timer.namespace()).thenReturn("namespace");
         when(timer.aggregations()).thenReturn(new Aggregation[] {});
         when(timer.tags()).thenReturn(new String[] {});
+        when(timer.sampleRate()).thenReturn(100);
 
         when(statfulSenderFacade.with()).thenReturn(statfulSenderAPI);
         when(statfulSenderAPI.tags(any(Tags.class))).thenReturn(statfulSenderAPI);
+        when(statfulSenderAPI.sampleRate(anyInt())).thenReturn(statfulSenderAPI);
         when(statfulSenderAPI.aggregations(any(Aggregations.class))).thenReturn(statfulSenderAPI);
         when(statfulSenderAPI.namespace(anyString())).thenReturn(statfulSenderAPI);
         when(statfulClient.timer(anyString(), anyLong())).thenReturn(statfulSenderFacade);
