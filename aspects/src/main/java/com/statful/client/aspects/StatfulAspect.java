@@ -9,7 +9,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
-import java.util.concurrent.CompletionStage;
 import java.util.logging.Logger;
 
 /**
@@ -56,20 +55,8 @@ public class StatfulAspect {
         try {
             Object returnValue = joinPoint.proceed();
 
-            if (returnValue instanceof CompletionStage<?>) {
-                CompletionStage<?> res = (CompletionStage<?>) returnValue;
-                res.whenComplete((r, t) -> {
-                    if (t != null) {
-                        tags.putTag("status", "error");
-                    } else {
-                        tags.putTag("status", "success");
-                    }
-                });
-                stopTimer = stopWatch(startTimer);
-            } else {
-                stopTimer = stopWatch(startTimer);
-                tags.putTag("status", "success");
-            }
+            stopTimer = stopWatch(startTimer);
+            tags.putTag("status", "success");
 
             return returnValue;
         } catch (Throwable t) {
