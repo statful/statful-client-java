@@ -42,5 +42,5 @@ public @interface Timer {
     /**
      * @return An int of the sampleRate to send to Statful
      */
-    int sampleRate();
+    int sampleRate() default 0;
 }

@@ -9,12 +9,15 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
+import java.util.concurrent.CompletableFuture;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -124,5 +127,50 @@ public class StatfulAspectTest {
 
         // When
         subject.methodTiming(joinPoint, timer);
+    }
+
+    @Test
+    public void shouldSendMetricIfIsInstanceOfCompletionStageSuccess() throws Throwable {
+        //Given
+        when(joinPoint.proceed()).thenReturn(CompletableFuture.completedFuture("something"));
+        subject.methodTiming(joinPoint, timer);
+
+        // Then
+        ArgumentCaptor<Tags> tagsCaptor = ArgumentCaptor.forClass(Tags.class);
+        verify(statfulSenderAPI).tags(tagsCaptor.capture());
+        assertEquals("success", tagsCaptor.getValue().getTagValue("status"));
+
+        verify(statfulClient).timer(eq("timerName"), anyLong());
+        verify(statfulSenderAPI).send();
+    }
+
+    @Test
+    public void shouldSendMetricIfIsInstanceOfCompletionStageException() throws Throwable {
+        //Given
+        when(joinPoint.proceed()).thenReturn(CompletableFuture.supplyAsync(() -> {throw new RuntimeException("something");}));
+        subject.methodTiming(joinPoint, timer);
+
+        // Then
+        ArgumentCaptor<Tags> tagsCaptor = ArgumentCaptor.forClass(Tags.class);
+        verify(statfulSenderAPI).tags(tagsCaptor.capture());
+        assertEquals("error", tagsCaptor.getValue().getTagValue("status"));
+
+        verify(statfulClient).timer(eq("timerName"), anyLong());
+        verify(statfulSenderAPI).send();
+    }
+
+    @Test
+    public void shouldSendMetricIfSampleRateIsDefault() throws Throwable {
+        //Given
+        when(timer.sampleRate()).thenReturn(0);
+        subject.methodTiming(joinPoint, timer);
+
+        // Then
+        ArgumentCaptor<Tags> tagsCaptor = ArgumentCaptor.forClass(Tags.class);
+        verify(statfulSenderAPI).tags(tagsCaptor.capture());
+        assertEquals("success", tagsCaptor.getValue().getTagValue("status"));
+
+        verify(statfulClient).timer(eq("timerName"), anyLong());
+        verify(statfulSenderAPI).send();
     }
 }

@@ -9,6 +9,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
+import java.util.concurrent.CompletionStage;
 import java.util.logging.Logger;
 
 /**
@@ -44,6 +45,7 @@ public class StatfulAspect {
      * @return The result of the invoked method
      * @throws Throwable Eventually thrown by the invoked method
      */
+
     @Around("@annotation(timer)")
     public final Object methodTiming(final ProceedingJoinPoint joinPoint, final Timer timer) throws Throwable {
         Tags tags = new Tags();
@@ -54,8 +56,20 @@ public class StatfulAspect {
         try {
             Object returnValue = joinPoint.proceed();
 
-            stopTimer = stopWatch(startTimer);
-            tags.putTag("status", "success");
+            if (returnValue instanceof CompletionStage<?>) {
+                CompletionStage<?> res = (CompletionStage<?>) returnValue;
+                res.whenComplete((r, t) -> {
+                    if (t != null) {
+                        tags.putTag("status", "error");
+                    } else {
+                        tags.putTag("status", "success");
+                    }
+                });
+                stopTimer = stopWatch(startTimer);
+            } else {
+                stopTimer = stopWatch(startTimer);
+                tags.putTag("status", "success");
+            }
 
             return returnValue;
         } catch (Throwable t) {
@@ -64,12 +78,20 @@ public class StatfulAspect {
             throw t;
         } finally {
             if (statful != null) {
-                statful.timer(timer.name(), stopTimer).with()
-                        .namespace(getNamespace(timer))
-                        .aggregations(getAggregations(timer))
-                        .sampleRate(getSampleRate(timer))
-                        .tags(tags)
-                        .send();
+                if (getSampleRate(timer) > 0) {
+                    statful.timer(timer.name(), stopTimer).with()
+                            .namespace(getNamespace(timer))
+                            .aggregations(getAggregations(timer))
+                            .sampleRate(getSampleRate(timer))
+                            .tags(tags)
+                            .send();
+                } else {
+                    statful.timer(timer.name(), stopTimer).with()
+                            .namespace(getNamespace(timer))
+                            .aggregations(getAggregations(timer))
+                            .tags(tags)
+                            .send();
+                }
             } else {
                 LOGGER.warning("Statful client is not configured");
             }
