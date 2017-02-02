@@ -133,7 +133,7 @@ public class StatfulAspectTest {
         when(timer.sampleRate()).thenReturn(0);
         subject.methodTiming(joinPoint, timer);
 
-        // The
+        // Then
         ArgumentCaptor<Tags> tagsCaptor = ArgumentCaptor.forClass(Tags.class);
         verify(statfulSenderAPI).tags(tagsCaptor.capture());
         assertEquals("success", tagsCaptor.getValue().getTagValue("status"));
