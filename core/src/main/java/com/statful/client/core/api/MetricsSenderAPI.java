@@ -240,6 +240,20 @@ public final class MetricsSenderAPI implements SenderAPI {
         }
     }
 
+    @Override
+    public void send(final long timestamp) {
+        try {
+            if (isValid()) {
+                metricsSenderProxy.put(name, value, tags, aggregations, aggregationFrequency, sampleRate, namespace,
+                        timestamp, aggregated);
+            } else {
+                LOGGER.warning("Unable to send metric because it's not valid. Please see the client documentation.");
+            }
+        } catch (Exception e) {
+            LOGGER.severe("An exception has occurred while sending the metric to Statful: " + e.toString());
+        }
+    }
+
     private SenderAPI withNamespace(final String namespace) {
         if (isStringSafe(namespace)) {
             this.namespace = namespace;
