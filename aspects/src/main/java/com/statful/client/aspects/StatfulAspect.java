@@ -64,7 +64,7 @@ public class StatfulAspect {
             tags.putTag("status", "error");
             throw t;
         } finally {
-            if (statful != null) {
+            if (statful != null && isEnabled(timer)) {
                 if (getSampleRate(timer) > 0) {
                     statful.timer(timer.name(), stopTimer).with()
                             .namespace(getNamespace(timer))
@@ -106,6 +106,10 @@ public class StatfulAspect {
     private Tags getTags(final Timer timer) {
         String[] tagsArray = timer.tags();
         return Tags.from(tagsArray);
+    }
+
+    private boolean isEnabled(final Timer timer) {
+        return timer.enabled();
     }
 
     private long startWatch() {

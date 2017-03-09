@@ -43,4 +43,9 @@ public @interface Timer {
      * @return An int of the sampleRate to send to Statful
      */
     int sampleRate() default 0;
+
+    /**
+     * @return A boolean stating if the metric is enabled
+     */
+    boolean enabled() default true;
 }

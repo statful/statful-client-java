@@ -48,6 +48,7 @@ public class StatfulAspectTest {
 
         when(timer.name()).thenReturn("timerName");
         when(timer.namespace()).thenReturn("namespace");
+        when(timer.enabled()).thenReturn(true);
         when(timer.aggregations()).thenReturn(new Aggregation[] {});
         when(timer.tags()).thenReturn(new String[] {});
         when(timer.sampleRate()).thenReturn(100);
@@ -141,4 +142,18 @@ public class StatfulAspectTest {
         verify(statfulClient).timer(eq("timerName"), anyLong());
         verify(statfulSenderAPI).send();
     }
+
+    @Test
+    public void shouldNotSendMetricIfEnabledIsFalse() throws Throwable {
+        // Given
+        when(joinPoint.proceed()).thenReturn("something");
+        when(timer.enabled()).thenReturn(false);
+
+        // When
+        subject.methodTiming(joinPoint, timer);
+
+        // Then
+        verify(statfulSenderAPI, times(0)).send();
+    }
+
 }
