@@ -105,11 +105,4 @@ public interface SenderAPI {
      * Sends the metric to Statful.
      */
     void send();
-
-    /**
-     * Sends the metric to Statful and override timestamp.
-     *
-     * @param timestamp Timestamp as long
-     */
-    void send(long timestamp);
 }
