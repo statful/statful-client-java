@@ -2,6 +2,7 @@ package com.statful.client.aspects;
 
 import com.statful.client.annotations.Timer;
 import com.statful.client.domain.api.Aggregations;
+import com.statful.client.domain.api.SenderAPI;
 import com.statful.client.domain.api.StatfulClient;
 import com.statful.client.domain.api.Tags;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -64,21 +65,17 @@ public class StatfulAspect {
             tags.putTag("status", "error");
             throw t;
         } finally {
-            if (statful != null && isEnabled(timer)) {
-                if (getSampleRate(timer) > 0) {
-                    statful.timer(timer.name(), stopTimer).with()
-                            .namespace(getNamespace(timer))
-                            .aggregations(getAggregations(timer))
-                            .sampleRate(getSampleRate(timer))
-                            .tags(tags)
-                            .send();
-                } else {
-                    statful.timer(timer.name(), stopTimer).with()
-                            .namespace(getNamespace(timer))
-                            .aggregations(getAggregations(timer))
-                            .tags(tags)
-                            .send();
+            if (statful != null) {
+                SenderAPI senderAPI = statful.timer(timer.name(), stopTimer).with()
+                        .namespace(getNamespace(timer))
+                        .aggregations(getAggregations(timer))
+                        .tags(tags);
+
+                if (isSampled(timer)) {
+                    senderAPI.sampleRate(getSampleRate(timer));
                 }
+                senderAPI.send();
+
             } else {
                 LOGGER.warning("Statful client is not configured");
             }
@@ -108,8 +105,8 @@ public class StatfulAspect {
         return Tags.from(tagsArray);
     }
 
-    private boolean isEnabled(final Timer timer) {
-        return timer.enabled();
+    private boolean isSampled(final Timer timer) {
+        return Timer.DEFAULT_SAMPLE_RATE != timer.sampleRate() && timer.sampleRate() > 0;
     }
 
     private long startWatch() {

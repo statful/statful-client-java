@@ -13,6 +13,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface Timer {
+
+     int DEFAULT_SAMPLE_RATE = -1;
+
     /**
      * @return The timer's name
      */
@@ -42,10 +45,6 @@ public @interface Timer {
     /**
      * @return An int of the sampleRate to send to Statful
      */
-    int sampleRate() default 0;
+    int sampleRate() default -1;
 
-    /**
-     * @return A boolean stating if the metric is enabled
-     */
-    boolean enabled() default true;
 }

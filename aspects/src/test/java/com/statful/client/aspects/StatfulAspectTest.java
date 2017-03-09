@@ -48,7 +48,6 @@ public class StatfulAspectTest {
 
         when(timer.name()).thenReturn("timerName");
         when(timer.namespace()).thenReturn("namespace");
-        when(timer.enabled()).thenReturn(true);
         when(timer.aggregations()).thenReturn(new Aggregation[] {});
         when(timer.tags()).thenReturn(new String[] {});
         when(timer.sampleRate()).thenReturn(100);
@@ -129,31 +128,34 @@ public class StatfulAspectTest {
     }
 
     @Test
-    public void shouldSendMetricIfSampleRateIsDefault() throws Throwable {
+    public void shouldNotSetSampleRateIfDefault() throws Throwable {
         //Given
-        when(timer.sampleRate()).thenReturn(0);
+        when(timer.sampleRate()).thenReturn(-1);
+
         subject.methodTiming(joinPoint, timer);
 
         // Then
         ArgumentCaptor<Tags> tagsCaptor = ArgumentCaptor.forClass(Tags.class);
         verify(statfulSenderAPI).tags(tagsCaptor.capture());
-        assertEquals("success", tagsCaptor.getValue().getTagValue("status"));
 
+        verify(statfulSenderAPI,times(0)).sampleRate(anyInt());
         verify(statfulClient).timer(eq("timerName"), anyLong());
         verify(statfulSenderAPI).send();
     }
 
     @Test
-    public void shouldNotSendMetricIfEnabledIsFalse() throws Throwable {
-        // Given
-        when(joinPoint.proceed()).thenReturn("something");
-        when(timer.enabled()).thenReturn(false);
+    public void shouldSendMetricIfSampleRateIsZero() throws Throwable {
+        //Given
+        when(timer.sampleRate()).thenReturn(0);
 
-        // When
         subject.methodTiming(joinPoint, timer);
 
         // Then
-        verify(statfulSenderAPI, times(0)).send();
+        ArgumentCaptor<Tags> tagsCaptor = ArgumentCaptor.forClass(Tags.class);
+        verify(statfulSenderAPI).tags(tagsCaptor.capture());
+
+        verify(statfulClient).timer(eq("timerName"), anyLong());
+        verify(statfulSenderAPI).send();
     }
 
 }
