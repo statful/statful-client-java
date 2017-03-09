@@ -60,7 +60,7 @@ public class BufferedMetricsSenderAPITest {
     }
 
     @Test
-    public void shouldDiscardIfStandardBufferIsFull() {
+    public void shouldDiscardOlderMetricsIfStandardBufferIsFull() {
         // Given
         when(configuration.getFlushSize()).thenReturn(10000);
 
@@ -76,6 +76,7 @@ public class BufferedMetricsSenderAPITest {
         // Then
         List<String> buffer = subject.getStandardBuffer();
         assertEquals("MetricsBuffer should have 5000 metrics", 5000, buffer.size());
+        assertTrue(buffer.contains("application.test_metric_overflow 500 123456789 100"));
     }
 
     @Test
@@ -95,6 +96,7 @@ public class BufferedMetricsSenderAPITest {
         // Then
         Map<Aggregation, Map<AggregationFrequency, List<String>>> buffer = subject.getAggregatedBuffer();
         assertEquals("MetricsBuffer should have 5000 metrics", 5000, buffer.get(Aggregation.AVG).get(AggregationFrequency.FREQ_10).size());
+        assertTrue(buffer.get(Aggregation.AVG).get(AggregationFrequency.FREQ_10).contains("application.test_metric_overflow 500 123456789 100"));
     }
 
     @Test

@@ -192,8 +192,7 @@ public class BufferedMetricsSender implements MetricsSender {
     private void putRaw(final String metric) {
         boolean inserted = standardBuffer.addToBuffer(metric);
         if (!inserted) {
-            // We should discard older metrics instead
-            LOGGER.warning("The buffer is full, metric ignored!.");
+            LOGGER.warning("Failed to add metric to buffer.");
         }
 
         if (standardBuffer.isTimeToFlush()) {
@@ -204,8 +203,7 @@ public class BufferedMetricsSender implements MetricsSender {
     private void putAggregatedRaw(final String metric, final Aggregation aggregation, final AggregationFrequency aggregationFrequency) {
         boolean inserted = aggregatedBuffer.addToBuffer(metric, aggregation, aggregationFrequency);
         if (!inserted) {
-            // We should discard older metrics instead
-            LOGGER.warning("The buffer is full, metric ignored!.");
+            LOGGER.warning("Failed to add metric to buffer.");
         }
 
         if (aggregatedBuffer.isTimeToFlush()) {

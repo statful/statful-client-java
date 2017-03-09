@@ -7,12 +7,14 @@ import com.statful.client.domain.api.MetricsBuffer;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  * Buffer to store aggregated metrics.
  */
 public class AggregatedBuffer implements MetricsBuffer {
 
+    private static final Logger LOGGER = Logger.getLogger(AggregatedBuffer.class.getName());
     private Map<String, Map<String, ArrayBlockingQueue<String>>> buffer;
     private int maxBufferSize;
     private int flushSize;
@@ -63,7 +65,19 @@ public class AggregatedBuffer implements MetricsBuffer {
         aggregatedBuffer.put(aggregationFrequency.toString(), aggregatedFreqBuffer);
         buffer.put(aggregation.toString(), aggregatedBuffer);
 
-        return aggregatedFreqBuffer.offer(metric);
+        boolean inserted = aggregatedFreqBuffer.offer(metric);
+        if (!inserted) {
+            try {
+                LOGGER.fine("Buffer is full, trying to discard oldest metric.");
+                aggregatedFreqBuffer.remove();
+            } catch (NoSuchElementException e) {
+                LOGGER.warning("Buffer has been emptied before trying to discard oldest entry.");
+            } finally {
+                inserted = aggregatedFreqBuffer.offer(metric);
+            }
+        }
+
+        return inserted;
     }
 
     /**
