@@ -102,6 +102,14 @@ public interface SenderAPI {
     SenderAPI namespace(final String namespace);
 
     /**
+     * Sets the namespace of the metric.
+     *
+     * @param timestamp Namespace as long
+     * @return A reference to this instance
+     */
+    SenderAPI timestamp(final Long timestamp);
+
+    /**
      * Sends the metric to Statful.
      */
     void send();

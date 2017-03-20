@@ -15,6 +15,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -49,9 +50,11 @@ public class StatfulAspectTest {
         when(timer.namespace()).thenReturn("namespace");
         when(timer.aggregations()).thenReturn(new Aggregation[] {});
         when(timer.tags()).thenReturn(new String[] {});
+        when(timer.sampleRate()).thenReturn(100);
 
         when(statfulSenderFacade.with()).thenReturn(statfulSenderAPI);
         when(statfulSenderAPI.tags(any(Tags.class))).thenReturn(statfulSenderAPI);
+        when(statfulSenderAPI.sampleRate(anyInt())).thenReturn(statfulSenderAPI);
         when(statfulSenderAPI.aggregations(any(Aggregations.class))).thenReturn(statfulSenderAPI);
         when(statfulSenderAPI.namespace(anyString())).thenReturn(statfulSenderAPI);
         when(statfulClient.timer(anyString(), anyLong())).thenReturn(statfulSenderFacade);
@@ -123,4 +126,36 @@ public class StatfulAspectTest {
         // When
         subject.methodTiming(joinPoint, timer);
     }
+
+    @Test
+    public void shouldNotSetSampleRateIfDefault() throws Throwable {
+        //Given
+        when(timer.sampleRate()).thenReturn(-1);
+
+        subject.methodTiming(joinPoint, timer);
+
+        // Then
+        ArgumentCaptor<Tags> tagsCaptor = ArgumentCaptor.forClass(Tags.class);
+        verify(statfulSenderAPI).tags(tagsCaptor.capture());
+
+        verify(statfulSenderAPI,times(0)).sampleRate(anyInt());
+        verify(statfulClient).timer(eq("timerName"), anyLong());
+        verify(statfulSenderAPI).send();
+    }
+
+    @Test
+    public void shouldSendMetricIfSampleRateIsZero() throws Throwable {
+        //Given
+        when(timer.sampleRate()).thenReturn(0);
+
+        subject.methodTiming(joinPoint, timer);
+
+        // Then
+        ArgumentCaptor<Tags> tagsCaptor = ArgumentCaptor.forClass(Tags.class);
+        verify(statfulSenderAPI).tags(tagsCaptor.capture());
+
+        verify(statfulClient).timer(eq("timerName"), anyLong());
+        verify(statfulSenderAPI).send();
+    }
+
 }

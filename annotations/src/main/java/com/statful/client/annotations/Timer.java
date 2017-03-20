@@ -13,6 +13,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface Timer {
+
+     int DEFAULT_SAMPLE_RATE = -1;
+
     /**
      * @return The timer's name
      */
@@ -38,4 +41,10 @@ public @interface Timer {
      * @return An array of aggregations to send to Statful
      */
     Aggregation[] aggregations() default {};
+
+    /**
+     * @return An int of the sampleRate to send to Statful
+     */
+    int sampleRate() default DEFAULT_SAMPLE_RATE;
+
 }

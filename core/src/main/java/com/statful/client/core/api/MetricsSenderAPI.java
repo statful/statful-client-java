@@ -4,6 +4,8 @@ import com.statful.client.domain.api.*;
 
 import java.util.logging.Logger;
 
+import static java.util.Objects.nonNull;
+
 /**
  * This class is an implementation of the {@link SenderAPI},
  * which uses {@link MetricsSender} to send metrics.
@@ -22,6 +24,7 @@ public final class MetricsSenderAPI implements SenderAPI {
     private String namespace;
     private Tags tags;
     private Integer sampleRate;
+    private Long timestamp;
     private Aggregations aggregations;
     private AggregationFrequency aggregationFrequency;
 
@@ -188,6 +191,12 @@ public final class MetricsSenderAPI implements SenderAPI {
     }
 
     @Override
+    public SenderAPI timestamp(final Long timestamp) {
+        withTimestamp(timestamp);
+        return this;
+    }
+
+    @Override
     public SenderAPI aggregation(final Aggregation aggregation) {
         withAggregation(aggregation);
         return this;
@@ -228,7 +237,7 @@ public final class MetricsSenderAPI implements SenderAPI {
     public void send() {
         try {
             if (isValid()) {
-                long unixTimestamp = getUnixTimestamp();
+                long unixTimestamp = nonNull(timestamp) ? timestamp : getUnixTimestamp();
 
                 metricsSenderProxy.put(name, value, tags, aggregations, aggregationFrequency, sampleRate, namespace,
                         unixTimestamp, aggregated);
@@ -244,6 +253,11 @@ public final class MetricsSenderAPI implements SenderAPI {
         if (isStringSafe(namespace)) {
             this.namespace = namespace;
         }
+        return this;
+    }
+
+    private SenderAPI withTimestamp(final Long timestamp) {
+        this.timestamp = timestamp;
         return this;
     }
 
