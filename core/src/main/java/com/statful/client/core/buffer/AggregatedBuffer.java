@@ -23,7 +23,7 @@ public class AggregatedBuffer implements MetricsBuffer {
      * @param flushSize A {@link Integer} representing the flush size
      */
     public AggregatedBuffer(final int maxBufferSize, final int flushSize) {
-        this.buffer = new ConcurrentHashMap<String, Map<String, ArrayBlockingQueue<String>>>();
+        this.buffer = new ConcurrentHashMap<>();
         this.maxBufferSize = maxBufferSize;
         this.flushSize = flushSize;
     }
@@ -49,14 +49,14 @@ public class AggregatedBuffer implements MetricsBuffer {
         ArrayBlockingQueue<String> aggregatedFreqBuffer;
 
         if (aggregatedBuffer == null) {
-            aggregatedBuffer = new ConcurrentHashMap<String, ArrayBlockingQueue<String>>();
+            aggregatedBuffer = new ConcurrentHashMap<>();
 
-            aggregatedFreqBuffer = new ArrayBlockingQueue<String>(this.maxBufferSize);
+            aggregatedFreqBuffer = new ArrayBlockingQueue<>(this.maxBufferSize);
         } else {
             aggregatedFreqBuffer = aggregatedBuffer.get(aggregationFrequency.toString());
 
             if (aggregatedFreqBuffer == null) {
-                aggregatedFreqBuffer = new ArrayBlockingQueue<String>(this.maxBufferSize);
+                aggregatedFreqBuffer = new ArrayBlockingQueue<>(this.maxBufferSize);
             }
         }
 
@@ -82,10 +82,12 @@ public class AggregatedBuffer implements MetricsBuffer {
             if (aggregatedFreqBuffer != null) {
                 Collection<String> messages = new ArrayList<String>();
                 aggregatedFreqBuffer.drainTo(messages, flushSize);
+                String metricDelimiter = "";
 
                 StringBuilder sb = new StringBuilder();
                 for (String metric : messages) {
-                    sb.append(metric).append("\n");
+                    sb.append(metricDelimiter).append(metric);
+                    metricDelimiter = "\n";
                 }
 
                 return sb.toString();

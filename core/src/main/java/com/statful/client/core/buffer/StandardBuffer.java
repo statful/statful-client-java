@@ -23,7 +23,7 @@ public class StandardBuffer implements MetricsBuffer {
     public StandardBuffer(final int maxBufferSize, final int flushSize) {
         this.maxBufferSize = maxBufferSize;
         this.flushSize = flushSize;
-        this.buffer = new ArrayBlockingQueue<String>(this.maxBufferSize);
+        this.buffer = new ArrayBlockingQueue<>(this.maxBufferSize);
     }
 
     /**
@@ -48,13 +48,17 @@ public class StandardBuffer implements MetricsBuffer {
      * @return A {@link String} with all the metrics
      */
     public final String readBuffer() {
-        Collection<String> messages = new ArrayList<String>();
+        Collection<String> messages = new ArrayList<>();
         buffer.drainTo(messages, flushSize);
+        String metricDelimiter = "";
 
         StringBuilder sb = new StringBuilder();
+
         for (String metric : messages) {
-            sb.append(metric).append("\n");
+            sb.append(metricDelimiter).append(metric);
+            metricDelimiter = "\n";
         }
+
         return sb.toString();
     }
 
