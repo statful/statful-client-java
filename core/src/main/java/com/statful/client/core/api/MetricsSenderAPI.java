@@ -4,8 +4,6 @@ import com.statful.client.domain.api.*;
 
 import java.util.logging.Logger;
 
-import static java.util.Objects.nonNull;
-
 /**
  * This class is an implementation of the {@link SenderAPI},
  * which uses {@link MetricsSender} to send metrics.
@@ -237,7 +235,7 @@ public final class MetricsSenderAPI implements SenderAPI {
     public void send() {
         try {
             if (isValid()) {
-                long unixTimestamp = nonNull(timestamp) ? timestamp : getUnixTimestamp();
+                long unixTimestamp = timestamp != null ? timestamp : getUnixTimestamp();
 
                 metricsSenderProxy.put(name, value, tags, aggregations, aggregationFrequency, sampleRate, namespace,
                         unixTimestamp, aggregated);
