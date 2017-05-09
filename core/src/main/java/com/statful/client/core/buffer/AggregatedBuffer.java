@@ -82,14 +82,15 @@ public class AggregatedBuffer implements MetricsBuffer {
             if (aggregatedFreqBuffer != null) {
                 Collection<String> messages = new ArrayList<String>();
                 aggregatedFreqBuffer.drainTo(messages, flushSize);
-                String metricDelimiter = "";
 
                 StringBuilder sb = new StringBuilder();
                 for (String metric : messages) {
-                    sb.append(metricDelimiter).append(metric);
-                    metricDelimiter = "\n";
+                    sb.append(metric).append("\n");
                 }
 
+                if (sb.length() > 0) {
+                    sb.setLength(sb.length() - 1);
+                }
                 return sb.toString();
             }
         }
