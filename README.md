@@ -295,7 +295,7 @@ The custom options that can be set on config param are detailed below.
 | Option | Description | Type | Default | Required |
 |:---|:---|:---|:---|:---|
 | _app_ | Defines the application global name. If specified sets a global tag `app=setValue`. | `String` | **none** | **NO** |
-| _dryRun_ | Defines if metrics should be output to the logger instead of being send. | `boolean` | `false` | **NO** |
+| _dryRun_ | Defines if metrics should be output to the logger instead of being sent. Log level is _DEBUG_. | `boolean` | `false` | **NO** |
 | _flushInterval_ | Defines the periodicity of buffer flushes in **miliseconds**. | `int` | `3000` | **NO** |
 | _flushSize_ | Defines the maximum buffer size before performing a flush. | `int` | `1000` | **NO** |
 | _namespace_ | Defines the global namespace. | `String` | `application` | **NO** |
