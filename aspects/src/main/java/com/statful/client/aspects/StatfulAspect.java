@@ -46,7 +46,7 @@ public class StatfulAspect {
      * @throws Throwable Eventually thrown by the invoked method
      */
 
-    @Around("@annotation(timer)")
+    @Around("@annotation(timer) && execution(* *(..))")
     public final Object methodTiming(final ProceedingJoinPoint joinPoint, final Timer timer) throws Throwable {
         Tags tags = new Tags();
         tags.merge(getTags(timer));
