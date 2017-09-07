@@ -83,6 +83,7 @@ public class BufferedMetricsSender implements MetricsSender {
             final long timestamp
     ) {
         if (!this.isValidSampleRate(sampleRate)) {
+            LOGGER.warning("Invalid sample rate supplied. Discarding metric.");
             return;
         }
         if (shouldPutMetric(sampleRate)) {
@@ -110,6 +111,7 @@ public class BufferedMetricsSender implements MetricsSender {
                                     final AggregationFrequency aggregationFrequency, final Integer sampleRate,
                                     final String namespace, final long timestamp) {
         if (!this.isValidSampleRate(sampleRate)) {
+            LOGGER.warning("Invalid sample rate supplied. Discarding metric.");
             return;
         }
         if (shouldPutMetric(sampleRate)) {
