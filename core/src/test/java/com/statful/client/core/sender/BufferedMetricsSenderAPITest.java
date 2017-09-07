@@ -285,6 +285,7 @@ public class BufferedMetricsSenderAPITest {
         assertEquals("MetricsBuffer should have 1 metric", 1, buffer.size());
     }
 
+    @Ignore
     @Test
     public void shouldPutMetricsConcurrently() throws Exception {
         // Given
