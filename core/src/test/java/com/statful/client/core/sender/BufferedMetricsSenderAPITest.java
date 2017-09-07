@@ -63,7 +63,7 @@ public class BufferedMetricsSenderAPITest {
 
         BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
-        for (int i=0; i<5000; i++) {
+        for (int i = 0; i < 5000; i++) {
             subject.put("test_metric", "500", null, null, AggregationFrequency.FREQ_10, 100, "application", 123456789);
         }
 
@@ -82,7 +82,7 @@ public class BufferedMetricsSenderAPITest {
 
         BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
-        for (int i=0; i<5000; i++) {
+        for (int i = 0; i < 5000; i++) {
             subject.aggregatedPut("test_metric", "500", null, Aggregation.AVG, AggregationFrequency.FREQ_10, 100, "application", 123456789);
         }
 
@@ -312,7 +312,7 @@ public class BufferedMetricsSenderAPITest {
         List<String> buffer = subject.getStandardBuffer();
         assertEquals("MetricsBuffer should have metrics", 1, buffer.size());
 
-        Thread.sleep(200);
+        Thread.sleep(500);
 
         // And then
         buffer = subject.getStandardBuffer();
@@ -342,26 +342,34 @@ public class BufferedMetricsSenderAPITest {
     }
 
     @Test
-    public void shouldSendMetricWhenSampleRateIsAbove100() {
+    public void shouldNotSendMetricWhenSampleRateIsNull() {
+        // When
+        subject.put("test_metric0", "100", null, null, AggregationFrequency.FREQ_10, null, "application", 123456789);
+
+        // Then
+        int size = subject.getStandardBuffer().size();
+        assertEquals("MetricsBuffer should have 0 metrics", 0, size);
+    }
+
+    @Test
+    public void shouldNotSendMetricWhenSampleRateIsAbove100() {
         // When
         subject.put("test_metric0", "100", null, null, AggregationFrequency.FREQ_10, 101, "application", 123456789);
 
         // Then
         int size = subject.getStandardBuffer().size();
-        assertEquals("MetricsBuffer should have 1 metric", 1, size);
+        assertEquals("MetricsBuffer should have 0 metrics", 0, size);
     }
 
     @Test
-    public void shouldSendAggregatedMetricWhenSampleRateIsAbove100() {
+    public void shouldNotSendAggregatedMetricWhenSampleRateIsAbove100() {
         // When
         subject.aggregatedPut("test_metric0", "100", null, Aggregation.AVG, AggregationFrequency.FREQ_10, 101, "application", 123456789);
-
         // Then
         int size = subject.getAggregatedBuffer().size();
-        assertEquals("MetricsBuffer should have 1 metric", 1, size);
+        assertEquals("MetricsBuffer should have 0 metrics", 0, size);
     }
 
-    @Ignore
     @Test
     public void shouldNotSendMetricWhenSampleRateIsBellow0() {
         // When
@@ -372,7 +380,7 @@ public class BufferedMetricsSenderAPITest {
         assertEquals("MetricsBuffer should have 0 metrics", 0, size);
     }
 
-    @Ignore
+
     @Test
     public void shouldNotSendAggregatedMetricWhenSampleRateIsBellow0() {
         // When
