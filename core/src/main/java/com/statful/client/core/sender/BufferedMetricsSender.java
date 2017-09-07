@@ -54,7 +54,7 @@ public class BufferedMetricsSender implements MetricsSender {
      * Default constructor.
      *
      * @param transportSender The {@link com.statful.client.core.transport.TransportSender} to send metrics
-     * @param configuration The {@link com.statful.client.domain.api.ClientConfiguration}
+     * @param configuration   The {@link com.statful.client.domain.api.ClientConfiguration}
      * @param executorService The {@link java.util.concurrent.ScheduledExecutorService} to handle flushes
      */
     public BufferedMetricsSender(
@@ -82,6 +82,9 @@ public class BufferedMetricsSender implements MetricsSender {
             final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace,
             final long timestamp
     ) {
+        if (!this.isValidSampleRate(sampleRate)) {
+            return;
+        }
         if (shouldPutMetric(sampleRate)) {
             String rawMessage = MessageBuilder.newBuilder()
                     .withName(name)
@@ -106,6 +109,9 @@ public class BufferedMetricsSender implements MetricsSender {
     public final void aggregatedPut(final String name, final String value, final Tags tags, final Aggregation aggregation,
                                     final AggregationFrequency aggregationFrequency, final Integer sampleRate,
                                     final String namespace, final long timestamp) {
+        if (!this.isValidSampleRate(sampleRate)) {
+            return;
+        }
         if (shouldPutMetric(sampleRate)) {
             String rawMessage = MessageBuilder.newBuilder()
                     .withName(name)
@@ -172,21 +178,11 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     private boolean shouldPutMetric(final int sampleRate) {
-        int newSampleRate = sanitizeSampleRate(sampleRate);
-        return Math.random() <= (double) newSampleRate / SAMPLE_RATE_DIVIDER;
+        return Math.random() <= (double) sampleRate / SAMPLE_RATE_DIVIDER;
     }
 
-    private int sanitizeSampleRate(final int sampleRate) {
-        int newSampleRate = MAX_SAMPLE_RATE;
-        if (sampleRate < MIN_SAMPLE_RATE) {
-            newSampleRate = MIN_SAMPLE_RATE;
-            LOGGER.warning("The configured sample rate is bellow 1, assuming 1.");
-        } else if (sampleRate > MAX_SAMPLE_RATE) {
-            newSampleRate = MAX_SAMPLE_RATE;
-            LOGGER.warning("The configured sample rate is above 100, assuming 100.");
-        }
-
-        return newSampleRate;
+    private boolean isValidSampleRate(final Integer sampleRate) {
+        return sampleRate != null && sampleRate >= MIN_SAMPLE_RATE && sampleRate <= MAX_SAMPLE_RATE;
     }
 
     private void putRaw(final String metric) {
