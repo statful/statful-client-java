@@ -1,5 +1,5 @@
 language: java
 jdk:
-  - oraclejdk7
+  - openjdk7
 install: mvn install -DskipTests=true -Dcobertura.skip=true -Dmaven.javadoc.skip=true -B -V
 script: mvn clean verify
