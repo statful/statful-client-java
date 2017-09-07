@@ -285,7 +285,6 @@ public class BufferedMetricsSenderAPITest {
         assertEquals("MetricsBuffer should have 1 metric", 1, buffer.size());
     }
 
-    @Ignore
     @Test
     public void shouldPutMetricsConcurrently() throws Exception {
         // Given
@@ -313,7 +312,7 @@ public class BufferedMetricsSenderAPITest {
         List<String> buffer = subject.getStandardBuffer();
         assertEquals("MetricsBuffer should have metrics", 1, buffer.size());
 
-        Thread.sleep(200);
+        Thread.sleep(500);
 
         // And then
         buffer = subject.getStandardBuffer();
