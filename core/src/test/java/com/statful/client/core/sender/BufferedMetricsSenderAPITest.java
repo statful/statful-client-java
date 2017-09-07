@@ -12,10 +12,7 @@ import org.mockito.stubbing.Answer;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
@@ -567,6 +564,7 @@ public class BufferedMetricsSenderAPITest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldDropMetricsWhenWorkerTasksQueueIsFull() {
         // Given
@@ -574,14 +572,24 @@ public class BufferedMetricsSenderAPITest {
         when(configuration.getFlushSize()).thenReturn(1);
         when(configuration.getMaxWorkerTasksQueueSize()).thenReturn(1);
 
-        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
+
+        final ScheduledFuture mockFuture = mock(ScheduledFuture.class);
+
+        BlockingQueue<Runnable> mockQueue = mock(BlockingQueue.class);
+        ScheduledThreadPoolExecutor mockExecutor = mock(ScheduledThreadPoolExecutor.class);
+        when(mockExecutor.schedule(any(Runnable.class), anyInt(), any(TimeUnit.class))).thenReturn(mockFuture);
+        when(mockExecutor.getQueue()).thenReturn(mockQueue);
+
+        when(mockQueue.size()).thenReturn(0, 1);
+
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, mockExecutor);
 
         // When
         subject.put("test_metric0", "100", null, null, AggregationFrequency.FREQ_10, 100, "application", 123456789);
         subject.put("test_metric1", "100", null, null, AggregationFrequency.FREQ_10, 100, "application", 123456789);
 
         // Then
-        verify(transportSender, times(1)).send(anyString());
+        verify(mockExecutor, times(1)).schedule(any(Runnable.class), anyInt(), any(TimeUnit.class));
     }
 
     private Answer<String> mockedTransportResponse = new Answer<String>() {
