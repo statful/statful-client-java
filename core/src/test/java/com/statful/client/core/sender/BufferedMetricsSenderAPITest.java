@@ -366,7 +366,7 @@ public class BufferedMetricsSenderAPITest {
         // When
         subject.aggregatedPut("test_metric0", "100", null, Aggregation.AVG, AggregationFrequency.FREQ_10, 101, "application", 123456789);
         // Then
-        int size = subject.getStandardBuffer().size();
+        int size = subject.getAggregatedBuffer().size();
         assertEquals("MetricsBuffer should have 0 metrics", 0, size);
     }
 
@@ -381,13 +381,13 @@ public class BufferedMetricsSenderAPITest {
     }
 
 
-    @Test()
+    @Test
     public void shouldNotSendAggregatedMetricWhenSampleRateIsBellow0() {
         // When
         subject.aggregatedPut("test_metric0", "100", null, Aggregation.AVG, AggregationFrequency.FREQ_10, -1, "application", 123456789);
 
         // Then
-        int size = subject.getStandardBuffer().size();
+        int size = subject.getAggregatedBuffer().size();
         assertEquals("MetricsBuffer should have 0 metrics", 0, size);
     }
 
