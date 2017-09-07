@@ -105,7 +105,7 @@
                     <aggregate>true</aggregate>
                     <check>
                         <haltOnFailure>true</haltOnFailure>
-                        <totalBranchRate>95</totalBranchRate>
+                        <totalBranchRate>90</totalBranchRate>
                         <totalLineRate>95</totalLineRate>
                     </check>
                     <instrumentation>
