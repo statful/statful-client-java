@@ -361,6 +361,7 @@ public class BufferedMetricsSenderAPITest {
         assertEquals("MetricsBuffer should have 1 metric", 1, size);
     }
 
+    @Ignore
     @Test
     public void shouldNotSendMetricWhenSampleRateIsBellow0() {
         // When
@@ -371,6 +372,7 @@ public class BufferedMetricsSenderAPITest {
         assertEquals("MetricsBuffer should have 0 metrics", 0, size);
     }
 
+    @Ignore
     @Test
     public void shouldNotSendAggregatedMetricWhenSampleRateIsBellow0() {
         // When
