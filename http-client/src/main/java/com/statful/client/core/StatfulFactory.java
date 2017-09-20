@@ -38,7 +38,8 @@ public final class StatfulFactory {
         @Override
         protected TransportSender buildTransportSender(final ClientConfiguration configuration) {
             SSLClientFactory clientFactory = buildHTTPClientFactory(configuration);
-            return new HTTPSender(configuration.isSecure(), configuration.getHost(), configuration.getPort(), clientFactory);
+            return new HTTPSender(configuration.isSecure(), configuration.getHost(), configuration.getPort(),
+                    configuration.getPath(), clientFactory);
         }
 
         private static SSLClientFactory buildHTTPClientFactory(final ClientConfiguration configuration) {

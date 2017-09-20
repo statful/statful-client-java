@@ -29,10 +29,11 @@ public class HTTPSender implements TransportSender {
      * @param secure Flag to send the message securely, weather using HTTP or HTTPS.
      * @param host The Statful API host
      * @param port The Staful API port
+     * @param path The Staful API path
      * @param clientFactory The HTTP client factory to use in this sender
      */
-    public HTTPSender(final boolean secure, final String host, final Integer port, final HTTPClientFactory clientFactory) {
-        this.uri = ApiUriFactory.buildUri(secure, host, port);
+    public HTTPSender(final boolean secure, final String host, final Integer port, final String path, final HTTPClientFactory clientFactory) {
+        this.uri = ApiUriFactory.buildUri(secure, host, port, path);
         this.clientFactory = clientFactory;
 
         try {

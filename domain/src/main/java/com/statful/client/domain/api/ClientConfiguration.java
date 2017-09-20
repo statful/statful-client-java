@@ -78,6 +78,13 @@ public interface ClientConfiguration {
     int getPort();
 
     /**
+     * Returns the path to use.
+     *
+     * @return {@code String} path
+     */
+    String getPath();
+
+    /**
      * Returns the timer default tags. Default is 'unit = ms'.
      *
      * @return A {@link Tags} for timer

@@ -105,6 +105,12 @@ public class DefaultClientConfigurationTest {
     }
 
     @Test
+    public void shouldGetPath() {
+        subject.setPath("/path");
+        assertEquals("Should get path", "/path", subject.getPath());
+    }
+
+    @Test
     public void shouldGetTransport() {
         subject.setTransport(Transport.UDP);
         Assert.assertEquals("Should get transport", Transport.UDP, subject.getTransport());
@@ -200,6 +206,7 @@ public class DefaultClientConfigurationTest {
         assertEquals("127.0.0.1", subject.getHost());
         assertEquals(2013, subject.getPort());
         assertEquals(100, subject.getSampleRate());
+        assertEquals("/tel/v2.0/metrics", subject.getPath());
         assertEquals("application", subject.getNamespace());
         assertEquals(10, subject.getFlushSize());
         assertEquals(5000, subject.getFlushIntervalMillis());

@@ -53,7 +53,7 @@ public final class ConfigurationBuilder<T> {
      * @return A {@link ConfigurationBuilder} of <code>T</code>
      */
     public static <T> ConfigurationBuilder<T> newBuilder(final ConfigurationBuilderChain<T> builderChain) {
-        return new ConfigurationBuilder<T>(builderChain);
+        return new ConfigurationBuilder<>(builderChain);
     }
 
     /**
@@ -77,6 +77,17 @@ public final class ConfigurationBuilder<T> {
      */
     public ConfigurationBuilder<T> port(final int port) {
         this.result.setPort(port);
+        return this;
+    }
+
+    /**
+     * Sets the path.
+     *
+     * @param path The path
+     * @return A reference to this configuration builder
+     */
+    public ConfigurationBuilder<T> path(final String path) {
+        this.result.setPath(path);
         return this;
     }
 

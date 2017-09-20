@@ -9,7 +9,7 @@ public class ApiUriFactoryTest {
     @Test
     public void shouldBuildHttpUri() {
         // When
-        String uri = ApiUriFactory.buildUri(false, "127.0.0.1", 80);
+        String uri = ApiUriFactory.buildUri(false, "127.0.0.1", 80, "/tel/v2.0/metrics");
 
         assertEquals("http://127.0.0.1:80/tel/v2.0/metrics", uri);
     }
@@ -17,7 +17,7 @@ public class ApiUriFactoryTest {
     @Test
     public void shouldBuildHttpAggregatedUri() {
         // When
-        String uri = ApiUriFactory.buildAggregatedUri(false, "127.0.0.1", 80);
+        String uri = ApiUriFactory.buildAggregatedUri(false, "127.0.0.1", 80, "/tel/v2.0/metrics");
 
         assertEquals("http://127.0.0.1:80/tel/v2.0/metrics/aggregation/{aggregation}/frequency/{frequency}", uri);
     }
@@ -25,7 +25,7 @@ public class ApiUriFactoryTest {
     @Test
     public void shouldBuildHttpUriWithoutPort() {
         // When
-        String uri = ApiUriFactory.buildUri(false, "127.0.0.1", null);
+        String uri = ApiUriFactory.buildUri(false, "127.0.0.1", null, "/tel/v2.0/metrics");
 
         assertEquals("http://127.0.0.1/tel/v2.0/metrics", uri);
     }
@@ -33,7 +33,7 @@ public class ApiUriFactoryTest {
     @Test
     public void shouldBuildHttpsUri() {
         // When
-        String uri = ApiUriFactory.buildUri(true, "127.0.0.1", null);
+        String uri = ApiUriFactory.buildUri(true, "127.0.0.1", null, "/tel/v2.0/metrics");
 
         assertEquals("https://127.0.0.1/tel/v2.0/metrics", uri);
     }
@@ -41,7 +41,7 @@ public class ApiUriFactoryTest {
     @Test
     public void shouldBuildHttpsAggregatedUri() {
         // When
-        String uri = ApiUriFactory.buildAggregatedUri(true, "127.0.0.1", null);
+        String uri = ApiUriFactory.buildAggregatedUri(true, "127.0.0.1", null, "/tel/v2.0/metrics");
 
         assertEquals("https://127.0.0.1/tel/v2.0/metrics/aggregation/{aggregation}/frequency/{frequency}", uri);
     }
