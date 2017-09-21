@@ -263,7 +263,7 @@ public class BufferedMetricsSender implements MetricsSender {
 
     private String buildAggregatedUri(final Aggregation aggregation, final AggregationFrequency aggregationFrequency) {
         String baseAggregatedUri = ApiUriFactory.buildAggregatedUri(configuration.isSecure(),
-                configuration.getHost(), configuration.getPort());
+                configuration.getHost(), configuration.getPort(), configuration.getPath());
 
         return baseAggregatedUri
                 .replace("{aggregation}", aggregation.getName())

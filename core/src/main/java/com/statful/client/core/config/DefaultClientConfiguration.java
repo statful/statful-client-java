@@ -18,6 +18,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private static final String DEFAULT_HOST = "127.0.0.1";
     private static final boolean DEFAULT_SECURE = true;
     private static final int DEFAULT_PORT = 2013;
+    private static final String DEFAULT_PATH = "/tel/v2.0/metrics";
     private static final int DEFAULT_SAMPLE_RATE = 100;
     private static final String DEFAULT_NAMESPACE = "application";
     private static final int DEFAULT_FLUSH_SIZE = 10;
@@ -33,6 +34,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
 
     private String host = DEFAULT_HOST;
     private int port = DEFAULT_PORT;
+    private String path = DEFAULT_PATH;
     private int sampleRate = DEFAULT_SAMPLE_RATE;
     private String namespace = DEFAULT_NAMESPACE;
     private int flushSize = DEFAULT_FLUSH_SIZE;
@@ -109,6 +111,11 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     @Override
     public final int getPort() {
         return port;
+    }
+
+    @Override
+    public final String getPath() {
+        return path;
     }
 
     @Override
@@ -222,6 +229,16 @@ public class DefaultClientConfiguration implements ClientConfiguration {
      */
     public final void setPort(final int port) {
         this.port = port;
+    }
+
+
+    /**
+     * Setter for path
+     *
+     * @param path The path
+     */
+    public final void setPath(final String path) {
+        this.path = path;
     }
 
     /**

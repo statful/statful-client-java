@@ -30,7 +30,7 @@ public class HTTPSenderAPITest extends HttpTest {
     public void shouldSendThroughHttp() {
         // Given
         mockMetricsPutWithStatusCode(201);
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, new SSLClientFactory(10, 1000, 5000, "any-token"));
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", new SSLClientFactory(10, 1000, 5000, "any-token"));
 
         // When
         subject.send(METRIC);
@@ -45,12 +45,12 @@ public class HTTPSenderAPITest extends HttpTest {
     @Test
     public void shouldSendThroughHttpWithUri() {
         // Given
-        String uri = ApiUriFactory.buildAggregatedUri(false, "127.0.0.1", mockServerPort)
+        String uri = ApiUriFactory.buildAggregatedUri(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics")
                 .replace("{aggregation}", Aggregation.AVG.getName())
                 .replace("{frequency}", Integer.toString(AggregationFrequency.FREQ_10.getValue()));
 
         mockMetricsPutWithStatusCodeAndUri(201, uri);
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, new SSLClientFactory(10, 1000, 5000, "any-token"));
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", new SSLClientFactory(10, 1000, 5000, "any-token"));
 
         // When
         subject.send(METRIC, uri);
@@ -66,7 +66,7 @@ public class HTTPSenderAPITest extends HttpTest {
     public void shouldNotThrowWhenMetricIsNotCreated() {
         // Given
         mockMetricsPutWithStatusCode(402);
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, new SSLClientFactory(10, 1000, 5000, "any-token"));
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", new SSLClientFactory(10, 1000, 5000, "any-token"));
 
         // When
         subject.send(METRIC);
@@ -81,7 +81,7 @@ public class HTTPSenderAPITest extends HttpTest {
         HTTPClientFactory httpClientFactory = mock(HTTPClientFactory.class);
         when(httpClientFactory.createHttpClient()).thenThrow(new GeneralSecurityException());
 
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, httpClientFactory);
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", httpClientFactory);
 
         // When
         subject.send(METRIC);
@@ -96,7 +96,7 @@ public class HTTPSenderAPITest extends HttpTest {
         HTTPClientFactory httpClientFactory = mock(HTTPClientFactory.class);
         when(httpClientFactory.createHttpClient()).thenReturn(httpClient);
 
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, httpClientFactory);
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", httpClientFactory);
 
         // When
         subject.send(METRIC);
@@ -110,7 +110,7 @@ public class HTTPSenderAPITest extends HttpTest {
         HTTPClientFactory httpClientFactory = mock(HTTPClientFactory.class);
         when(httpClientFactory.createHttpClient()).thenReturn(httpClient);
 
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, httpClientFactory);
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", httpClientFactory);
 
         // When
         subject.shutdown();
@@ -128,7 +128,7 @@ public class HTTPSenderAPITest extends HttpTest {
         HTTPClientFactory httpClientFactory = mock(HTTPClientFactory.class);
         when(httpClientFactory.createHttpClient()).thenReturn(httpClient);
 
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, httpClientFactory);
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", httpClientFactory);
 
         // When
         subject.shutdown();
@@ -140,7 +140,7 @@ public class HTTPSenderAPITest extends HttpTest {
         HTTPClientFactory httpClientFactory = mock(HTTPClientFactory.class);
         when(httpClientFactory.createHttpClient()).thenReturn(null);
 
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, httpClientFactory);
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", httpClientFactory);
 
         // When
         subject.shutdown();
@@ -161,7 +161,7 @@ public class HTTPSenderAPITest extends HttpTest {
         HTTPClientFactory httpClientFactory = mock(HTTPClientFactory.class);
         when(httpClientFactory.createHttpClient()).thenReturn(httpClient);
 
-        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, httpClientFactory);
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", httpClientFactory);
 
         // When
         subject.send(METRIC);
