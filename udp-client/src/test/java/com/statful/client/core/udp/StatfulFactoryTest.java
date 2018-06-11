@@ -1,4 +1,4 @@
-package com.statful.client.core;
+package com.statful.client.core.udp;
 
 import com.statful.client.domain.api.StatfulClient;
 import com.statful.client.transport.UdpEcho;
@@ -32,7 +32,7 @@ public class StatfulFactoryTest {
     }
 
     @Test
-    public void shouldCreateUDPClientWithoutOptionalConfigurations() throws Exception {
+    public void shouldCreateUDPClientWithoutOptionalConfigurations() {
         StatfulClient client = StatfulFactory.buildUDPClient().build();
 
         assertNotNull(client);

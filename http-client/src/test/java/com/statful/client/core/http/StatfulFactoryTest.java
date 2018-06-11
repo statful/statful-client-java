@@ -1,4 +1,4 @@
-package com.statful.client.core;
+package com.statful.client.core.http;
 
 import com.statful.client.domain.api.StatfulClient;
 import com.statful.client.test.HttpTest;
@@ -49,7 +49,7 @@ public class StatfulFactoryTest extends HttpTest {
     }
 
     @Test
-    public void shouldCreateHTTPClientWithoutOptionalConfigurations() throws Exception {
+    public void shouldCreateHTTPClientWithoutOptionalConfigurations() {
         StatfulClient client = StatfulFactory.buildHTTPClient().build();
 
         assertNotNull(client);
