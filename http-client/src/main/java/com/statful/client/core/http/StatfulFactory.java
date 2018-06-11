@@ -14,7 +14,7 @@ import static com.statful.client.domain.api.Transport.HTTP;
  */
 public final class StatfulFactory {
 
-    private static HTTPClientFactory httpClientFactory = new HTTPClientFactory();
+    private static final HTTPClientFactory HTTP_CLIENT_FACTORY = new HTTPClientFactory();
 
     private StatfulFactory() { }
 
@@ -24,7 +24,7 @@ public final class StatfulFactory {
      * @return A Statful client builder, ready for configure or bootstrap
      */
     public static StatfulClientBuilder buildHTTPClient() {
-        return httpClientFactory.buildClient();
+        return HTTP_CLIENT_FACTORY.buildClient();
     }
 
     /**

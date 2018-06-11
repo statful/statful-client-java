@@ -12,7 +12,7 @@ import com.statful.client.transport.UDPSender;
  */
 public final class StatfulFactory {
 
-    private static final UDPClientFactory udpClientFactory = new UDPClientFactory();
+    private static final UDPClientFactory UDP_CLIENT_FACTORY = new UDPClientFactory();
 
     private StatfulFactory() { }
 
@@ -22,7 +22,7 @@ public final class StatfulFactory {
      * @return A Statful client builder, ready for configure or bootstrap
      */
     public static StatfulClientBuilder buildUDPClient() {
-        return udpClientFactory.buildClient();
+        return UDP_CLIENT_FACTORY.buildClient();
     }
 
     /**
