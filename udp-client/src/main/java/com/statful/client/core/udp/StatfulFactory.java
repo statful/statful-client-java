@@ -1,5 +1,6 @@
-package com.statful.client.core;
+package com.statful.client.core.udp;
 
+import com.statful.client.core.CustomStatfulFactory;
 import com.statful.client.core.api.StatfulClientBuilder;
 import com.statful.client.core.transport.TransportSender;
 import com.statful.client.domain.api.ClientConfiguration;
@@ -11,17 +12,17 @@ import com.statful.client.transport.UDPSender;
  */
 public final class StatfulFactory {
 
-    private static final UDPClientFactory UDP_CLIENT_FACTORY = new UDPClientFactory();
+    private static final UDPClientFactory udpClientFactory = new UDPClientFactory();
 
     private StatfulFactory() { }
 
     /**
-     * Instantiates a new {@link com.statful.client.core.api.StatfulClientBuilder} to use UDP protocol.
+     * Instantiates a new {@link StatfulClientBuilder} to use UDP protocol.
      *
      * @return A Statful client builder, ready for configure or bootstrap
      */
     public static StatfulClientBuilder buildUDPClient() {
-        return UDP_CLIENT_FACTORY.buildClient();
+        return udpClientFactory.buildClient();
     }
 
     /**

@@ -1,5 +1,6 @@
-package com.statful.client.core;
+package com.statful.client.core.http;
 
+import com.statful.client.core.CustomStatfulFactory;
 import com.statful.client.core.api.StatfulClientBuilder;
 import com.statful.client.core.transport.TransportSender;
 import com.statful.client.domain.api.ClientConfiguration;
@@ -18,7 +19,7 @@ public final class StatfulFactory {
     private StatfulFactory() { }
 
     /**
-     * Instantiates a new {@link com.statful.client.core.api.StatfulClientBuilder} to use HTTP protocol.
+     * Instantiates a new {@link StatfulClientBuilder} to use HTTP protocol.
      *
      * @return A Statful client builder, ready for configure or bootstrap
      */
