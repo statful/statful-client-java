@@ -332,7 +332,7 @@ The methods for sending metrics receive a metric name and a metric value as argu
 Read the methods options reference bellow to get more information about the default values.
 
 | Option | Description | Default for Counter | Default for Gauge | Default for Timer | Default for Custom Metric |
-|:---|:---|:---|:---|:---|:---|:---|
+|:---|:---|:---|:---|:---|:---|
 | _aggregations_ | Defines the aggregations to be executed. These aggregations are merged with the ones configured globally, including method defaults.<br><br> **Valid Aggregations:** `AVG, COUNT, SUM, FIRST, LAST, P90, P95, MIN, MAX` | `SUM, COUNT` | `LAST` | `AVG, P90, COUNT` | none |
 | _aggFreq_ | Defines the aggregation frequency in **seconds**. It overrides the global aggregation frequency configuration.<br><br> **Valid Aggregation Frequencies:** `10, 30, 60, 120, 180, 300` | `10` | `10` | `10` | `10` |
 | _namespace_ | Defines the namespace of the metric. It overrides the global namespace configuration. | `application` | `application` | `application` | `application` |
