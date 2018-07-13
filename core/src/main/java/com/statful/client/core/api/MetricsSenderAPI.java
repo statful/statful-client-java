@@ -56,9 +56,10 @@ public final class MetricsSenderAPI implements SenderAPI {
      *
      * @param metricsSender The {@link MetricsSender}
      * @param isAggregated A {@link Boolean} flag stating if the metric is aggregated
+     * @param isSampled A {@link Boolean} flag stating if the metric is sampled
      * @return An instance of {@link SenderAPI}
      */
-    public static MetricsSenderAPI newInstance(final MetricsSender metricsSender, final boolean isAggregated) {
+    public static MetricsSenderAPI newInstance(final MetricsSender metricsSender, final boolean isAggregated, final boolean isSampled) {
         return new MetricsSenderAPI(metricsSender, isAggregated);
     }
 
