@@ -393,7 +393,15 @@ class StatfulClientImpl implements StatfulClient {
     @Override
     public void aggregatedSampledPut(final String name, final String value, final Tags tags, final Aggregation aggregation,
                                      final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace, final long timestamp) {
-
+        if (enabled) {
+            try {
+                metricsSender.aggregatedSampledPut(name, value, tags, aggregation, aggregationFrequency, sampleRate, namespace, timestamp);
+            } catch (Exception e) {
+                LOGGER.warning("Unable to send metric: " + e.toString());
+            }
+        } else {
+            LOGGER.fine("Statful client is disabled. The metric was not sent.");
+        }
     }
 
     @Override
@@ -468,7 +476,7 @@ class StatfulClientImpl implements StatfulClient {
     }
 
     private SenderFacade sampledGauge(final String metricName, final String value, final Integer sampleRate) {
-        SenderAPI metricsSenderAPI = createGauge(metricName, value, true, false).with()
+        SenderAPI metricsSenderAPI = createGauge(metricName, value, false, true).with()
                 .aggregations(configuration.getGaugeAggregations())
                 .aggregationFrequency(configuration.getGaugeAggregationFrequency())
                 .sampleRate(sampleRate);
