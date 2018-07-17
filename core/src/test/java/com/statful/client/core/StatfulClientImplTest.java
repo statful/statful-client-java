@@ -400,6 +400,15 @@ public class StatfulClientImplTest {
     }
 
     @Test
+    public void shouldSendDoubleSampledAggregatedGaugeMetric() {
+        // When
+        subject.sampledAggregatedGauge("current_sessions", 2.2, Aggregation.FIRST, AggregationFrequency.FREQ_10, Integer.MAX_VALUE).send();
+
+        // Then
+        verify(metricsSender).aggregatedSampledPut(eq("gauge.current_sessions"), eq("2.2"), isNull(Tags.class), eq(Aggregation.FIRST), eq(AggregationFrequency.FREQ_10), eq(Integer.MAX_VALUE), eq("application"), anyLong());
+    }
+
+    @Test
     public void shouldSendFloatGaugeMetric() {
         // When
         subject.gauge("current_sessions", Float.valueOf("2.3")).send();
@@ -420,6 +429,24 @@ public class StatfulClientImplTest {
 
         // Then
         verify(metricsSender).aggregatedPut(eq("gauge.current_sessions"), eq("2.3"), isNull(Tags.class), eq(Aggregation.FIRST), eq(AggregationFrequency.FREQ_10), eq(10), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendFloatSampledGaugeMetric() {
+        // When
+        subject.sampledGauge("current_sessions", Float.valueOf("2.3"), Integer.MAX_VALUE).send();
+
+        // Then
+        verify(metricsSender).putSampled(eq("gauge.current_sessions"), eq("2.3"), isNull(Tags.class), any(Aggregations.class), any(AggregationFrequency.class), eq(Integer.MAX_VALUE), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendFloatSampledAggregatedGaugeMetric() {
+        // When
+        subject.sampledAggregatedGauge("current_sessions", Float.valueOf("2.3"), Aggregation.FIRST, AggregationFrequency.FREQ_10, Integer.MAX_VALUE).send();
+
+        // Then
+        verify(metricsSender).aggregatedSampledPut(eq("gauge.current_sessions"), eq("2.3"), isNull(Tags.class), eq(Aggregation.FIRST), eq(AggregationFrequency.FREQ_10), eq(Integer.MAX_VALUE), eq("application"), anyLong());
     }
 
     @Test
@@ -498,6 +525,26 @@ public class StatfulClientImplTest {
     }
 
     @Test
+    public void shouldSendSimpleIntegerSampledMetric() {
+        // When
+        subject.sampledPut("response_time", 1000, Integer.MAX_VALUE).send();
+
+
+        verify(metricsSender).putSampled(eq("response_time"), eq("1000"), any(Tags.class), any(Aggregations.class), any(AggregationFrequency.class), eq(Integer.MAX_VALUE), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendSimpleIntegerSampledAggregatedMetric() {
+        // When
+        subject.sampledAggregatedPut("response_time", 1000, Aggregation.AVG, AggregationFrequency.FREQ_10, Integer.MAX_VALUE).send();
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+
+        verify(metricsSender).aggregatedSampledPut(eq("response_time"), eq("1000"), tagsArg.capture(), eq(Aggregation.AVG), eq(AggregationFrequency.FREQ_10), eq(Integer.MAX_VALUE), eq("application"), anyLong());
+    }
+
+    @Test
     public void shouldSendSimpleLongAggregatedMetric() {
         // When
         subject.aggregatedPut("response_time", 1000L, Aggregation.AVG, AggregationFrequency.FREQ_10).send();
@@ -506,6 +553,17 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
 
         verify(metricsSender).aggregatedPut(eq("response_time"), eq("1000"), tagsArg.capture(), eq(Aggregation.AVG), eq(AggregationFrequency.FREQ_10), eq(10), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendSimpleLongSampledAggregatedMetric() {
+        // When
+        subject.sampledAggregatedPut("response_time", 1000L, Aggregation.AVG, AggregationFrequency.FREQ_10, Integer.MAX_VALUE).send();
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+
+        verify(metricsSender).aggregatedSampledPut(eq("response_time"), eq("1000"), tagsArg.capture(), eq(Aggregation.AVG), eq(AggregationFrequency.FREQ_10), eq(Integer.MAX_VALUE), eq("application"), anyLong());
     }
 
     @Test
@@ -520,6 +578,24 @@ public class StatfulClientImplTest {
     }
 
     @Test
+    public void shouldSendSimpleFloatSampledMetric() {
+        // When
+        subject.sampledPut("response_time", 1000F, Integer.MAX_VALUE).send();
+
+        // Then
+        verify(metricsSender).putSampled(eq("response_time"), eq("1000.0"), any(Tags.class), any(Aggregations.class), any(AggregationFrequency.class), eq(Integer.MAX_VALUE), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendSimpleFloatSampledAggregatedMetric() {
+        // When
+        subject.sampledAggregatedPut("response_time", 1000F,Aggregation.AVG, AggregationFrequency.FREQ_10, Integer.MAX_VALUE).send();
+
+        // Then
+        verify(metricsSender).aggregatedSampledPut(eq("response_time"), eq("1000.0"), any(Tags.class), eq(Aggregation.AVG), eq(AggregationFrequency.FREQ_10), eq(Integer.MAX_VALUE), eq("application"), anyLong());
+    }
+
+    @Test
     public void shouldSendSimpleDoubleAggregatedMetric() {
         // When
         subject.aggregatedPut("response_time", 1000D, Aggregation.AVG, AggregationFrequency.FREQ_10).send();
@@ -528,6 +604,17 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
 
         verify(metricsSender).aggregatedPut(eq("response_time"), eq("1000.0"), tagsArg.capture(), eq(Aggregation.AVG), eq(AggregationFrequency.FREQ_10), eq(10), eq("application"), anyLong());
+    }
+
+    @Test
+    public void shouldSendSimpleDoubleSampledAggregatedMetric() {
+        // When
+        subject.sampledAggregatedPut("response_time", 1000D, Aggregation.AVG, AggregationFrequency.FREQ_10, Integer.MAX_VALUE).send();
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+
+        verify(metricsSender).aggregatedSampledPut(eq("response_time"), eq("1000.0"), tagsArg.capture(), eq(Aggregation.AVG), eq(AggregationFrequency.FREQ_10), eq(Integer.MAX_VALUE), eq("application"), anyLong());
     }
 
     @Test
@@ -748,6 +835,23 @@ public class StatfulClientImplTest {
         ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
 
         verify(metricsSender).aggregatedPut(eq("timer.response_time"), eq("1000"), tagsArg.capture(), eq(Aggregation.AVG), eq(AggregationFrequency.FREQ_10), eq(10), eq("application"), eq(100000L));
+
+        // Then it should have tags
+        shouldContainDefaultTimerTags(tagsArg.getValue());
+    }
+
+    @Test
+    public void shouldPutRawSampledMetrics() {
+        // When
+        Tags tags = new Tags();
+        tags.putTag("unit", "ms");
+
+        subject.putSampled("timer.response_time", "1000", tags, Aggregations.from(Aggregation.AVG), AggregationFrequency.FREQ_10, Integer.MAX_VALUE, "application", 100000);
+
+        // Then
+        ArgumentCaptor<Tags> tagsArg = ArgumentCaptor.forClass(Tags.class);
+
+        verify(metricsSender).putSampled(eq("timer.response_time"), eq("1000"), tagsArg.capture(), any(Aggregations.class), eq(AggregationFrequency.FREQ_10), eq(Integer.MAX_VALUE), eq("application"), eq(100000L));
 
         // Then it should have tags
         shouldContainDefaultTimerTags(tagsArg.getValue());
