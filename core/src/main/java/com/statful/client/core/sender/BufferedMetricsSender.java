@@ -87,22 +87,38 @@ public class BufferedMetricsSender implements MetricsSender {
             return;
         }
         if (shouldPutMetric(sampleRate)) {
-            String rawMessage = MessageBuilder.newBuilder()
-                    .withName(name)
-                    .withValue(value)
-                    .withTags(tags)
-                    .withAggregations(aggregations)
-                    .withAggregationFreq(aggregationFrequency)
-                    .withNamespace(namespace)
-                    .withTimestamp(timestamp)
-                    .withSampleRate(sampleRate)
-                    .build();
+            putMetric(name, value, tags, aggregations, aggregationFrequency, sampleRate, namespace, timestamp);
+        }
+    }
 
-            if (!dryRun) {
-                this.putRaw(rawMessage);
-            } else {
-                LOGGER.fine("Dry metric: " + rawMessage);
-            }
+    @Override
+    public final void putSampled(final String name, final String value, final Tags tags, final Aggregations aggregations,
+                                 final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace, final long timestamp) {
+        if (!this.isValidSampleRate(sampleRate)) {
+            LOGGER.warning("Invalid sample rate supplied. Discarding metric.");
+            return;
+        }
+
+        putMetric(name, value, tags, aggregations, aggregationFrequency, sampleRate, namespace, timestamp);
+    }
+
+    private void putMetric(final String name, final String value, final Tags tags, final Aggregations aggregations,
+                           final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace, final long timestamp) {
+        String rawMessage = MessageBuilder.newBuilder()
+                .withName(name)
+                .withValue(value)
+                .withTags(tags)
+                .withAggregations(aggregations)
+                .withAggregationFreq(aggregationFrequency)
+                .withNamespace(namespace)
+                .withTimestamp(timestamp)
+                .withSampleRate(sampleRate)
+                .build();
+
+        if (!dryRun) {
+            this.putRaw(rawMessage);
+        } else {
+            LOGGER.fine("Dry metric: " + rawMessage);
         }
     }
 
@@ -132,6 +148,32 @@ public class BufferedMetricsSender implements MetricsSender {
                         + " Frequency: " + aggregationFrequency);
             }
         }
+    }
+
+    @Override
+    public final void aggregatedSampledPut(final String name, final String value, final Tags tags, final Aggregation aggregation,
+                                           final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace,
+                                           final long timestamp) {
+        if (!this.isValidSampleRate(sampleRate)) {
+            LOGGER.warning("Invalid sample rate supplied. Discarding metric.");
+            return;
+        }
+            String rawMessage = MessageBuilder.newBuilder()
+                    .withName(name)
+                    .withValue(value)
+                    .withTags(tags)
+                    .withNamespace(namespace)
+                    .withTimestamp(timestamp)
+                    .withSampleRate(sampleRate)
+                    .build();
+
+            if (!dryRun) {
+                this.putAggregatedRaw(rawMessage, aggregation, aggregationFrequency);
+            } else {
+                LOGGER.fine("Dry metric: " + rawMessage
+                        + " Aggregation: " + aggregation
+                        + " Frequency: " + aggregationFrequency);
+            }
     }
 
     @Override

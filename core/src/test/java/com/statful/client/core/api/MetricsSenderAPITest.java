@@ -50,7 +50,7 @@ public class MetricsSenderAPITest {
 
     @Test
     public void shouldNotSendWhenAggregatedMetricIsInvalid() {
-        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender, true);
+        MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender, true, false);
         builder.name("something").value("something").aggregations(Aggregations.from(Aggregation.AVG, Aggregation.COUNT));
 
         builder.send();
