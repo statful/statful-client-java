@@ -54,7 +54,7 @@ public class BufferedMetricsSender implements MetricsSender {
      * Default constructor.
      *
      * @param transportSender The {@link com.statful.client.core.transport.TransportSender} to send metrics
-     * @param configuration The {@link com.statful.client.domain.api.ClientConfiguration}
+     * @param configuration   The {@link com.statful.client.domain.api.ClientConfiguration}
      * @param executorService The {@link java.util.concurrent.ScheduledExecutorService} to handle flushes
      */
     public BufferedMetricsSender(
@@ -82,23 +82,43 @@ public class BufferedMetricsSender implements MetricsSender {
             final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace,
             final long timestamp
     ) {
+        if (!this.isValidSampleRate(sampleRate)) {
+            LOGGER.warning("Invalid sample rate supplied. Discarding metric.");
+            return;
+        }
         if (shouldPutMetric(sampleRate)) {
-            String rawMessage = MessageBuilder.newBuilder()
-                    .withName(name)
-                    .withValue(value)
-                    .withTags(tags)
-                    .withAggregations(aggregations)
-                    .withAggregationFreq(aggregationFrequency)
-                    .withNamespace(namespace)
-                    .withTimestamp(timestamp)
-                    .withSampleRate(sampleRate)
-                    .build();
+            putMetric(name, value, tags, aggregations, aggregationFrequency, sampleRate, namespace, timestamp);
+        }
+    }
 
-            if (!dryRun) {
-                this.putRaw(rawMessage);
-            } else {
-                LOGGER.fine("Dry metric: " + rawMessage);
-            }
+    @Override
+    public final void putSampled(final String name, final String value, final Tags tags, final Aggregations aggregations,
+                                 final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace, final long timestamp) {
+        if (!this.isValidSampleRate(sampleRate)) {
+            LOGGER.warning("Invalid sample rate supplied. Discarding metric.");
+            return;
+        }
+
+        putMetric(name, value, tags, aggregations, aggregationFrequency, sampleRate, namespace, timestamp);
+    }
+
+    private void putMetric(final String name, final String value, final Tags tags, final Aggregations aggregations,
+                           final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace, final long timestamp) {
+        String rawMessage = MessageBuilder.newBuilder()
+                .withName(name)
+                .withValue(value)
+                .withTags(tags)
+                .withAggregations(aggregations)
+                .withAggregationFreq(aggregationFrequency)
+                .withNamespace(namespace)
+                .withTimestamp(timestamp)
+                .withSampleRate(sampleRate)
+                .build();
+
+        if (!dryRun) {
+            this.putRaw(rawMessage);
+        } else {
+            LOGGER.fine("Dry metric: " + rawMessage);
         }
     }
 
@@ -106,6 +126,10 @@ public class BufferedMetricsSender implements MetricsSender {
     public final void aggregatedPut(final String name, final String value, final Tags tags, final Aggregation aggregation,
                                     final AggregationFrequency aggregationFrequency, final Integer sampleRate,
                                     final String namespace, final long timestamp) {
+        if (!this.isValidSampleRate(sampleRate)) {
+            LOGGER.warning("Invalid sample rate supplied. Discarding metric.");
+            return;
+        }
         if (shouldPutMetric(sampleRate)) {
             String rawMessage = MessageBuilder.newBuilder()
                     .withName(name)
@@ -124,6 +148,32 @@ public class BufferedMetricsSender implements MetricsSender {
                         + " Frequency: " + aggregationFrequency);
             }
         }
+    }
+
+    @Override
+    public final void aggregatedSampledPut(final String name, final String value, final Tags tags, final Aggregation aggregation,
+                                           final AggregationFrequency aggregationFrequency, final Integer sampleRate, final String namespace,
+                                           final long timestamp) {
+        if (!this.isValidSampleRate(sampleRate)) {
+            LOGGER.warning("Invalid sample rate supplied. Discarding metric.");
+            return;
+        }
+            String rawMessage = MessageBuilder.newBuilder()
+                    .withName(name)
+                    .withValue(value)
+                    .withTags(tags)
+                    .withNamespace(namespace)
+                    .withTimestamp(timestamp)
+                    .withSampleRate(sampleRate)
+                    .build();
+
+            if (!dryRun) {
+                this.putAggregatedRaw(rawMessage, aggregation, aggregationFrequency);
+            } else {
+                LOGGER.fine("Dry metric: " + rawMessage
+                        + " Aggregation: " + aggregation
+                        + " Frequency: " + aggregationFrequency);
+            }
     }
 
     @Override
@@ -172,21 +222,11 @@ public class BufferedMetricsSender implements MetricsSender {
     }
 
     private boolean shouldPutMetric(final int sampleRate) {
-        int newSampleRate = sanitizeSampleRate(sampleRate);
-        return Math.random() <= (double) newSampleRate / SAMPLE_RATE_DIVIDER;
+        return Math.random() <= (double) sampleRate / SAMPLE_RATE_DIVIDER;
     }
 
-    private int sanitizeSampleRate(final int sampleRate) {
-        int newSampleRate = MAX_SAMPLE_RATE;
-        if (sampleRate < MIN_SAMPLE_RATE) {
-            newSampleRate = MIN_SAMPLE_RATE;
-            LOGGER.warning("The configured sample rate is bellow 1, assuming 1.");
-        } else if (sampleRate > MAX_SAMPLE_RATE) {
-            newSampleRate = MAX_SAMPLE_RATE;
-            LOGGER.warning("The configured sample rate is above 100, assuming 100.");
-        }
-
-        return newSampleRate;
+    private boolean isValidSampleRate(final Integer sampleRate) {
+        return sampleRate != null && sampleRate >= MIN_SAMPLE_RATE && sampleRate <= MAX_SAMPLE_RATE;
     }
 
     private void putRaw(final String metric) {
@@ -265,7 +305,7 @@ public class BufferedMetricsSender implements MetricsSender {
 
     private String buildAggregatedUri(final Aggregation aggregation, final AggregationFrequency aggregationFrequency) {
         String baseAggregatedUri = ApiUriFactory.buildAggregatedUri(configuration.isSecure(),
-                configuration.getHost(), configuration.getPort());
+                configuration.getHost(), configuration.getPort(), configuration.getPath());
 
         return baseAggregatedUri
                 .replace("{aggregation}", aggregation.getName())

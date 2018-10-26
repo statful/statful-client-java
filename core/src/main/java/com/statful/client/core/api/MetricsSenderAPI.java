@@ -16,12 +16,14 @@ public final class MetricsSenderAPI implements SenderAPI {
 
     private MetricsSenderProxy metricsSenderProxy;
     private boolean aggregated;
+    private boolean isSampled;
 
     private String name;
     private String value;
     private String namespace;
     private Tags tags;
     private Integer sampleRate;
+    private Long timestamp;
     private Aggregations aggregations;
     private AggregationFrequency aggregationFrequency;
 
@@ -35,9 +37,10 @@ public final class MetricsSenderAPI implements SenderAPI {
         this.aggregated = false;
     }
 
-    MetricsSenderAPI(final MetricsSender metricsSender, final boolean isAggregated) {
+    MetricsSenderAPI(final MetricsSender metricsSender, final boolean isAggregated, final boolean isSampled) {
         this.metricsSenderProxy = new MetricsSenderProxy(metricsSender);
         this.aggregated = isAggregated;
+        this.isSampled = isSampled;
     }
 
     /**
@@ -47,7 +50,7 @@ public final class MetricsSenderAPI implements SenderAPI {
      * @return An instance of {@link SenderAPI}
      */
     public static MetricsSenderAPI newInstance(final MetricsSender metricsSender) {
-        return new MetricsSenderAPI(metricsSender, false);
+        return new MetricsSenderAPI(metricsSender, false, false);
     }
 
     /**
@@ -55,10 +58,11 @@ public final class MetricsSenderAPI implements SenderAPI {
      *
      * @param metricsSender The {@link MetricsSender}
      * @param isAggregated A {@link Boolean} flag stating if the metric is aggregated
+     * @param isSampled A {@link Boolean} flag stating if the metric is sampled
      * @return An instance of {@link SenderAPI}
      */
-    public static MetricsSenderAPI newInstance(final MetricsSender metricsSender, final boolean isAggregated) {
-        return new MetricsSenderAPI(metricsSender, isAggregated);
+    public static MetricsSenderAPI newInstance(final MetricsSender metricsSender, final boolean isAggregated, final boolean isSampled) {
+        return new MetricsSenderAPI(metricsSender, isAggregated, isSampled);
     }
 
     /**
@@ -68,6 +72,15 @@ public final class MetricsSenderAPI implements SenderAPI {
      */
     public boolean isAggregated() {
         return aggregated;
+    }
+
+    /**
+     * A getter for the sampled flag.
+     *
+     * @return The sampled flag
+     */
+    public boolean isSampled() {
+        return isSampled;
     }
 
     /**
@@ -188,6 +201,12 @@ public final class MetricsSenderAPI implements SenderAPI {
     }
 
     @Override
+    public SenderAPI timestamp(final Long timestamp) {
+        withTimestamp(timestamp);
+        return this;
+    }
+
+    @Override
     public SenderAPI aggregation(final Aggregation aggregation) {
         withAggregation(aggregation);
         return this;
@@ -228,10 +247,10 @@ public final class MetricsSenderAPI implements SenderAPI {
     public void send() {
         try {
             if (isValid()) {
-                long unixTimestamp = getUnixTimestamp();
+                long unixTimestamp = timestamp != null ? timestamp : getUnixTimestamp();
 
                 metricsSenderProxy.put(name, value, tags, aggregations, aggregationFrequency, sampleRate, namespace,
-                        unixTimestamp, aggregated);
+                        unixTimestamp, aggregated, isSampled);
             } else {
                 LOGGER.warning("Unable to send metric because it's not valid. Please see the client documentation.");
             }
@@ -244,6 +263,11 @@ public final class MetricsSenderAPI implements SenderAPI {
         if (isStringSafe(namespace)) {
             this.namespace = namespace;
         }
+        return this;
+    }
+
+    private SenderAPI withTimestamp(final Long timestamp) {
+        this.timestamp = timestamp;
         return this;
     }
 

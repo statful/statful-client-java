@@ -1,5 +1,6 @@
-package com.statful.client.core;
+package com.statful.client.core.http;
 
+import com.statful.client.core.CustomStatfulFactory;
 import com.statful.client.core.api.StatfulClientBuilder;
 import com.statful.client.core.transport.TransportSender;
 import com.statful.client.domain.api.ClientConfiguration;
@@ -13,17 +14,17 @@ import static com.statful.client.domain.api.Transport.HTTP;
  */
 public final class StatfulFactory {
 
-    private static HTTPClientFactory httpClientFactory = new HTTPClientFactory();
+    private static final HTTPClientFactory HTTP_CLIENT_FACTORY = new HTTPClientFactory();
 
     private StatfulFactory() { }
 
     /**
-     * Instantiates a new {@link com.statful.client.core.api.StatfulClientBuilder} to use HTTP protocol.
+     * Instantiates a new {@link StatfulClientBuilder} to use HTTP protocol.
      *
      * @return A Statful client builder, ready for configure or bootstrap
      */
     public static StatfulClientBuilder buildHTTPClient() {
-        return httpClientFactory.buildClient();
+        return HTTP_CLIENT_FACTORY.buildClient();
     }
 
     /**
@@ -38,7 +39,8 @@ public final class StatfulFactory {
         @Override
         protected TransportSender buildTransportSender(final ClientConfiguration configuration) {
             SSLClientFactory clientFactory = buildHTTPClientFactory(configuration);
-            return new HTTPSender(configuration.isSecure(), configuration.getHost(), configuration.getPort(), clientFactory);
+            return new HTTPSender(configuration.isSecure(), configuration.getHost(), configuration.getPort(),
+                    configuration.getPath(), clientFactory);
         }
 
         private static SSLClientFactory buildHTTPClientFactory(final ClientConfiguration configuration) {

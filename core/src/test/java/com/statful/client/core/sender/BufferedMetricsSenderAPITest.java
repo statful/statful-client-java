@@ -2,6 +2,7 @@ package com.statful.client.core.sender;
 
 import com.statful.client.core.transport.TransportSender;
 import com.statful.client.domain.api.*;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -12,10 +13,7 @@ import org.mockito.stubbing.Answer;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
@@ -66,7 +64,7 @@ public class BufferedMetricsSenderAPITest {
 
         BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
-        for (int i=0; i<5000; i++) {
+        for (int i = 0; i < 5000; i++) {
             subject.put("test_metric", "500", null, null, AggregationFrequency.FREQ_10, 100, "application", 123456789);
         }
 
@@ -85,7 +83,7 @@ public class BufferedMetricsSenderAPITest {
 
         BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
 
-        for (int i=0; i<5000; i++) {
+        for (int i = 0; i < 5000; i++) {
             subject.aggregatedPut("test_metric", "500", null, Aggregation.AVG, AggregationFrequency.FREQ_10, 100, "application", 123456789);
         }
 
@@ -152,6 +150,17 @@ public class BufferedMetricsSenderAPITest {
     }
 
     @Test
+    public void shouldSendSimpleRawSampledMetric() {
+        // When
+        subject.putSampled("test_metric", "500", null, null, null, 1, "application", 123456789);
+
+        // Then
+        List<String> buffer = subject.getStandardBuffer();
+        assertEquals("MetricsBuffer should not be empty", 1, buffer.size());
+        assertEquals("Should buffer timer metric", "application.test_metric 500 123456789 1", buffer.get(0));
+    }
+
+    @Test
     public void shouldSendRawMetricWithTagsAndAggregations() {
         // When
         Tags tags = new Tags();
@@ -193,6 +202,19 @@ public class BufferedMetricsSenderAPITest {
 
         // Then
         List<String> buffer = subject.getAggregatedBuffer().get(Aggregation.AVG).get(AggregationFrequency.FREQ_10);
+        assertEquals("MetricsBuffer should have 2 metrics", 2, buffer.size());
+        assertEquals("Should buffer timer metric", "application.test_metric0 100 123456789 100", buffer.get(0));
+        assertEquals("Should buffer timer metric", "application.test_metric1 101 123456790 100", buffer.get(1));
+    }
+
+    @Test
+    public void shouldBufferSampledMetrics() {
+        // When
+        subject.putSampled("test_metric0", "100", null, null, AggregationFrequency.FREQ_10, 100, "application", 123456789);
+        subject.putSampled("test_metric1", "101", null, null, AggregationFrequency.FREQ_10, 100, "application", 123456790);
+
+        // Then
+        List<String> buffer = subject.getStandardBuffer();
         assertEquals("MetricsBuffer should have 2 metrics", 2, buffer.size());
         assertEquals("Should buffer timer metric", "application.test_metric0 100 123456789 100", buffer.get(0));
         assertEquals("Should buffer timer metric", "application.test_metric1 101 123456790 100", buffer.get(1));
@@ -315,7 +337,7 @@ public class BufferedMetricsSenderAPITest {
         List<String> buffer = subject.getStandardBuffer();
         assertEquals("MetricsBuffer should have metrics", 1, buffer.size());
 
-        Thread.sleep(200);
+        Thread.sleep(500);
 
         // And then
         buffer = subject.getStandardBuffer();
@@ -345,23 +367,53 @@ public class BufferedMetricsSenderAPITest {
     }
 
     @Test
-    public void shouldSendMetricWhenSampleRateIsAbove100() {
+    public void shouldSendSampledAggregatedWithSampleRate() {
+        // When
+        subject.aggregatedSampledPut("test_metric0", "100", null, Aggregation.AVG, AggregationFrequency.FREQ_10, 50, "application", 123456789);
+        subject.aggregatedSampledPut("test_metric0", "100", null, Aggregation.AVG, AggregationFrequency.FREQ_10, 100, "application", 123456789);
+
+        // Then
+        int size = subject.getAggregatedBuffer().size();
+        assertTrue("MetricsBuffer should have at least 1 metric and at most 2 metrics", size > 0 && size <= 2);
+    }
+
+    @Test
+    public void shouldNotSendMetricWhenSampleRateIsNull() {
+        // When
+        subject.put("test_metric0", "100", null, null, AggregationFrequency.FREQ_10, null, "application", 123456789);
+
+        // Then
+        int size = subject.getStandardBuffer().size();
+        assertEquals("MetricsBuffer should have 0 metrics", 0, size);
+    }
+
+    @Test
+    public void shouldNotSendMetricWhenSampleRateIsAbove100() {
         // When
         subject.put("test_metric0", "100", null, null, AggregationFrequency.FREQ_10, 101, "application", 123456789);
 
         // Then
         int size = subject.getStandardBuffer().size();
-        assertEquals("MetricsBuffer should have 1 metric", 1, size);
+        assertEquals("MetricsBuffer should have 0 metrics", 0, size);
     }
 
     @Test
-    public void shouldSendAggregatedMetricWhenSampleRateIsAbove100() {
+    public void shouldNotSendAggregatedMetricWhenSampleRateIsAbove100() {
         // When
         subject.aggregatedPut("test_metric0", "100", null, Aggregation.AVG, AggregationFrequency.FREQ_10, 101, "application", 123456789);
-
         // Then
         int size = subject.getAggregatedBuffer().size();
-        assertEquals("MetricsBuffer should have 1 metric", 1, size);
+        assertEquals("MetricsBuffer should have 0 metrics", 0, size);
+    }
+
+    @Test
+    public void shouldNotSendSampledMetricWhenSampleRateIsAbove100() {
+        // When
+        subject.putSampled("test_metric0", "100", null, null, AggregationFrequency.FREQ_10, 101, "application", 123456789);
+
+        // Then
+        int size = subject.getStandardBuffer().size();
+        assertEquals("MetricsBuffer should have 0 metrics", 0, size);
     }
 
     @Test
@@ -374,6 +426,7 @@ public class BufferedMetricsSenderAPITest {
         assertEquals("MetricsBuffer should have 0 metrics", 0, size);
     }
 
+
     @Test
     public void shouldNotSendAggregatedMetricWhenSampleRateIsBellow0() {
         // When
@@ -381,6 +434,16 @@ public class BufferedMetricsSenderAPITest {
 
         // Then
         int size = subject.getAggregatedBuffer().size();
+        assertEquals("MetricsBuffer should have 0 metrics", 0, size);
+    }
+
+    @Test
+    public void shouldNotSendSampledMetricWhenSampleRateIsBellow0() {
+        // When
+        subject.putSampled("test_metric0", "100", null, null, AggregationFrequency.FREQ_10, -1, "application", 123456789);
+
+        // Then
+        int size = subject.getStandardBuffer().size();
         assertEquals("MetricsBuffer should have 0 metrics", 0, size);
     }
 
@@ -479,7 +542,7 @@ public class BufferedMetricsSenderAPITest {
     }
 
     @Test
-    public void shouldFlushStandardMetricBuffersSynchronously() throws Exception {
+    public void shouldFlushStandardMetricBuffersSynchronously() {
         // Given
         when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
@@ -496,7 +559,7 @@ public class BufferedMetricsSenderAPITest {
 
     @Test
     @Ignore
-    public void shouldFlushAggregatedMetricBuffersSynchronously() throws Exception {
+    public void shouldFlushAggregatedMetricBuffersSynchronously() {
         // Given
         when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
@@ -512,7 +575,7 @@ public class BufferedMetricsSenderAPITest {
     }
 
     @Test
-    public void shouldHandleFlushAggregatedMetricBuffersSynchronouslyWithEmptyBuffers() throws Exception {
+    public void shouldHandleFlushAggregatedMetricBuffersSynchronouslyWithEmptyBuffers() {
         // Given
         when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
@@ -532,7 +595,7 @@ public class BufferedMetricsSenderAPITest {
     }
 
     @Test
-    public void shouldNotCallSenderWhenFlushingSynchronouslyWithEmptyBuffer() throws Exception {
+    public void shouldNotCallSenderWhenFlushingSynchronouslyWithEmptyBuffer() {
         // Given
         when(configuration.getFlushIntervalMillis()).thenReturn(100L);
 
@@ -567,6 +630,7 @@ public class BufferedMetricsSenderAPITest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldDropMetricsWhenWorkerTasksQueueIsFull() {
         // Given
@@ -574,14 +638,24 @@ public class BufferedMetricsSenderAPITest {
         when(configuration.getFlushSize()).thenReturn(1);
         when(configuration.getMaxWorkerTasksQueueSize()).thenReturn(1);
 
-        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, executorService);
+
+        final ScheduledFuture mockFuture = mock(ScheduledFuture.class);
+
+        BlockingQueue<Runnable> mockQueue = mock(BlockingQueue.class);
+        ScheduledThreadPoolExecutor mockExecutor = mock(ScheduledThreadPoolExecutor.class);
+        when(mockExecutor.schedule(any(Runnable.class), anyInt(), any(TimeUnit.class))).thenReturn(mockFuture);
+        when(mockExecutor.getQueue()).thenReturn(mockQueue);
+
+        when(mockQueue.size()).thenReturn(0, 1);
+
+        final BufferedMetricsSender subject = new BufferedMetricsSender(transportSender, configuration, mockExecutor);
 
         // When
         subject.put("test_metric0", "100", null, null, AggregationFrequency.FREQ_10, 100, "application", 123456789);
         subject.put("test_metric1", "100", null, null, AggregationFrequency.FREQ_10, 100, "application", 123456789);
 
         // Then
-        verify(transportSender, times(1)).send(anyString());
+        verify(mockExecutor, times(1)).schedule(any(Runnable.class), anyInt(), any(TimeUnit.class));
     }
 
     private Answer<String> mockedTransportResponse = new Answer<String>() {

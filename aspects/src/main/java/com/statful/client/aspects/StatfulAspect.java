@@ -2,6 +2,7 @@ package com.statful.client.aspects;
 
 import com.statful.client.annotations.Timer;
 import com.statful.client.domain.api.Aggregations;
+import com.statful.client.domain.api.SenderAPI;
 import com.statful.client.domain.api.StatfulClient;
 import com.statful.client.domain.api.Tags;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -44,7 +45,8 @@ public class StatfulAspect {
      * @return The result of the invoked method
      * @throws Throwable Eventually thrown by the invoked method
      */
-    @Around("@annotation(timer)")
+
+    @Around("@annotation(timer) && execution(* *(..))")
     public final Object methodTiming(final ProceedingJoinPoint joinPoint, final Timer timer) throws Throwable {
         Tags tags = new Tags();
         tags.merge(getTags(timer));
@@ -64,11 +66,16 @@ public class StatfulAspect {
             throw t;
         } finally {
             if (statful != null) {
-                statful.timer(timer.name(), stopTimer).with()
+                SenderAPI senderAPI = statful.timer(timer.name(), stopTimer).with()
                         .namespace(getNamespace(timer))
                         .aggregations(getAggregations(timer))
-                        .tags(tags)
-                        .send();
+                        .tags(tags);
+
+                if (isSampled(timer)) {
+                    senderAPI.sampleRate(getSampleRate(timer));
+                }
+                senderAPI.send();
+
             } else {
                 LOGGER.warning("Statful client is not configured");
             }
@@ -85,6 +92,10 @@ public class StatfulAspect {
         return namespace;
     }
 
+    private int getSampleRate(final Timer timer) {
+        return timer.sampleRate();
+    }
+
     private Aggregations getAggregations(final Timer timer) {
         return Aggregations.from(timer.aggregations());
     }
@@ -92,6 +103,10 @@ public class StatfulAspect {
     private Tags getTags(final Timer timer) {
         String[] tagsArray = timer.tags();
         return Tags.from(tagsArray);
+    }
+
+    private boolean isSampled(final Timer timer) {
+        return Timer.DEFAULT_SAMPLE_RATE != timer.sampleRate() && timer.sampleRate() > 0;
     }
 
     private long startWatch() {
