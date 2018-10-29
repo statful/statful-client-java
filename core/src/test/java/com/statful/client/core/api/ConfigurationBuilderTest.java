@@ -12,6 +12,7 @@ import static com.statful.client.core.api.MetricBuilder.*;
 import static com.statful.client.domain.api.Aggregation.*;
 import static com.statful.client.domain.api.AggregationFrequency.FREQ_10;
 import static com.statful.client.domain.api.AggregationFrequency.FREQ_120;
+import static com.statful.client.domain.api.Transport.HTTP;
 import static com.statful.client.domain.api.Transport.UDP;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -28,11 +29,11 @@ public class ConfigurationBuilderTest {
     @Test
     public void shouldUseDefaultValuesWhenNoneAreSpecified() {
         ClientConfiguration config = newBuilder()
-                .transport(UDP)
+                .transport(HTTP)
                 .buildConfiguration();
 
-        assertEquals("Should have default host", "127.0.0.1", config.getHost());
-        assertEquals("Should have default port", 2013, config.getPort());
+        assertEquals("Should have default host", "api.statful.com", config.getHost());
+        assertEquals("Should have default port", 443, config.getPort());
         assertFalse("Should not dry run as default", config.isDryRun());
         assertEquals("Should have default sample rate", 100, config.getSampleRate());
         assertEquals("Should have default namespace", "application", config.getNamespace());

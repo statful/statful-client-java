@@ -21,6 +21,8 @@ public class StatfulFactoryTest {
 
         // When
         StatfulClient client = StatfulFactory.buildUDPClient().with()
+                .host("localhost")
+                .port(2013)
                 .flushSize(1)
                 .build();
         client.counter("test_counter").send();
@@ -33,7 +35,11 @@ public class StatfulFactoryTest {
 
     @Test
     public void shouldCreateUDPClientWithoutOptionalConfigurations() {
-        StatfulClient client = StatfulFactory.buildUDPClient().build();
+        StatfulClient client = StatfulFactory.buildUDPClient()
+                .with()
+                .host("localhost")
+                .port(2013)
+                .build();
 
         assertNotNull(client);
     }

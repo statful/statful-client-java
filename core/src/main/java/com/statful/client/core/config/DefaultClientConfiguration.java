@@ -15,9 +15,9 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private static final int MAX_TASKS_QUEUE_SIZE = 100;
     private static final long TASK_KILLER_INTERVAL = 30000;
 
-    private static final String DEFAULT_HOST = "127.0.0.1";
+    private static final String DEFAULT_HOST = "api.statful.com";
     private static final boolean DEFAULT_SECURE = true;
-    private static final int DEFAULT_PORT = 2013;
+    private static final int DEFAULT_PORT = 443;
     private static final String DEFAULT_PATH = "/tel/v2.0/metrics";
     private static final int DEFAULT_SAMPLE_RATE = 100;
     private static final String DEFAULT_NAMESPACE = "application";
