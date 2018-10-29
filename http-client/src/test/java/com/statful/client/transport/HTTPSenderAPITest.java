@@ -9,6 +9,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Test;
+import org.mockserver.verify.VerificationTimes;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -60,6 +61,26 @@ public class HTTPSenderAPITest extends HttpTest {
                 request()
                         .withBody(METRIC),
                 once());
+    }
+
+    @Test
+    public void shouldNotThrowWhenReturnCodeIsValid() {
+        // Given
+        mockMetricsPutWithStatusCode(201);
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", new SSLClientFactory(10, 1000, 5000, "any-token"));
+
+        // When
+        subject.send(METRIC);
+
+        // Given
+        mockMetricsPutWithStatusCode(200);
+        subject = new HTTPSender(false, "127.0.0.1", mockServerPort, "/tel/v2.0/metrics", new SSLClientFactory(10, 1000, 5000, "any-token"));
+
+        // When
+        subject.send(METRIC);
+
+        // Then
+        mockClientAndServer.verify(request().withBody(METRIC), VerificationTimes.exactly(2));
     }
 
     @Test

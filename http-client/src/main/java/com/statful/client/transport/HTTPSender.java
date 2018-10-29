@@ -17,6 +17,7 @@ public class HTTPSender implements TransportSender {
 
     private static final Logger LOGGER = Logger.getLogger(HTTPSender.class.getName());
     private static final Integer HTTP_CREATED = 201;
+    private static final Integer HTTP_OK = 200;
 
     private final String uri;
     private final HTTPClientFactory clientFactory;
@@ -94,6 +95,6 @@ public class HTTPSender implements TransportSender {
     }
 
     private boolean metricNotCreated(final StatusLine statusLine) {
-        return HTTP_CREATED != statusLine.getStatusCode();
+        return HTTP_CREATED != statusLine.getStatusCode() || HTTP_OK != statusLine.getStatusCode();
     }
 }
