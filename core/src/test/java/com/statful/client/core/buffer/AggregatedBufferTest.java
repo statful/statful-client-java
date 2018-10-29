@@ -49,7 +49,7 @@ public class AggregatedBufferTest {
         String bufferString = subject.readBuffer(Aggregation.AVG, AggregationFrequency.FREQ_10);
 
         // Then
-        assertEquals("foo\n", bufferString);
+        assertEquals("foo", bufferString);
     }
 
     @Test

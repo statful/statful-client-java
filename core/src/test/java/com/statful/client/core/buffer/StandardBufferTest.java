@@ -51,7 +51,7 @@ public class StandardBufferTest {
         String bufferString = subject.readBuffer();
 
         // Then
-        assertEquals("foo\n", bufferString);
+        assertEquals("foo", bufferString);
     }
 
     @Test

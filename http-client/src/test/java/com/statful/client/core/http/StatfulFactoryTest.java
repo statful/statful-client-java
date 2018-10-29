@@ -43,7 +43,7 @@ public class StatfulFactoryTest extends HttpTest {
         // Then
         mockClientAndServer.verify(
                 request()
-                        .withBody(regex("application.counter.test_counter 1 .+ count,sum,10 100\\n")),
+                        .withBody(regex("application.counter.test_counter 1 .+ count,sum,10 100")),
                 once()
         );
     }
