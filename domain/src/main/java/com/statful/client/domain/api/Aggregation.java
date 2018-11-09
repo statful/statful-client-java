@@ -11,6 +11,7 @@ public enum Aggregation {
     SUM("sum"),
     FIRST("first"),
     P95("p95"),
+    P99("p99"),
     MIN("min"),
     MAX("max");
 
