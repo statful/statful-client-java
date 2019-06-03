@@ -1,10 +1,7 @@
 package com.statful.client.core.api;
 
 import com.statful.client.core.config.DefaultClientConfiguration;
-import com.statful.client.domain.api.Aggregation;
-import com.statful.client.domain.api.AggregationFrequency;
-import com.statful.client.domain.api.Aggregations;
-import com.statful.client.domain.api.Tags;
+import com.statful.client.domain.api.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -86,7 +83,7 @@ public class MetricsSenderAPITest {
     public void shouldIgnoreSampleRateWhenNull() {
         MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
 
-        DefaultClientConfiguration config = new DefaultClientConfiguration();
+        DefaultClientConfiguration config = new DefaultClientConfiguration(Transport.UDP);
         config.setNamespace("namespace");
 
         builder.configuration(config);
@@ -97,7 +94,7 @@ public class MetricsSenderAPITest {
     @Test
     public void shouldIgnoreNamespaceWhenNull() {
         MetricsSenderAPI builder = new MetricsSenderAPI(metricsSender);
-        DefaultClientConfiguration config = new DefaultClientConfiguration();
+        DefaultClientConfiguration config = new DefaultClientConfiguration(Transport.UDP);
         config.setSampleRate(20);
 
         builder.configuration(config);
@@ -138,7 +135,7 @@ public class MetricsSenderAPITest {
 
     @Test
     public void shouldSendIfValid() {
-        DefaultClientConfiguration config = new DefaultClientConfiguration();
+        DefaultClientConfiguration config = new DefaultClientConfiguration(Transport.UDP);
         config.setNamespace("namespace");
         config.setSampleRate(50);
 

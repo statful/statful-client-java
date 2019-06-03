@@ -10,6 +10,7 @@ import org.junit.Test;
 import static com.statful.client.domain.api.Aggregation.*;
 import static com.statful.client.domain.api.AggregationFrequency.FREQ_10;
 import static com.statful.client.domain.api.AggregationFrequency.FREQ_120;
+import static com.statful.client.domain.api.Transport.UDP;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
 
@@ -19,14 +20,11 @@ public class DefaultClientConfigurationTest {
 
     @Before
     public void setUp() {
-        subject = new DefaultClientConfiguration();
+        subject = new DefaultClientConfiguration(UDP);
     }
 
     @Test
     public void shouldValidate() {
-        // Given
-        subject.setTransport(Transport.UDP);
-
         // When
         boolean result = subject.isValid();
 
@@ -35,28 +33,45 @@ public class DefaultClientConfigurationTest {
     }
 
     @Test
-    public void shouldInvalidateWithNoTransport() {
+    public void shouldHaveDefaultHttpValues() {
         // When
-        boolean result = subject.isValid();
+        subject = new DefaultClientConfiguration();
 
         // Then
-        assertFalse("Should be invalid", result);
+        assertEquals("api.statful.com", subject.getHost());
+        assertEquals(443, subject.getPort());
     }
 
     @Test
-    public void shouldInvalidate() {
-        // When
-        boolean result = subject.isValid();
+    public void shouldHaveDefaultUDPValues() {
+        assertEquals("127.0.0.1", subject.getHost());
+        assertEquals(2013, subject.getPort());
+    }
 
-        // Then
-        assertFalse("Should be invalid", result);
+    @Test
+    public void shouldHaveDefaultHTTPValues() {
+        subject.setTransport(Transport.HTTP);
+        assertEquals("api.statful.com", subject.getHost());
+        assertEquals(443, subject.getPort());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void shouldThrowWithDefaultOTHERHostValues() {
+        subject.setTransport(Transport.OTHER);
+        assertEquals("should throw", subject.getHost());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void shouldThrowWithDefaultOTHERPortValues() {
+        subject.setTransport(Transport.OTHER);
+        assertEquals(0, subject.getPort());
     }
 
     @Test
     public void shouldMergeApplicationTags() {
         subject.mergeApplicationTag("host", "localhost");
         subject.mergeApplicationTag("cluster", "production");
-        
+
         Tags tags = subject.getApplicationTags();
         assertEquals("Should have merged tag", "localhost", tags.getTagValue("host"));
         assertEquals("Should have merged tag", "production", tags.getTagValue("cluster"));
@@ -112,8 +127,8 @@ public class DefaultClientConfigurationTest {
 
     @Test
     public void shouldGetTransport() {
-        subject.setTransport(Transport.UDP);
-        Assert.assertEquals("Should get transport", Transport.UDP, subject.getTransport());
+        subject.setTransport(UDP);
+        Assert.assertEquals("Should get transport", UDP, subject.getTransport());
     }
 
     @Test
@@ -210,13 +225,13 @@ public class DefaultClientConfigurationTest {
         assertEquals("application", subject.getNamespace());
         assertEquals(10, subject.getFlushSize());
         assertEquals(5000, subject.getFlushIntervalMillis());
+        assertEquals(UDP, subject.getTransport());
         assertFalse(subject.isDryRun());
 
         assertEquals(FREQ_10, subject.getTimerAggregationFrequency());
         assertEquals(FREQ_10, subject.getCounterAggregationFrequency());
         assertEquals(FREQ_10, subject.getGaugeAggregationFrequency());
 
-        assertNull(subject.getTransport());
         assertNull(subject.getToken());
         assertNull(subject.getApp());
         assertNull(subject.getCounterTags());

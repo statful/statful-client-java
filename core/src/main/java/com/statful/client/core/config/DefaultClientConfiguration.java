@@ -15,9 +15,7 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private static final int MAX_TASKS_QUEUE_SIZE = 100;
     private static final long TASK_KILLER_INTERVAL = 30000;
 
-    private static final String DEFAULT_HOST = "127.0.0.1";
     private static final boolean DEFAULT_SECURE = true;
-    private static final int DEFAULT_PORT = 2013;
     private static final String DEFAULT_PATH = "/tel/v2.0/metrics";
     private static final int DEFAULT_SAMPLE_RATE = 100;
     private static final String DEFAULT_NAMESPACE = "application";
@@ -32,8 +30,8 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private static final Aggregation[] DEFAULT_COUNTER_AGGREGATIONS = new Aggregation[] {Aggregation.SUM, Aggregation.COUNT};
     private static final Aggregation[] DEFAULT_GAUGE_AGGREGATIONS = new Aggregation[] {Aggregation.LAST};
 
-    private String host = DEFAULT_HOST;
-    private int port = DEFAULT_PORT;
+    private String host;
+    private int port = -1;
     private String path = DEFAULT_PATH;
     private int sampleRate = DEFAULT_SAMPLE_RATE;
     private String namespace = DEFAULT_NAMESPACE;
@@ -62,6 +60,20 @@ public class DefaultClientConfiguration implements ClientConfiguration {
     private AggregationFrequency timerAggregationFrequency = DEFAULT_AGGREGATION_FREQ;
     private AggregationFrequency counterAggregationFrequency = DEFAULT_AGGREGATION_FREQ;
     private AggregationFrequency gaugeAggregationFrequency = DEFAULT_AGGREGATION_FREQ;
+
+    /**
+     * @param transport sets the transport so the correct default values for host and port can be set
+     */
+    public DefaultClientConfiguration(final Transport transport) {
+        this.transport = transport;
+    }
+
+    /**
+     * Default constructor, sets the transport as HTTP
+     */
+    public DefaultClientConfiguration() {
+        this.transport = Transport.HTTP;
+    }
 
     @Override
     public final boolean isValid() {
@@ -105,12 +117,12 @@ public class DefaultClientConfiguration implements ClientConfiguration {
 
     @Override
     public final String getHost() {
-        return host;
+        return host == null ? transport.getDefaultHost() : host;
     }
 
     @Override
     public final int getPort() {
-        return port;
+        return port == -1 ? transport.getDefaultPort() : port;
     }
 
     @Override

@@ -20,8 +20,8 @@ public final class ConfigurationBuilder<T> {
     private DefaultClientConfiguration result;
     private ConfigurationBuilderChain<T> builderChain;
 
-    private ConfigurationBuilder() {
-        this.result = new DefaultClientConfiguration();
+    private ConfigurationBuilder(final Transport transport) {
+        this.result = new DefaultClientConfiguration(transport);
     }
 
     /**
@@ -29,8 +29,9 @@ public final class ConfigurationBuilder<T> {
      *
      * @param builderChain The {@link ConfigurationBuilderChain} of <code>T</code>.
      */
-    private ConfigurationBuilder(final ConfigurationBuilderChain<T> builderChain) {
-        this.result = new DefaultClientConfiguration();
+    private ConfigurationBuilder(final Transport transport,
+                                 final ConfigurationBuilderChain<T> builderChain) {
+        this.result = new DefaultClientConfiguration(transport);
         this.builderChain = builderChain;
     }
 
@@ -40,20 +41,22 @@ public final class ConfigurationBuilder<T> {
      * @param <T> The type to return upon build
      * @return An instance of {@link ConfigurationBuilder}
      */
-    static <T> ConfigurationBuilder<T> newBuilder() {
-        return new ConfigurationBuilder<T>();
+    static <T> ConfigurationBuilder<T> newBuilder(final Transport transport) {
+        return new ConfigurationBuilder<>(transport);
     }
 
     /**
      * Creates a new instance of {@link ConfigurationBuilder} with the passed
      * {@link ConfigurationBuilderChain} of <code>T</code>.
      *
+     * @param transport Sets the transport so the correct default values for host and port can be set
      * @param builderChain A {@link ConfigurationBuilderChain} of <code>T</code>
      * @param <T> A T type
      * @return A {@link ConfigurationBuilder} of <code>T</code>
      */
-    public static <T> ConfigurationBuilder<T> newBuilder(final ConfigurationBuilderChain<T> builderChain) {
-        return new ConfigurationBuilder<>(builderChain);
+    public static <T> ConfigurationBuilder<T> newBuilder(final Transport transport,
+                                                         final ConfigurationBuilderChain<T> builderChain) {
+        return new ConfigurationBuilder<>(transport, builderChain);
     }
 
     /**

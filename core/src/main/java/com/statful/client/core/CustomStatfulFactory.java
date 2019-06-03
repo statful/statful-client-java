@@ -44,9 +44,7 @@ public abstract class CustomStatfulFactory {
     public final StatfulClientBuilder buildClient() {
         LOGGER.info("Starting Statful client.");
         ConfigurationBuilder<StatfulClient> configurationBuilder =
-                ConfigurationBuilder
-                        .newBuilder(builderChain)
-                        .transport(transport);
+                ConfigurationBuilder.newBuilder(transport, builderChain);
 
         return new StatfulClientBuilder(configurationBuilder);
     }
