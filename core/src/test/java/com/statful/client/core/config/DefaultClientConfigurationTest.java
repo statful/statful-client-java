@@ -203,8 +203,8 @@ public class DefaultClientConfigurationTest {
     @Test
     public void shouldHaveDefaultConfigurationValues() {
 
-        assertEquals("127.0.0.1", subject.getHost());
-        assertEquals(2013, subject.getPort());
+        assertEquals("api.statful.com", subject.getHost());
+        assertEquals(443, subject.getPort());
         assertEquals(100, subject.getSampleRate());
         assertEquals("/tel/v2.0/metrics", subject.getPath());
         assertEquals("application", subject.getNamespace());
