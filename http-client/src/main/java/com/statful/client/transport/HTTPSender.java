@@ -62,7 +62,7 @@ public class HTTPSender implements TransportSender {
                 response = httpClient.execute(clientFactory.createHttpPut(uri, message));
                 StatusLine statusLine = response.getStatusLine();
 
-                if (metricNotCreated(statusLine)) {
+                if (!metricCreated(statusLine)) {
                     LOGGER.warning("Unable to send metric. Reason: "
                             + statusLine.getReasonPhrase() + ", status: "
                             + statusLine.getStatusCode());
@@ -94,7 +94,7 @@ public class HTTPSender implements TransportSender {
         }
     }
 
-    private boolean metricNotCreated(final StatusLine statusLine) {
-        return HTTP_CREATED != statusLine.getStatusCode() || HTTP_OK != statusLine.getStatusCode();
+    private boolean metricCreated(final StatusLine statusLine) {
+        return HTTP_CREATED == statusLine.getStatusCode() || HTTP_OK == statusLine.getStatusCode();
     }
 }
