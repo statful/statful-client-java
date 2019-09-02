@@ -37,7 +37,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <aspectj.version>1.8.2</aspectj.version>
+        <aspectj.version>1.9.4</aspectj.version>
         <apache-hc.version>4.5.2</apache-hc.version>
         <findbugs.version>3.0.1</findbugs.version>
         <junit.version>4.12</junit.version>
