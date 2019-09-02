@@ -301,8 +301,8 @@ The custom options that can be set on config param are detailed below.
 | _namespace_ | Defines the global namespace. | `String` | `application` | **NO** |
 | _sampleRate_ | Defines the rate sampling. **Should be a number between [1, 100]**. | `int` | `100` | **NO** |
 | _tags_ | Defines a list global tags. | `String`, `String` pairs | Empty list of tags | **NO** |
-| _host_ | Defines the host name to where the metrics should be sent. | `String` | `127.0.0.1` | **NO** |
-| _port_ | Defines the port. | `int` | `2013` | **NO** |
+| _host_ | Defines the host name to where the metrics should be sent. | `String` | `api.statful.com` | **NO** |
+| _port_ | Defines the port. | `int` | `443` | **NO** |
 | _token_ | Defines the authentication token to be used. | `String` | **none** | **NO** |
 | _timeout_ | Defines the timeout for the transport layers in **miliseconds**. Must be set inside _api_. | `long` | `2000` | **NO** |
 | _secure_ | Enable or disables HTTPS. | `boolean` | `true` | **NO** |
