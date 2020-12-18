@@ -4,13 +4,16 @@ import com.statful.client.domain.api.MetricsBuffer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.logging.Logger;
 
 /**
  * Buffer to store metrics.
  */
 public class StandardBuffer implements MetricsBuffer {
 
+    private static final Logger LOGGER = Logger.getLogger(StandardBuffer.class.getName());
     private ArrayBlockingQueue<String> buffer;
     private int maxBufferSize;
     private int flushSize;
@@ -40,7 +43,19 @@ public class StandardBuffer implements MetricsBuffer {
      * @return A {@link Boolean} with the success of the operation
      */
     public final boolean addToBuffer(final String metric) {
-        return buffer.offer(metric);
+        boolean inserted = buffer.offer(metric);
+        if (!inserted) {
+            try {
+                LOGGER.fine("Buffer is full, trying to discard oldest metric.");
+                buffer.remove();
+            } catch (NoSuchElementException e) {
+                LOGGER.warning("Buffer has been emptied before trying to discard oldest entry.");
+            } finally {
+                inserted = buffer.offer(metric);
+            }
+        }
+
+        return inserted;
     }
 
     /**
