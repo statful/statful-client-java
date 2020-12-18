@@ -24,21 +24,22 @@ Statful client for Java. This client is intended to gather metrics and send them
 
 ## Configuration
 
-Add one of the following snippets to your POM.xml file.
-
-### Configuration for UDP client
-
-    <dependency>
-        <groupId>com.statful.client</groupId>
-        <artifactId>udp-client</artifactId>
-        <version>${statful-client.version}</version>
-    </dependency>
+Add one of the below configuration snippets (either HTTP or UDP Client), as applicable, to your POM.xml file. 
+The UDP configuration should be used when the RELAY component in the Client Architecture serves as the gateway to Statful API.
 
 ### Configuration for HTTP client
 
     <dependency>
         <groupId>com.statful.client</groupId>
         <artifactId>http-client</artifactId>
+        <version>${statful-client.version}</version>
+    </dependency>
+    
+### Configuration for UDP client
+
+    <dependency>
+        <groupId>com.statful.client</groupId>
+        <artifactId>udp-client</artifactId>
         <version>${statful-client.version}</version>
     </dependency>
 
@@ -296,7 +297,7 @@ The custom options that can be set on config param are detailed below.
 |:---|:---|:---|:---|:---|
 | _app_ | Defines the application global name. If specified sets a global tag `app=setValue`. | `String` | **none** | **NO** |
 | _dryRun_ | Defines if metrics should be output to the logger instead of being sent. Log level is _DEBUG_. | `boolean` | `false` | **NO** |
-| _flushInterval_ | Defines the periodicity of buffer flushes in **miliseconds**. | `int` | `3000` | **NO** |
+| _flushInterval_ | Defines the periodicity of buffer flushes in **milliseconds**. | `int` | `3000` | **NO** |
 | _flushSize_ | Defines the maximum buffer size before performing a flush. | `int` | `1000` | **NO** |
 | _namespace_ | Defines the global namespace. | `String` | `application` | **NO** |
 | _sampleRate_ | Defines the rate sampling. **Should be a number between [1, 100]**. | `int` | `100` | **NO** |
@@ -304,7 +305,7 @@ The custom options that can be set on config param are detailed below.
 | _host_ | Defines the host name to where the metrics should be sent. | `String` | `api.statful.com` | **NO** |
 | _port_ | Defines the port. | `int` | `443` | **NO** |
 | _token_ | Defines the authentication token to be used. | `String` | **none** | **NO** |
-| _timeout_ | Defines the timeout for the transport layers in **miliseconds**. Must be set inside _api_. | `long` | `2000` | **NO** |
+| _timeout_ | Defines the timeout for the transport layers in **milliseconds**.| `long` | `2000` | **NO** |
 | _secure_ | Enable or disables HTTPS. | `boolean` | `true` | **NO** |
 | _connectTimeout_ | Connection timeout for http/tcp transports in **milliseconds**. | `long` | `500` | **NO** |
 | _connectionPoolSize_ | Connection pool size. | `int` | `10` | **NO** |
