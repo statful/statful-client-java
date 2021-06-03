@@ -38,7 +38,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <aspectj.version>1.9.4</aspectj.version>
-        <apache-hc.version>4.5.2</apache-hc.version>
+        <apache-hc.version>4.5.13</apache-hc.version>
         <findbugs.version>3.0.1</findbugs.version>
         <junit.version>4.13.1</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
